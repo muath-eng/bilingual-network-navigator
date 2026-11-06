@@ -10,33 +10,91 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as LabRouteImport } from './routes/lab'
+import { Route as SubnetRouteImport } from './routes/subnet'
+import { Route as TroubleshootRouteImport } from './routes/troubleshoot'
+import { Route as LearnIndexRouteImport } from './routes/learn.index'
+import { Route as LearnIdRouteImport } from './routes/learn.$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LabRoute = LabRouteImport.update({
+  id: '/lab',
+  path: '/lab',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SubnetRoute = SubnetRouteImport.update({
+  id: '/subnet',
+  path: '/subnet',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TroubleshootRoute = TroubleshootRouteImport.update({
+  id: '/troubleshoot',
+  path: '/troubleshoot',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LearnIndexRoute = LearnIndexRouteImport.update({
+  id: '/learn/',
+  path: '/learn/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LearnIdRoute = LearnIdRouteImport.update({
+  id: '/learn/$id',
+  path: '/learn/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/lab': typeof LabRoute
+  '/subnet': typeof SubnetRoute
+  '/troubleshoot': typeof TroubleshootRoute
+  '/learn/$id': typeof LearnIdRoute
+  '/learn/': typeof LearnIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/lab': typeof LabRoute
+  '/subnet': typeof SubnetRoute
+  '/troubleshoot': typeof TroubleshootRoute
+  '/learn/$id': typeof LearnIdRoute
+  '/learn': typeof LearnIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/lab': typeof LabRoute
+  '/subnet': typeof SubnetRoute
+  '/troubleshoot': typeof TroubleshootRoute
+  '/learn/$id': typeof LearnIdRoute
+  '/learn/': typeof LearnIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    '/' | '/lab' | '/subnet' | '/troubleshoot' | '/learn/$id' | '/learn/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/lab' | '/subnet' | '/troubleshoot' | '/learn/$id' | '/learn'
+  id:
+    | '__root__'
+    | '/'
+    | '/lab'
+    | '/subnet'
+    | '/troubleshoot'
+    | '/learn/$id'
+    | '/learn/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  LabRoute: typeof LabRoute
+  SubnetRoute: typeof SubnetRoute
+  TroubleshootRoute: typeof TroubleshootRoute
+  LearnIdRoute: typeof LearnIdRoute
+  LearnIndexRoute: typeof LearnIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +106,51 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/lab': {
+      id: '/lab'
+      path: '/lab'
+      fullPath: '/lab'
+      preLoaderRoute: typeof LabRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/subnet': {
+      id: '/subnet'
+      path: '/subnet'
+      fullPath: '/subnet'
+      preLoaderRoute: typeof SubnetRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/troubleshoot': {
+      id: '/troubleshoot'
+      path: '/troubleshoot'
+      fullPath: '/troubleshoot'
+      preLoaderRoute: typeof TroubleshootRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/learn/': {
+      id: '/learn/'
+      path: '/learn'
+      fullPath: '/learn/'
+      preLoaderRoute: typeof LearnIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/learn/$id': {
+      id: '/learn/$id'
+      path: '/learn/$id'
+      fullPath: '/learn/$id'
+      preLoaderRoute: typeof LearnIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  LabRoute: LabRoute,
+  SubnetRoute: SubnetRoute,
+  TroubleshootRoute: TroubleshootRoute,
+  LearnIdRoute: LearnIdRoute,
+  LearnIndexRoute: LearnIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
