@@ -1,6 +1,42 @@
 {
   "schema_version": 1,
   "events": {
+    "project.lab_used": {
+      "event_schema_version": 1,
+      "description": "A learner adds or deletes a lab device, connects or deletes a cable, changes a device address setting, or runs ping; no addresses or names are collected.",
+      "privacy": {
+        "contains_pii": false,
+        "purpose": "product_analytics"
+      },
+      "properties_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "action"
+        ],
+        "properties": {
+          "action": {
+            "type": "string",
+            "enum": [
+              "add_device",
+              "delete_device",
+              "connect_cable",
+              "delete_cable",
+              "configure_device",
+              "ping"
+            ]
+          },
+          "device_kind": {
+            "type": "string",
+            "enum": [
+              "pc",
+              "switch",
+              "router"
+            ]
+          }
+        }
+      }
+    },
     "project.lesson_completed": {
       "event_schema_version": 1,
       "description": "A lesson quiz is passed with all answers correct and the lesson was not already marked complete in this browser.",
