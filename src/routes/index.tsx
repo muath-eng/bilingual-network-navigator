@@ -9,6 +9,8 @@ export const Route = createFileRoute("/")({
       { title: "Network Master — تعلّم الشبكات من الصفر حتى الاحتراف" },
       { name: "description", content: "منصة عربية وإنجليزية لتعلم الشبكات ومحاكاتها: دروس، مختبر تفاعلي، وإصلاح أعطال." },
       { property: "og:title", content: "Network Master" },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
       { property: "og:description", content: "Learn networking from zero to pro with lessons, a live lab and troubleshooting drills." },
     ],
   }),

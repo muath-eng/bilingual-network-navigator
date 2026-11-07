@@ -9,6 +9,8 @@ export const Route = createFileRoute("/learn/")({
       { title: "الدروس — Network Master" },
       { name: "description", content: "مسار تعليمي متدرج في الشبكات: مبتدئ، متوسط، متقدم." },
       { property: "og:title", content: "Lessons — Network Master" },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
       { property: "og:description", content: "A graded networking curriculum: beginner, intermediate, advanced." },
     ],
   }),
@@ -36,6 +38,7 @@ function Learn() {
                 key={l.id}
                 to="/learn/$id"
                 params={{ id: l.id }}
+                onClick={() => window.__lovableEvents?.track?.("project.lesson_started", { lesson_id: l.id })}
                 className="flex items-center gap-4 rounded-xl border border-border bg-card p-5 hover:border-primary"
               >
                 <span className="font-mono text-muted-foreground">0{i + 1}</span>

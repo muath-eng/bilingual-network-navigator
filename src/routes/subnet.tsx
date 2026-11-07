@@ -9,6 +9,8 @@ export const Route = createFileRoute("/subnet")({
       { title: "حاسبة الشبكات الفرعية — Network Master" },
       { name: "description", content: "احسب عنوان الشبكة والبث وعدد الأجهزة لأي عنوان IP." },
       { property: "og:title", content: "Subnet Calculator — Network Master" },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
       { property: "og:description", content: "Compute network, broadcast and host range for any IPv4 address." },
     ],
   }),
