@@ -39,7 +39,7 @@ function LessonPage() {
       <h1 className="mt-3 font-display text-3xl font-bold">{t(lesson.titleAr, lesson.titleEn)}</h1>
       {domain && (
         <div className="mt-3 flex flex-wrap items-center gap-2 text-xs">
-          <span className="rounded-full bg-primary/10 px-3 py-1 font-semibold text-primary">{t(domain.ar, domain.en)} · {domain.weight}%</span>
+          <span className="rounded-full bg-primary/10 px-3 py-1 font-semibold text-primary">{domain.version} · {t(domain.ar, domain.en)} · {domain.weight}%</span>
           <span className="rounded-full border border-border px-3 py-1 text-muted-foreground">{t("أهداف الاختبار", "Exam objectives")}: {lesson.objective}</span>
         </div>
       )}
