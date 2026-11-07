@@ -17,12 +17,6 @@ export const Route = createFileRoute("/learn/")({
   component: Learn,
 });
 
-const levels = [
-  { id: "beginner", ar: "مبتدئ", en: "Beginner" },
-  { id: "intermediate", ar: "متوسط", en: "Intermediate" },
-  { id: "advanced", ar: "متقدم", en: "Advanced" },
-] as const;
-
 function Learn() {
   const { t } = useLang();
   const { done } = useProgress();
