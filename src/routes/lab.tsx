@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useRef, useState } from "react";
 import { Monitor, Router as RouterIcon, Server, Trash2, Link2 } from "lucide-react";
 import { useLang } from "@/lib/i18n";
-import { createTopology, diagnose, simulatePing, type Cable, type Device } from "@/lib/lab-engine";
+import { createTopology, diagnose, labTemplates, simulatePing, type Cable, type Device } from "@/lib/lab-engine";
 
 export const Route = createFileRoute("/lab")({
   head: () => ({
@@ -33,10 +33,23 @@ function Lab() {
   const [selectedLink, setSelectedLink] = useState<number | null>(null);
   const [log, setLog] = useState<string[]>([]);
   const [target, setTarget] = useState(initialTopology.target);
+  const [template, setTemplate] = useState("routed");
   const drag = useRef<{ id: string; dx: number; dy: number } | null>(null);
   const svgRef = useRef<SVGSVGElement>(null);
 
   const selected = devs.find((d) => d.id === sel);
+  const activeTemplate = labTemplates.find((item) => item.id === template);
+  const loadTemplate = (id: string) => {
+    const topology = createTopology(id);
+    setTemplate(id);
+    setDevs(topology.devs);
+    setLinks(topology.links);
+    setTarget(topology.target);
+    setSel("d1");
+    setSelectedLink(null);
+    setLinking(null);
+    setLog([]);
+  };
   const update = (patch: Partial<Dev>) => setDevs(devs.map((d) => (d.id === sel ? { ...d, ...patch } : d)));
 
   const add = (kind: Kind) => {
@@ -90,6 +103,15 @@ function Lab() {
       <p className="mt-1 text-sm text-muted-foreground">
         {t("اسحب الأجهزة، اربطها بالكابل، اضبط العناوين ثم جرّب ping.", "Drag devices, connect cables, set addresses, then try ping.")}
       </p>
+      <section className="mt-4 rounded-xl border border-border bg-card p-4">
+        <label className="block text-sm font-semibold">
+          {t("اختر سيناريو تدريبياً", "Choose a lab scenario")}
+          <select value={template} onChange={(e) => loadTemplate(e.target.value)} className="mt-2 w-full rounded-md border border-input bg-background px-3 py-2 font-normal">
+            {labTemplates.map((item) => <option key={item.id} value={item.id}>{t(item.ar, item.en)}</option>)}
+          </select>
+        </label>
+        {activeTemplate && <p className="mt-2 text-sm leading-6 text-muted-foreground">{t(activeTemplate.goalAr, activeTemplate.goalEn)}</p>}
+      </section>
       <div className="mt-4 flex flex-wrap gap-2">
         <button onClick={() => add("pc")} className="flex items-center gap-1 rounded-lg border border-border px-3 py-2 text-sm hover:bg-secondary"><Monitor className="h-4 w-4" /> PC</button>
         <button onClick={() => add("switch")} className="flex items-center gap-1 rounded-lg border border-border px-3 py-2 text-sm hover:bg-secondary"><Server className="h-4 w-4" /> Switch</button>
