@@ -27,7 +27,7 @@ export function segment(devs: Device[], links: Cable[], start: string, vlan: num
    for (const l of links.filter(x => x.enabled && (x.a === id || x.b === id))) {
     const otherId = l.a === id ? l.b : l.a;
     const other = devs.find(x => x.id === otherId);
-    if (other && (other.kind === 'switch' || interfaces(other).some(i => i.vlan === vlan))) q.push(otherId);
+    if (other && ((other.kind === 'switch' && other.vlan === vlan) || interfaces(other).some(i => i.vlan === vlan))) q.push(otherId);
    }
   }
  }
