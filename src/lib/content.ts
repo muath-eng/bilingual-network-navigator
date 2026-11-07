@@ -1,6 +1,10 @@
+import { ccnaLessons } from "./ccna-course";
+
 export type Lesson = {
   id: string;
   level: "beginner" | "intermediate" | "advanced";
+  domain?: string;
+  objective?: string;
   titleAr: string;
   titleEn: string;
   bodyAr: string[];
@@ -8,7 +12,7 @@ export type Lesson = {
   quiz: { qAr: string; qEn: string; options: string[]; answer: number }[];
 };
 
-export const lessons: Lesson[] = [
+const foundationLessons: Lesson[] = [
   {
     id: "what-is-network",
     level: "beginner",
@@ -130,6 +134,8 @@ export const lessons: Lesson[] = [
     ],
   },
 ];
+
+export const lessons: Lesson[] = [...foundationLessons, ...ccnaLessons];
 
 export const scenarios = [
   {
