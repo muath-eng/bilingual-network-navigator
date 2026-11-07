@@ -1,4 +1,5 @@
 import { ccnaLessons } from "./ccna-course";
+export { ccnaDomains } from "./ccna-course";
 
 export type Lesson = {
   id: string;
