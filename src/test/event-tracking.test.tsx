@@ -1,4 +1,4 @@
-import { createElement, type ComponentType } from "react";
+import { createElement, type ComponentType, type MouseEvent, type ReactNode } from "react";
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { lessons } from "@/lib/content";
@@ -9,8 +9,8 @@ vi.mock("@tanstack/react-router", () => ({
     options,
     useLoaderData: () => ({ lesson: lessons[0] }),
   }),
-  Link: ({ children, to, params, ...props }: { children: React.ReactNode; to: string; params?: { id: string } }) =>
-    createElement("a", { ...props, href: to.replace("$id", params?.id ?? "") }, children),
+  Link: ({ children, to, params, onClick, ...props }: { children: ReactNode; to: string; params?: { id: string }; onClick?: (event: MouseEvent) => void }) =>
+    createElement("a", { ...props, href: to.replace("$id", params?.id ?? ""), onClick: (event: MouseEvent) => { event.preventDefault(); onClick?.(event); } }, children),
   notFound: () => new Error("Not found"),
 }));
 
@@ -18,7 +18,7 @@ import { Route as LearnRoute } from "@/routes/learn.index";
 import { Route as LessonRoute } from "@/routes/learn.$id";
 import { Route as LabRoute } from "@/routes/lab";
 
-const track = vi.fn(() => null);
+const track = vi.fn<(event: string, properties?: Record<string, unknown>) => string | null>(() => null);
 function mount(route: { options: { component?: unknown } }) {
   render(<LangProvider>{createElement(route.options.component as ComponentType)}</LangProvider>);
 }
