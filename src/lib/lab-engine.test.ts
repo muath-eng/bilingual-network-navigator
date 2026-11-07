@@ -33,6 +33,14 @@ describe("network lab simulator", () => {
     expect(segment(devs, links, "d4", 1)).not.toContain("d5");
   });
 
+  it("routes between VLANs through separate access switches and router interfaces", () => {
+    const { devs, links } = createTopology("vlan");
+    const result = simulatePing(devs, links, "d1", "10.0.0.30");
+    expect(result.ok).toBe(true);
+    expect(result.code).toBe("routed");
+    expect(segment(devs, links, "d1", 1)).not.toContain("d2");
+  });
+
   it("blocks hosts assigned to a different VLAN on an access switch", () => {
     const { devs, links } = createTopology("lan");
     devs.find((d) => d.id === "d2")!.vlan = 20;
