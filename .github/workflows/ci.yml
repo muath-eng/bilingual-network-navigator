@@ -34,6 +34,12 @@ jobs:
           src/routes/lab.tsx
           src/routes/learn.index.tsx
           'src/routes/learn.$id.tsx'
+          src/routes/mikrotik.tsx
+          src/routes/practice.tsx
+          src/routes/exam.tsx
+          src/routes/profile.tsx
+          src/routes/troubleshoot.tsx
+          src/components/SiteHeader.tsx
       - name: Commit formatting changes
         env:
           TARGET_BRANCH: ${{ github.head_ref || github.ref_name }}
@@ -41,7 +47,7 @@ jobs:
           if ! git diff --quiet; then
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add src/lib/ccna-course.ts src/lib/content.ts src/lib/lesson-types.ts src/lib/lab-engine.ts src/lib/lab-engine.test.ts src/routes/lab.tsx src/routes/learn.index.tsx 'src/routes/learn.$id.tsx'
+            git add src/lib/ccna-course.ts src/lib/content.ts src/lib/lesson-types.ts src/lib/lab-engine.ts src/lib/lab-engine.test.ts src/routes/lab.tsx src/routes/learn.index.tsx 'src/routes/learn.$id.tsx' src/routes/mikrotik.tsx src/routes/practice.tsx src/routes/exam.tsx src/routes/profile.tsx src/routes/troubleshoot.tsx src/components/SiteHeader.tsx
             git commit -m "Format CCNA curriculum and lab updates"
             git push origin "HEAD:${TARGET_BRANCH}"
           fi
@@ -58,5 +64,11 @@ jobs:
           src/routes/lab.tsx
           src/routes/learn.index.tsx
           'src/routes/learn.$id.tsx'
+          src/routes/mikrotik.tsx
+          src/routes/practice.tsx
+          src/routes/exam.tsx
+          src/routes/profile.tsx
+          src/routes/troubleshoot.tsx
+          src/components/SiteHeader.tsx
       - name: Build production app
         run: bun run build
