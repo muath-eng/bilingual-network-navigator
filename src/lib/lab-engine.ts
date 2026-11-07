@@ -19,7 +19,7 @@ export function segment(devs: Device[], links: Cable[], start: string, vlan: num
   const d = devs.find(x => x.id === id); if (!d?.enabled) continue;
   if (id !== start && !interfaces(d).some(i => i.vlan === vlan) && d.kind !== 'switch') continue;
   seen.add(id);
-  if (d.kind === 'switch') {
+  if (d.kind === 'switch' || (id === start && d.kind !== 'router')) {
    for (const l of links.filter(x => x.enabled && (x.a === id || x.b === id))) q.push(l.a === id ? l.b : l.a);
   } else if (id === start && d.kind === 'router' && interfaces(d).some(i => i.vlan === vlan)) {
    // A router is a boundary between broadcast domains: only traverse links
