@@ -39,6 +39,7 @@ jobs:
           src/routes/exam.tsx
           src/routes/profile.tsx
           src/routes/troubleshoot.tsx
+          src/routes/about.tsx
           src/components/SiteHeader.tsx
       - name: Run tests
         run: bun run test
@@ -58,6 +59,7 @@ jobs:
           src/routes/exam.tsx
           src/routes/profile.tsx
           src/routes/troubleshoot.tsx
+          src/routes/about.tsx
           src/components/SiteHeader.tsx
       - name: Build production app
         run: bun run build
