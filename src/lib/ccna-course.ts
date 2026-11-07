@@ -530,13 +530,13 @@ export const ccnaLessons: Lesson[] = [
       "REST أسلوب لبناء واجهات API فوق HTTP. أشهر الأفعال: GET للقراءة، POST للإنشاء أو الإجراء، PUT للاستبدال، PATCH للتعديل الجزئي، وDELETE للحذف.",
       "CRUD تعني Create وRead وUpdate وDelete. قد تستخدم APIs المصادقة عبر Token أو API key أو OAuth 2.0. لا تضع الأسرار في الشيفرة أو المستودعات العامة.",
       "JSON صيغة بيانات تتكون من Objects بين أقواس معقوفة، Arrays بين أقواس مربعة، وأزواج key/value. القيم قد تكون نصاً أو رقماً أو Boolean أو null أو كائناً أو مصفوفة.",
-      "مثال JSON: {"hostname":"SW1","enabled":true,"vlans":[10,20]}. انتبه إلى علامات الاقتباس المزدوجة والفواصل وصحة البنية."
+      'مثال JSON: {"hostname":"SW1","enabled":true,"vlans":[10,20]}. انتبه إلى علامات الاقتباس المزدوجة والفواصل وصحة البنية.'
     ],
     bodyEn: [
       "REST is an architectural style for APIs over HTTP. Common methods: GET reads, POST creates or triggers an action, PUT replaces, PATCH partially updates and DELETE removes.",
       "CRUD means Create, Read, Update and Delete. APIs may authenticate with tokens, API keys or OAuth 2.0. Never place secrets in source code or public repositories.",
       "JSON contains objects in curly braces, arrays in square brackets and key/value pairs. Values may be strings, numbers, booleans, null, objects or arrays.",
-      "Example JSON: {"hostname":"SW1","enabled":true,"vlans":[10,20]}. Pay attention to double quotes, commas and valid structure."
+      'Example JSON: {"hostname":"SW1","enabled":true,"vlans":[10,20]}. Pay attention to double quotes, commas and valid structure.'
     ],
     quiz: [
       { qAr: "أي HTTP method يقرأ البيانات؟", qEn: "Which HTTP method reads data?", options: ["GET", "DELETE", "PATCH"], answer: 0 },
