@@ -75,7 +75,7 @@ export function simulatePing(devs: Device[], links: Cable[], source: string | nu
 export const labTemplates = [
  {id:'routed',ar:'شبكتان وراوتر',en:'Two LANs and a router',goalAr:'أوصل PC1 إلى PC3 عبر الراوتر، ثم اختبر مسار الرد.',goalEn:'Reach PC3 from PC1 through the router and verify the return path.'},
  {id:'lan',ar:'شبكة محلية',en:'Local network',goalAr:'تحقق من اتصال PC1 وPC2 في نفس الشبكة دون بوابة.',goalEn:'Verify PC1 to PC2 connectivity on the same subnet without a gateway.'},
- {id:'vlan',ar:'عزل VLAN والتوجيه',en:'VLAN isolation and routing',goalAr:'PC2 في VLAN 20؛ اضبط عنوانه 10.0.0.30 وبوابته 10.0.0.1 للوصول إلى PC1.',goalEn:'PC2 is on VLAN 20; set its IP to 10.0.0.30 and gateway to 10.0.0.1 to reach PC1.'},
+ {id:'vlan',ar:'عزل VLAN والتوجيه',en:'VLAN isolation and routing',goalAr:'PC1 في VLAN 1 وPC2 وPC3 في VLAN 20؛ اختبر الاتصال بين الشبكتين عبر واجهتي الراوتر.',goalEn:'PC1 is in VLAN 1 and PC2/PC3 are in VLAN 20; test inter-VLAN routing through the router interfaces.'},
  {id:'gateway',ar:'عطل البوابة',en:'Gateway fault',goalAr:'شخّص فشل PC1 إلى PC3، ثم صحح بوابة PC1.',goalEn:'Diagnose PC1 to PC3 failure, then correct PC1’s gateway.'},
  {id:'duplicate',ar:'تعارض العناوين',en:'IP conflict',goalAr:'اكتشف العنوان المكرر وخصص عنواناً فريداً لـPC2.',goalEn:'Find the duplicate IP and give PC2 a unique address.'},
  {id:'cable',ar:'كابل متوقف',en:'Link outage',goalAr:'افحص الوصلات وأعد تشغيل كابل PC1 إلى SW1.',goalEn:'Inspect links and enable the PC1 to SW1 cable.'},
@@ -89,14 +89,21 @@ export function createTopology(template = 'routed'): {devs:Device[];links:Cable[
  {id:'d4',kind:'router',name:'R1',x:440,y:170,ip:'192.168.1.1',mask:'255.255.255.0',gw:'',ip2:'10.0.0.1',mask2:'255.255.255.0',vlan:1,vlan2:2,enabled:true},
  {id:'d5',kind:'pc',name:'PC3',x:600,y:170,ip:'10.0.0.20',mask:'255.255.255.0',gw:'10.0.0.1',vlan:2,enabled:true},
  ];
- const links:Cable[] = [{a:'d1',b:'d3',enabled:true},{a:'d2',b:'d3',enabled:true},{a:'d3',b:'d4',enabled:true},{a:'d4',b:'d5',enabled:true}];
+ let links:Cable[] = [{a:'d1',b:'d3',enabled:true},{a:'d2',b:'d3',enabled:true},{a:'d3',b:'d4',enabled:true},{a:'d4',b:'d5',enabled:true}];
  const pc1=devs[0],pc2=devs[1],r=devs[3],pc3=devs[4];
  if (!pc1 || !pc2 || !r || !pc3) throw new Error('Missing topology devices');
  if(template==='gateway') pc1.gw='192.168.2.1';
  if(template==='duplicate') pc2.ip=pc1.ip;
  if(template==='cable' && links[0]) links[0].enabled=false;
  if(template==='mask') pc3.mask='255.255.255.240';
- if(template==='vlan') {pc2.vlan=20;r.vlan2=20;pc3.vlan=20;}
+ if(template==='vlan') {
+  pc2.vlan=20; pc2.ip='10.0.0.30'; pc2.gw='10.0.0.1';
+  r.vlan2=20; pc3.vlan=20;
+  const sw2:Device={id:'d6',kind:'switch',name:'SW2',x:260,y:300,ip:'',mask:'',gw:'',vlan:20,enabled:true};
+  devs.push(sw2);
+  links=links.filter(l=>!(l.a==='d2'&&l.b==='d3') && !(l.a==='d4'&&l.b==='d5'));
+  links.push({a:'d2',b:'d6',enabled:true},{a:'d6',b:'d4',enabled:true},{a:'d6',b:'d5',enabled:true});
+}
  if(template==='lan') return {devs:devs.slice(0,3).map(d=>({...d,gw:''})),links:links.slice(0,2),target:'192.168.1.11'};
  return {devs,links,target:'10.0.0.20'};
 }
