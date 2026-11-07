@@ -17,6 +17,11 @@ export const Route = createFileRoute("/learn/")({
   component: Learn,
 });
 
+const examVersions = [
+  { id: "v1.1", ar: "CCNA 200-301 v1.1", en: "CCNA 200-301 v1.1", noteAr: "متاح للاختبار حتى 2 فبراير 2027", noteEn: "Available for exams through February 2, 2027" },
+  { id: "v2.0", ar: "CCNA 200-301 v2.0", en: "CCNA 200-301 v2.0", noteAr: "يبدأ الاختبار بهذا الإصدار في 3 فبراير 2027", noteEn: "This exam version starts February 3, 2027" },
+] as const;
+
 function Learn() {
   const { t } = useLang();
   const { done } = useProgress();
@@ -29,8 +34,8 @@ function Learn() {
       <h1 className="font-display text-3xl font-bold">{t("أكاديمية الشبكات وCCNA", "Networking Academy & CCNA")}</h1>
       <p className="mt-3 max-w-3xl leading-7 text-muted-foreground">
         {t(
-          "مسار منظم يغطي مجالات اختبار Cisco CCNA 200-301 v1.1 الستة، مع دروس عربية وإنجليزية واختبارات قصيرة وأمثلة أوامر Cisco IOS.",
-          "A structured path across all six Cisco CCNA 200-301 v1.1 exam domains, with bilingual lessons, quizzes and Cisco IOS examples."
+          "منهج ثنائي اللغة يغطي أهداف CCNA 200-301 v1.1، ويضيف مسار v2.0 القادم حتى تستعد للإصدار المناسب لموعد اختبارك.",
+          "A bilingual curriculum covering CCNA 200-301 v1.1, with a separate v2.0 track so you can prepare for the version matching your exam date."
         )}
       </p>
 
@@ -46,12 +51,19 @@ function Learn() {
           <div className="h-full rounded-full bg-primary transition-all" style={{ width: `${(completed / Math.max(ccnaLessons.length, 1)) * 100}%` }} />
         </div>
         <p className="mt-3 text-xs leading-6 text-muted-foreground">
-          {t("تنبيه للمتقدمين للاختبار: منهج v1.1 هو المعتمد حتى 2 فبراير 2027، ويبدأ إصدار v2.0 في 3 فبراير 2027. سنحدّث المسار عند الانتقال.", "Exam note: v1.1 remains the active blueprint through February 2, 2027; v2.0 begins February 3, 2027. The curriculum will be updated for that transition.")}
+          {t("اختر الإصدار وفق تاريخ اختبارك: v1.1 حتى 2 فبراير 2027، وv2.0 ابتداءً من 3 فبراير 2027.", "Choose the version that matches your exam date: v1.1 through February 2, 2027, and v2.0 from February 3, 2027.")}
         </p>
       </section>
 
-      <div className="mt-8 space-y-5">
-        {ccnaDomains.map((domain, index) => {
+      <div className="mt-8 space-y-10">
+        {examVersions.map((version) => (
+          <section key={version.id}>
+            <div className="mb-4">
+              <h2 className="font-display text-2xl font-bold">{t(version.ar, version.en)}</h2>
+              <p className="mt-1 text-sm text-muted-foreground">{t(version.noteAr, version.noteEn)}</p>
+            </div>
+            <div className="space-y-5">
+              {ccnaDomains.filter((domain) => domain.version === version.id).map((domain, index) => {
           const domainLessons = lessons.filter((lesson) => lesson.domain === domain.id);
           const domainDone = domainLessons.filter((lesson) => done.includes(lesson.id)).length;
           return (
@@ -86,7 +98,10 @@ function Learn() {
               </div>
             </section>
           );
-        })}
+              })}
+            </div>
+          </section>
+        ))}
       </div>
 
       <section className="mt-10">
