@@ -28,3 +28,5 @@ use the editor.
   own key and store it in Secrets.
 - **Secrets.** Lovable manages them. Do not put secret values in the repo.
 <!-- LOVABLE:END -->
+
+- Emit product analytics directly in existing interaction handlers through the optional injected Lovable tracker; use only cataloged, non-personal properties so tracking remains safe without the SDK.

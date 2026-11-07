@@ -50,6 +50,7 @@ function Lab() {
     const prefix = kind === "pc" ? "PC" : kind === "switch" ? "SW" : "R";
     setDevs([...devs, { id, kind, name: prefix + n, x: 120 + Math.random() * 400, y: 60 + Math.random() * 260, ip: "", mask: "255.255.255.0", gw: "" }]);
     setSel(id);
+    window.__lovableEvents?.track?.("project.lab_used", { action: "add_device", device_kind: kind });
   };
 
   const pt = (e: React.PointerEvent) => {
@@ -59,7 +60,10 @@ function Lab() {
 
   const clickDev = (id: string) => {
     if (linking && linking !== id) {
-      if (!links.some((l) => (l.a === linking && l.b === id) || (l.b === linking && l.a === id))) setLinks([...links, { a: linking, b: id }]);
+      if (!links.some((l) => (l.a === linking && l.b === id) || (l.b === linking && l.a === id))) {
+        setLinks([...links, { a: linking, b: id }]);
+        window.__lovableEvents?.track?.("project.lab_used", { action: "connect_cable" });
+      }
       setLinking(null);
     } else setSel(id);
   };
@@ -82,6 +86,7 @@ function Lab() {
   const ifaces = (d: Dev) => [d.ip, d.ip2].filter((x): x is string => !!x && ipToInt(x) !== null);
 
   const ping = () => {
+    window.__lovableEvents?.track?.("project.lab_used", { action: "ping" });
     const src = selected;
     const out: string[] = [`> ping ${target} (${src?.name})`];
     if (!src || src.kind !== "pc") { setLog([...out, t("اختر جهاز PC كمصدر", "Select a PC as source")]); return; }
@@ -147,7 +152,10 @@ function Lab() {
               if (!a || !b) return null;
               return (
                 <line key={i} x1={a.x} y1={a.y} x2={b.x} y2={b.y} className="stroke-primary" strokeWidth={2.5}
-                  onDoubleClick={() => setLinks(links.filter((_, j) => j !== i))} />
+                  onDoubleClick={() => {
+                    setLinks(links.filter((_, j) => j !== i));
+                    window.__lovableEvents?.track?.("project.lab_used", { action: "delete_cable" });
+                  }} />
               );
             })}
             {devs.map((d) => {
@@ -169,7 +177,7 @@ function Lab() {
             <div className="rounded-xl border border-border bg-card p-4">
               <div className="flex items-center justify-between">
                 <input value={selected.name} onChange={(e) => update({ name: e.target.value })} className="w-32 rounded bg-transparent font-display font-semibold" />
-                <button onClick={() => { setDevs(devs.filter((d) => d.id !== sel)); setLinks(links.filter((l) => l.a !== sel && l.b !== sel)); setSel(null); }} className="text-destructive"><Trash2 className="h-4 w-4" /></button>
+                <button onClick={() => { setDevs(devs.filter((d) => d.id !== sel)); setLinks(links.filter((l) => l.a !== sel && l.b !== sel)); setSel(null); window.__lovableEvents?.track?.("project.lab_used", { action: "delete_device", device_kind: selected.kind }); }} className="text-destructive"><Trash2 className="h-4 w-4" /></button>
               </div>
               {selected.kind === "switch" ? (
                 <p className="mt-2 text-sm text-muted-foreground">{t("السويتش لا يحتاج عنوان IP؛ يمرر الإطارات داخل الشبكة.", "Switches need no IP; they forward frames within the LAN.")}</p>
@@ -178,7 +186,11 @@ function Lab() {
                   {([["ip", selected.kind === "router" ? "IP (Gi0/0)" : "IP"], ...(selected.kind === "router" ? [["ip2", "IP (Gi0/1)"]] : []), ["mask", "Mask"], ...(selected.kind === "pc" ? [["gw", "Gateway"]] : [])] as [keyof Dev, string][]).map(([k, label]) => (
                     <label key={k} className="block">
                       <span className="text-muted-foreground">{label}</span>
-                      <input value={(selected[k] as string) ?? ""} onChange={(e) => update({ [k]: e.target.value })} className="mt-1 w-full rounded-md border border-input bg-background px-2 py-1.5 font-mono" />
+                      <input value={(selected[k] as string) ?? ""} onChange={(e) => update({ [k]: e.target.value })} onBlur={(e) => {
+                        if (e.target.value !== e.target.defaultValue) {
+                          window.__lovableEvents?.track?.("project.lab_used", { action: "configure_device", device_kind: selected.kind });
+                        }
+                      }} className="mt-1 w-full rounded-md border border-input bg-background px-2 py-1.5 font-mono" />
                     </label>
                   ))}
                 </div>

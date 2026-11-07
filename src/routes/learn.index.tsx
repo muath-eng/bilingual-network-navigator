@@ -36,6 +36,7 @@ function Learn() {
                 key={l.id}
                 to="/learn/$id"
                 params={{ id: l.id }}
+                onClick={() => window.__lovableEvents?.track?.("project.lesson_started", { lesson_id: l.id })}
                 className="flex items-center gap-4 rounded-xl border border-border bg-card p-5 hover:border-primary"
               >
                 <span className="font-mono text-muted-foreground">0{i + 1}</span>

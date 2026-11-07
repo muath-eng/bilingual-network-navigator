@@ -23,7 +23,7 @@ export const Route = createFileRoute("/learn/$id")({
 function LessonPage() {
   const { lesson } = Route.useLoaderData();
   const { t, lang } = useLang();
-  const { mark } = useProgress();
+  const { done, mark } = useProgress();
   const [answers, setAnswers] = useState<Record<number, number>>({});
   const [checked, setChecked] = useState(false);
   const score = lesson.quiz.filter((q, i) => answers[i] === q.answer).length;
@@ -60,7 +60,19 @@ function LessonPage() {
           {!checked ? (
             <button
               disabled={Object.keys(answers).length < lesson.quiz.length}
-              onClick={() => { setChecked(true); if (score === lesson.quiz.length) mark(lesson.id); }}
+              onClick={() => {
+                setChecked(true);
+                window.__lovableEvents?.track?.("project.quiz_submitted", {
+                  lesson_id: lesson.id, score, question_count: lesson.quiz.length,
+                  passed: score === lesson.quiz.length,
+                });
+                if (score === lesson.quiz.length) {
+                  mark(lesson.id);
+                  if (!done.includes(lesson.id)) {
+                    window.__lovableEvents?.track?.("project.lesson_completed", { lesson_id: lesson.id });
+                  }
+                }
+              }}
               className="rounded-lg bg-primary px-5 py-2 font-semibold text-primary-foreground disabled:opacity-40"
             >
               {t("تحقق", "Check")}
@@ -78,7 +90,7 @@ function LessonPage() {
         </div>
       </section>
       {next && (
-        <Link to="/learn/$id" params={{ id: next.id }} className="mt-6 inline-block text-primary hover:underline">
+        <Link to="/learn/$id" params={{ id: next.id }} onClick={() => window.__lovableEvents?.track?.("project.lesson_started", { lesson_id: next.id })} className="mt-6 inline-block text-primary hover:underline">
           {t("الدرس التالي:", "Next:")} {t(next.titleAr, next.titleEn)} →
         </Link>
       )}
