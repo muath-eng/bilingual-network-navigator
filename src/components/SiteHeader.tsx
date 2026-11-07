@@ -9,6 +9,9 @@ export function SiteHeader() {
     { to: "/lab", ar: "المختبر", en: "Lab" },
     { to: "/troubleshoot", ar: "الأعطال", en: "Troubleshoot" },
     { to: "/subnet", ar: "حاسبة الشبكات", en: "Subnet calc" },
+    { to: "/mikrotik", ar: "MikroTik", en: "MikroTik" },
+    { to: "/practice", ar: "تدريب الأوامر", en: "CLI practice" },
+    { to: "/exam", ar: "الاختبارات", en: "Exams" },
   ] as const;
   return (
     <header className="sticky top-0 z-20 border-b border-border bg-background/85 backdrop-blur">
