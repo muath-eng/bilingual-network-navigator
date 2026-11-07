@@ -14,6 +14,8 @@ export const Route = createFileRoute("/learn/$id")({
       { title: loaderData ? `${loaderData.lesson.titleAr} — Network Master` : "Network Master" },
       { name: "description", content: loaderData?.lesson.bodyAr[0] ?? "" },
       { property: "og:title", content: loaderData?.lesson.titleEn ?? "Lesson" },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
       { property: "og:description", content: loaderData?.lesson.bodyEn[0] ?? "" },
     ],
   }),

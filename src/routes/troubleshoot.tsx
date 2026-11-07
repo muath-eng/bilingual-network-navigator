@@ -9,6 +9,8 @@ export const Route = createFileRoute("/troubleshoot")({
       { title: "إصلاح الأعطال — Network Master" },
       { name: "description", content: "سيناريوهات واقعية لتشخيص أعطال الشبكات وحلها." },
       { property: "og:title", content: "Troubleshooting — Network Master" },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
       { property: "og:description", content: "Real-world network fault scenarios to diagnose and fix." },
     ],
   }),

@@ -10,6 +10,8 @@ export const Route = createFileRoute("/lab")({
       { title: "مختبر المحاكاة — Network Master" },
       { name: "description", content: "ابنِ شبكتك بالأجهزة والكابلات واضبط العناوين واختبر الاتصال بـ ping." },
       { property: "og:title", content: "Network Lab — Network Master" },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
       { property: "og:description", content: "Build a network, configure IPs and test connectivity with ping." },
     ],
   }),
@@ -186,8 +188,9 @@ function Lab() {
                   {([["ip", selected.kind === "router" ? "IP (Gi0/0)" : "IP"], ...(selected.kind === "router" ? [["ip2", "IP (Gi0/1)"]] : []), ["mask", "Mask"], ...(selected.kind === "pc" ? [["gw", "Gateway"]] : [])] as [keyof Dev, string][]).map(([k, label]) => (
                     <label key={k} className="block">
                       <span className="text-muted-foreground">{label}</span>
-                      <input value={(selected[k] as string) ?? ""} onChange={(e) => update({ [k]: e.target.value })} onBlur={(e) => {
-                        if (e.target.value !== e.target.defaultValue) {
+                      <input value={(selected[k] as string) ?? ""} onChange={(e) => {
+                        update({ [k]: e.target.value });
+                        if (e.target.value !== selected[k]) {
                           window.__lovableEvents?.track?.("project.lab_used", { action: "configure_device", device_kind: selected.kind });
                         }
                       }} className="mt-1 w-full rounded-md border border-input bg-background px-2 py-1.5 font-mono" />

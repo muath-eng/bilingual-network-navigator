@@ -1,6 +1,26 @@
 {
   "schema_version": 1,
   "events": {
+    "project.lesson_completed": {
+      "event_schema_version": 1,
+      "description": "A lesson quiz is passed with all answers correct and the lesson was not already marked complete in this browser.",
+      "privacy": {
+        "contains_pii": false,
+        "purpose": "product_analytics"
+      },
+      "properties_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "lesson_id"
+        ],
+        "properties": {
+          "lesson_id": {
+            "type": "string"
+          }
+        }
+      }
+    },
     "project.lesson_started": {
       "event_schema_version": 1,
       "description": "A learner opens a lesson using a lesson link in the learning path or next-lesson navigation; direct page visits are measured by built-in page views.",
