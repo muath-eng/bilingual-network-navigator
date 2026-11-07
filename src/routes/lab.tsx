@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useRef, useState } from "react";
 import { Monitor, Router as RouterIcon, Server, Trash2, Link2 } from "lucide-react";
 import { useLang } from "@/lib/i18n";
-import { ipToInt, sameSubnet } from "@/lib/network";
+import { createTopology, diagnose, simulatePing, type Cable, type Device } from "@/lib/lab-engine";
 
 export const Route = createFileRoute("/lab")({
   head: () => ({
@@ -39,7 +39,7 @@ function Lab() {
   const [sel, setSel] = useState<string | null>("d1");
   const [linking, setLinking] = useState<string | null>(null);
   const [log, setLog] = useState<string[]>([]);
-  const [target, setTarget] = useState("10.0.0.20");
+  const [target, setTarget] = useState(initialTopology.target);
   const drag = useRef<{ id: string; dx: number; dy: number } | null>(null);
   const svgRef = useRef<SVGSVGElement>(null);
 
@@ -50,7 +50,7 @@ function Lab() {
     const n = devs.filter((d) => d.kind === kind).length + 1;
     const id = "d" + Date.now();
     const prefix = kind === "pc" ? "PC" : kind === "switch" ? "SW" : "R";
-    setDevs([...devs, { id, kind, name: prefix + n, x: 120 + Math.random() * 400, y: 60 + Math.random() * 260, ip: "", mask: "255.255.255.0", gw: "" }]);
+    setDevs([...devs, { id, kind, name: prefix + n, x: 120 + Math.random() * 400, y: 60 + Math.random() * 260, ip: "", mask: "255.255.255.0", gw: "", vlan: 1, enabled: true }]);
     setSel(id);
     window.__lovableEvents?.track?.("project.lab_used", { action: "add_device", device_kind: kind });
   };
@@ -63,57 +63,30 @@ function Lab() {
   const clickDev = (id: string) => {
     if (linking && linking !== id) {
       if (!links.some((l) => (l.a === linking && l.b === id) || (l.b === linking && l.a === id))) {
-        setLinks([...links, { a: linking, b: id }]);
+        setLinks([...links, { a: linking, b: id, enabled: true }]);
         window.__lovableEvents?.track?.("project.lab_used", { action: "connect_cable" });
       }
       setLinking(null);
     } else setSel(id);
   };
 
-  // Simulation: BFS over L2 (stop at routers), then route through router interfaces
-  const neighbors = (id: string) => links.flatMap((l) => (l.a === id ? [l.b] : l.b === id ? [l.a] : []));
-  const l2Domain = (start: string) => {
-    const seen = new Set([start]);
-    const q = [start];
-    while (q.length) {
-      const c = q.shift()!;
-      for (const n of neighbors(c)) {
-        if (seen.has(n)) continue;
-        seen.add(n);
-        if (devs.find((d) => d.id === n)?.kind === "switch") q.push(n);
-      }
-    }
-    return [...seen].map((i) => devs.find((d) => d.id === i)!).filter(Boolean);
-  };
-  const ifaces = (d: Dev) => [d.ip, d.ip2].filter((x): x is string => !!x && ipToInt(x) !== null);
-
   const ping = () => {
     window.__lovableEvents?.track?.("project.lab_used", { action: "ping" });
-    const src = selected;
-    const out: string[] = [`> ping ${target} (${src?.name})`];
-    if (!src || src.kind !== "pc") { setLog([...out, t("اختر جهاز PC كمصدر", "Select a PC as source")]); return; }
-    if (ipToInt(src.ip) === null) { setLog([...out, t("عنوان IP المصدر غير صالح", "Source IP is invalid")]); return; }
-    const domain = l2Domain(src.id);
-    const direct = domain.find((d) => d.id !== src.id && ifaces(d).includes(target));
-    if (direct && sameSubnet(src.ip, target, src.mask)) {
-      setLog([...out, `Reply from ${target}: bytes=32 time<1ms TTL=128`, t("✓ نجح (نفس الشبكة)", "✓ Success (same subnet)")]);
-      return;
+    const result = simulatePing(devs, links, sel, target);
+    const out = [`> ping ${target} (${selected?.name ?? "—"})`];
+    if (result.ok) {
+      out.push(`Reply from ${target}: bytes=32 time<1ms`, `✓ ${t(result.ar, result.en)}`, `Path: ${result.path.join(" → ")}`);
+    } else {
+      out.push("Request timed out.", `✗ ${t(result.ar, result.en)} [${result.code}]`);
     }
-    if (sameSubnet(src.ip, target, src.mask)) { setLog([...out, "Request timed out.", t("✗ الجهاز غير موجود أو غير متصل بنفس السويتش", "✗ Host not found on this segment")]); return; }
-    const gw = domain.find((d) => d.kind === "router" && ifaces(d).includes(src.gw));
-    if (!gw) { setLog([...out, "Destination host unreachable.", t("✗ البوابة الافتراضية غير صحيحة أو غير متصلة", "✗ Default gateway wrong or not reachable")]); return; }
-    // search other router-connected segments
-    for (const n of neighbors(gw.id)) {
-      const seg = l2Domain(n).concat(devs.find((d) => d.id === n)!);
-      const host = seg.find((d) => d.kind === "pc" && d.ip === target);
-      if (host) {
-        const back = ifaces(gw).includes(host.gw);
-        if (!back) { setLog([...out, "Request timed out.", t(`✗ ${host.name} لا يملك بوابة صحيحة للرد`, `✗ ${host.name} has no valid gateway to reply`)]); return; }
-        setLog([...out, `Reply from ${target}: bytes=32 time=2ms TTL=127`, t(`✓ نجح عبر ${gw.name}`, `✓ Success via ${gw.name}`)]);
-        return;
-      }
-    }
-    setLog([...out, "Request timed out.", t("✗ لا يوجد مسار إلى الوجهة", "✗ No route to destination")]);
+    setLog(out);
+  };
+
+  const runDiagnostics = () => {
+    const findings = diagnose(devs, links);
+    setLog(findings.length
+      ? findings.map((f) => `[${f.code}] ${f.device}: ${t(f.ar, f.en)}`)
+      : [t("لم يتم العثور على أعطال واضحة في الشبكة.", "No obvious network issues found.")]);
   };
 
   const byId = (id: string) => devs.find((d) => d.id === id)!;
