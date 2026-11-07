@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useRef, useState } from "react";
+import { Download, Upload } from "lucide-react";
 import { Monitor, Router as RouterIcon, Server, Trash2, Link2 } from "lucide-react";
 import { useLang } from "@/lib/i18n";
 import {
@@ -54,6 +55,8 @@ function Lab() {
   const [template, setTemplate] = useState("routed");
   const drag = useRef<{ id: string; dx: number; dy: number } | null>(null);
   const svgRef = useRef<SVGSVGElement>(null);
+  const importRef = useRef<HTMLInputElement>(null);
+  const [fileMessage, setFileMessage] = useState("");
 
   const selected = devs.find((d) => d.id === sel);
   const activeTemplate = labTemplates.find((item) => item.id === template);
@@ -70,6 +73,81 @@ function Lab() {
   };
   const update = (patch: Partial<Dev>) =>
     setDevs(devs.map((d) => (d.id === sel ? { ...d, ...patch } : d)));
+  const exportTopology = () => {
+    const payload = {
+      app: "Network Master Lab",
+      version: 1,
+      exportedAt: new Date().toISOString(),
+      target,
+      devices: devs,
+      cables: links,
+    };
+    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const anchor = document.createElement("a");
+    anchor.href = url;
+    anchor.download = "network-master-topology.json";
+    anchor.click();
+    URL.revokeObjectURL(url);
+    setFileMessage(t("تم تصدير تصميم الشبكة.", "Network topology exported."));
+  };
+
+  const importTopology = async (file?: File) => {
+    if (!file) return;
+    try {
+      const payload = JSON.parse(await file.text()) as {
+        app?: string; version?: number; target?: string;
+        devices?: unknown; cables?: unknown;
+      };
+      if (payload.app !== "Network Master Lab" || payload.version !== 1 ||
+          !Array.isArray(payload.devices) || !Array.isArray(payload.cables) ||
+          payload.devices.length < 1 || payload.devices.length > 100 ||
+          payload.cables.length > 300) throw new Error("Invalid topology");
+      const kinds = new Set(["pc", "switch", "router", "server"]);
+      const imported = payload.devices.map((raw) => {
+        if (!raw || typeof raw !== "object") throw new Error("Invalid device");
+        const d = raw as Record<string, unknown>;
+        if (typeof d.id !== "string" || typeof d.name !== "string" ||
+            typeof d.kind !== "string" || !kinds.has(d.kind) ||
+            typeof d.x !== "number" || typeof d.y !== "number") throw new Error("Invalid device");
+        return {
+          id: d.id.slice(0, 80), name: d.name.slice(0, 40), kind: d.kind as Kind,
+          x: Math.max(30, Math.min(670, d.x)), y: Math.max(30, Math.min(330, d.y)),
+          ip: typeof d.ip === "string" ? d.ip.slice(0, 40) : "",
+          mask: typeof d.mask === "string" ? d.mask.slice(0, 40) : "255.255.255.0",
+          gw: typeof d.gw === "string" ? d.gw.slice(0, 40) : "",
+          ip2: typeof d.ip2 === "string" ? d.ip2.slice(0, 40) : undefined,
+          mask2: typeof d.mask2 === "string" ? d.mask2.slice(0, 40) : undefined,
+          vlan: typeof d.vlan === "number" ? Math.max(1, Math.min(4094, Math.floor(d.vlan))) : 1,
+          vlan2: typeof d.vlan2 === "number" ? Math.max(1, Math.min(4094, Math.floor(d.vlan2))) : undefined,
+          enabled: d.enabled !== false,
+        } satisfies Dev;
+      });
+      const ids = new Set(imported.map((d) => d.id));
+      if (ids.size !== imported.length) throw new Error("Duplicate device IDs");
+      const importedLinks = payload.cables.map((raw) => {
+        if (!raw || typeof raw !== "object") throw new Error("Invalid cable");
+        const link = raw as Record<string, unknown>;
+        if (typeof link.a !== "string" || typeof link.b !== "string" ||
+            !ids.has(link.a) || !ids.has(link.b) || link.a === link.b) throw new Error("Invalid cable endpoints");
+        return { a: link.a, b: link.b, enabled: link.enabled !== false };
+      });
+      setDevs(imported);
+      setLinks(importedLinks);
+      setTarget(typeof payload.target === "string" ? payload.target.slice(0, 40) : "");
+      setTemplate("custom");
+      setSel(imported[0].id);
+      setSelectedLink(null);
+      setLinking(null);
+      setLog([]);
+      setFileMessage(t("تم استيراد الشبكة بنجاح.", "Network topology imported successfully."));
+    } catch {
+      setFileMessage(t("تعذر قراءة الملف. اختر نسخة تصدير صحيحة من مختبر Network Master.","Could not read this file. Choose a valid Network Master Lab export."));
+    } finally {
+      if (importRef.current) importRef.current.value = "";
+    }
+  };
+
 
   const add = (kind: Kind) => {
     const n = devs.filter((d) => d.kind === kind).length + 1;
@@ -172,6 +250,12 @@ function Lab() {
             {t(activeTemplate.goalAr, activeTemplate.goalEn)}
           </p>
         )}
+      </section>
+      <section className="mt-3 flex flex-wrap items-center gap-2 rounded-xl border border-border bg-card p-3">
+        <button onClick={exportTopology} className="inline-flex items-center gap-2 rounded-lg border border-border px-3 py-2 text-sm font-medium hover:bg-secondary"><Download className="h-4 w-4"/>{t("تصدير الشبكة","Export topology")}</button>
+        <button onClick={() => importRef.current?.click()} className="inline-flex items-center gap-2 rounded-lg border border-border px-3 py-2 text-sm font-medium hover:bg-secondary"><Upload className="h-4 w-4"/>{t("استيراد شبكة","Import topology")}</button>
+        <input ref={importRef} type="file" accept="application/json,.json" className="hidden" onChange={(e) => void importTopology(e.target.files?.[0])}/>
+        {fileMessage && <p role="status" className="w-full text-xs text-muted-foreground">{fileMessage}</p>}
       </section>
       <div className="mt-4 flex flex-wrap gap-2">
         <button
