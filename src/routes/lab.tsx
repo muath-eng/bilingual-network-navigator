@@ -19,23 +19,15 @@ export const Route = createFileRoute("/lab")({
 });
 
 type Kind = "pc" | "switch" | "router";
-type Dev = { id: string; kind: Kind; name: string; x: number; y: number; ip: string; mask: string; gw: string; ip2?: string };
-type LinkT = { a: string; b: string };
-
-const initial: Dev[] = [
-  { id: "d1", kind: "pc", name: "PC1", x: 80, y: 80, ip: "192.168.1.10", mask: "255.255.255.0", gw: "192.168.1.1" },
-  { id: "d2", kind: "pc", name: "PC2", x: 80, y: 260, ip: "192.168.1.11", mask: "255.255.255.0", gw: "192.168.1.1" },
-  { id: "d3", kind: "switch", name: "SW1", x: 260, y: 170, ip: "", mask: "", gw: "" },
-  { id: "d4", kind: "router", name: "R1", x: 440, y: 170, ip: "192.168.1.1", mask: "255.255.255.0", gw: "", ip2: "10.0.0.1" },
-  { id: "d5", kind: "pc", name: "PC3", x: 600, y: 170, ip: "10.0.0.20", mask: "255.255.255.0", gw: "10.0.0.1" },
-];
-const initialLinks: LinkT[] = [{ a: "d1", b: "d3" }, { a: "d2", b: "d3" }, { a: "d3", b: "d4" }, { a: "d4", b: "d5" }];
-const icons = { pc: Monitor, switch: Server, router: RouterIcon };
+type Dev = Device;
+type LinkT = Cable;
+const initialTopology = createTopology();
+const icons: Record<Device["kind"], typeof Monitor> = { pc: Monitor, switch: Server, router: RouterIcon, server: Server };
 
 function Lab() {
   const { t } = useLang();
-  const [devs, setDevs] = useState(initial);
-  const [links, setLinks] = useState(initialLinks);
+  const [devs, setDevs] = useState<Dev[]>(initialTopology.devs);
+  const [links, setLinks] = useState<LinkT[]>(initialTopology.links);
   const [sel, setSel] = useState<string | null>("d1");
   const [linking, setLinking] = useState<string | null>(null);
   const [log, setLog] = useState<string[]>([]);
@@ -180,6 +172,7 @@ function Lab() {
               <input value={target} onChange={(e) => setTarget(e.target.value)} className="flex-1 rounded-md border border-input bg-background px-2 py-1.5 font-mono text-sm" />
               <button onClick={ping} className="rounded-md bg-primary px-4 text-sm font-semibold text-primary-foreground">ping</button>
             </div>
+            <button onClick={runDiagnostics} className="mt-2 w-full rounded-md border border-border px-3 py-2 text-sm hover:bg-secondary">{t("تشخيص الشبكة", "Diagnose network")}</button>
             <pre dir="ltr" className="mt-3 min-h-24 whitespace-pre-wrap rounded-md bg-background p-3 font-mono text-xs text-primary">{log.join("\n") || "_"}</pre>
           </div>
           <p className="text-xs text-muted-foreground">{t("نقر مزدوج على الكابل لحذفه.", "Double-click a cable to delete it.")}</p>
