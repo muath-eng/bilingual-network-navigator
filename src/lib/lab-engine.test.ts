@@ -33,6 +33,19 @@ describe("network lab simulator", () => {
     expect(segment(devs, links, "d4", 1)).not.toContain("d5");
   });
 
+  it("blocks hosts assigned to a different VLAN on an access switch", () => {
+    const { devs, links } = createTopology("lan");
+    devs.find((d) => d.id === "d2")!.vlan = 20;
+    expect(segment(devs, links, "d1", 1)).not.toContain("d2");
+    expect(simulatePing(devs, links, "d1", "192.168.1.11").ok).toBe(false);
+  });
+
+  it("does not forward a VLAN through a switch assigned to another VLAN", () => {
+    const { devs, links } = createTopology("lan");
+    devs.find((d) => d.id === "d3")!.vlan = 20;
+    expect(segment(devs, links, "d1", 1)).not.toContain("d3");
+  });
+
   it("does not traverse a disabled cable", () => {
     const { devs, links } = createTopology("cable");
     const result = simulatePing(devs, links, "d1", "10.0.0.20");
