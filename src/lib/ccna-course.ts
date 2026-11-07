@@ -1,12 +1,17 @@
 import type { Lesson } from "./lesson-types";
 
 export const ccnaDomains = [
-  { id: "fundamentals", ar: "أساسيات الشبكات", en: "Network Fundamentals", weight: 20, objectives: "1.1–1.13" },
-  { id: "access", ar: "الوصول إلى الشبكة", en: "Network Access", weight: 20, objectives: "2.1–2.9" },
-  { id: "connectivity", ar: "اتصال IP والتوجيه", en: "IP Connectivity", weight: 25, objectives: "3.1–3.5" },
-  { id: "services", ar: "خدمات IP", en: "IP Services", weight: 10, objectives: "4.1–4.9" },
-  { id: "security", ar: "أساسيات أمن الشبكات", en: "Security Fundamentals", weight: 15, objectives: "5.1–5.10" },
-  { id: "automation", ar: "الأتمتة والبرمجة", en: "Automation & Programmability", weight: 10, objectives: "6.1–6.7" },
+  { id: "fundamentals", version: "v1.1", ar: "أساسيات الشبكات", en: "Network Fundamentals", weight: 20, objectives: "1.1–1.13" },
+  { id: "access", version: "v1.1", ar: "الوصول إلى الشبكة", en: "Network Access", weight: 20, objectives: "2.1–2.9" },
+  { id: "connectivity", version: "v1.1", ar: "اتصال IP والتوجيه", en: "IP Connectivity", weight: 25, objectives: "3.1–3.5" },
+  { id: "services", version: "v1.1", ar: "خدمات IP", en: "IP Services", weight: 10, objectives: "4.1–4.9" },
+  { id: "security", version: "v1.1", ar: "أساسيات أمن الشبكات", en: "Security Fundamentals", weight: 15, objectives: "5.1–5.10" },
+  { id: "automation", version: "v1.1", ar: "الأتمتة والبرمجة", en: "Automation & Programmability", weight: 10, objectives: "6.1–6.7" },
+  { id: "v2-infrastructure", version: "v2.0", ar: "البنية التحتية والاتصال", en: "Network Infrastructure and Connectivity", weight: 25, objectives: "1.1–1.7" },
+  { id: "v2-switching", version: "v2.0", ar: "التحويل والوصول إلى الشبكة", en: "Switching and Network Access", weight: 25, objectives: "2.1–2.5" },
+  { id: "v2-routing", version: "v2.0", ar: "توجيه IP", en: "IP Routing", weight: 20, objectives: "3.1–3.4" },
+  { id: "v2-services", version: "v2.0", ar: "خدمات الشبكة والأمن", en: "Network Services and Security", weight: 20, objectives: "4.1–4.7" },
+  { id: "v2-operations", version: "v2.0", ar: "الذكاء الاصطناعي وتشغيل الشبكات", en: "AI, Network Operations and Management", weight: 10, objectives: "5.1–5.6" },
 ] as const;
 
 export const ccnaLessons: Lesson[] = [
@@ -558,6 +563,122 @@ export const ccnaLessons: Lesson[] = [
     quiz: [
       { qAr: "أي أداة تستخدم Playbooks بصيغة YAML؟", qEn: "Which tool commonly uses YAML playbooks?", options: ["Ansible", "Terraform only", "Wireshark"], answer: 0 },
       { qAr: "ما مفهوم Infrastructure as Code؟", qEn: "What does Infrastructure as Code mean?", options: ["Describe infrastructure in files", "Configure only by console cable", "Replace IP addressing"], answer: 0 }
+    ]
+  }
+
+,
+  {
+    id: "ccna-v2-infrastructure",
+    level: "intermediate", domain: "v2-infrastructure", objective: "1.1–1.7",
+    titleAr: "منهج v2.0: تشخيص البنية التحتية والاتصال",
+    titleEn: "v2.0: Infrastructure and connectivity troubleshooting",
+    bodyAr: [
+      "يركز إصدار v2.0 على تشخيص الأعطال عملياً: افحص الكابلات النحاسية والضوئية، المسافة ومستوى الإشارة والـpinout، وسرعة الواجهة وDuplex وأخطاء CRC والتصادمات.",
+      "راجع إعداد IPv4 وIPv6 وتخصيص العناوين والـPrefix، ثم اختبر الاتصال من العميل إلى البوابة والوجهة. استخدم أدوات نظام التشغيل لقراءة IP وRoute وDNS، وميّز بين فشل الربط وفشل التوجيه وفشل تحليل الأسماء.",
+      "في Wi-Fi راجع نطاق التردد والقناة وخصائص RF والتداخل وبروتوكول الأمان. افحص إعدادات العميل السلكية واللاسلكية على Windows وmacOS وLinux.",
+      "تعامل مع DHCPv4 من منظور العميل والخادم وRelay على IOS: تحقق من نطاق العناوين، الاستثناءات، Binding، ip helper-address، وإمكانية الوصول إلى الخادم."
+    ],
+    bodyEn: [
+      "v2.0 emphasizes practical troubleshooting: inspect copper and fiber cabling, distance, signal levels and pinout, as well as interface speed, duplex, CRC errors and collisions.",
+      "Verify IPv4 and IPv6 addressing, assignment and prefix sizing. Test from client to gateway and destination. Use OS tools to inspect IP, routes and DNS, distinguishing link, routing and name-resolution failures.",
+      "For Wi-Fi, review band, channel, RF characteristics, interference and security protocol. Inspect wired and wireless client settings on Windows, macOS and Linux.",
+      "Troubleshoot DHCPv4 clients, servers and IOS relay: verify scopes, exclusions, bindings, ip helper-address and reachability to the DHCP server."
+    ],
+    quiz: [
+      { qAr: "أي قيمة تساعد في اكتشاف أخطاء الطبقة الفيزيائية؟", qEn: "Which counter helps identify physical-layer errors?", options: ["CRC", "DNS TTL", "HTTP status"], answer: 0 },
+      { qAr: "ما الأمر الذي يربط DHCP relay بخادم بعيد على IOS؟", qEn: "Which IOS command points a DHCP relay to a remote server?", options: ["ip helper-address", "ip route-cache", "switchport voice vlan"], answer: 0 }
+    ]
+  },
+  {
+    id: "ccna-v2-switching",
+    level: "advanced", domain: "v2-switching", objective: "2.1–2.5",
+    titleAr: "منهج v2.0: إعداد السويتشات والوصول وتشخيص Layer 2",
+    titleEn: "v2.0: Switching, network access and Layer 2 troubleshooting",
+    bodyAr: [
+      "تدرّب على إعداد وصلات Switch-to-Switch وSwitch-to-Router، وواجهات Layer 2/Layer 3، وTrunk 802.1Q، وEtherChannel/LACP، وواجهات SVI لإدارة السويتش أو توجيه VLANs.",
+      "اضبط منافذ الحافة للأجهزة مثل الحواسيب والطابعات وأجهزة IoT وهواتف VoIP ونقاط الوصول والخوادم الافتراضية وأجهزة الشبكة. راجع VLAN وPoE وPort-Channel وLACP.",
+      "استخدم CDP وLLDP لمقارنة التوصيلات الفعلية مع مخطط الشبكة. اقرأ مخرجات show وshow logging، واختبر ping وextended ping وtraceroute، وافهم متى يفيد Packet Capture.",
+      "في Rapid PVST+ حدد Root Bridge وRoot Port وDesignated Port وحالات المنافذ، واضبط PortFast وRoot Guard وLoop Guard وBPDU Guard وفق دور المنفذ."
+    ],
+    bodyEn: [
+      "Configure switch-to-switch and switch-to-router connectivity, Layer 2/Layer 3 interfaces, 802.1Q trunks, EtherChannel/LACP and SVIs for switch management or inter-VLAN routing.",
+      "Configure edge ports for desktops, printers, IoT, VoIP phones, access points, virtualized hosts and network appliances. Review VLAN, PoE, Port-Channel and LACP settings.",
+      "Use CDP and LLDP to validate physical connections against documentation. Interpret show and show logging output, test with ping, extended ping and traceroute, and understand packet-capture output.",
+      "For Rapid PVST+, identify the root bridge, root and designated ports and port states. Apply PortFast, Root Guard, Loop Guard and BPDU Guard according to port role."
+    ],
+    quiz: [
+      { qAr: "ما واجهة Layer 3 الافتراضية على السويتش؟", qEn: "What is a Layer 3 virtual interface on a switch?", options: ["SVI", "Console", "Access Point"], answer: 0 },
+      { qAr: "أي أمر يفيد في قراءة سجل أحداث الجهاز؟", qEn: "Which command displays device log messages?", options: ["show logging", "show vlan brief only", "copy running-config"], answer: 0 }
+    ]
+  },
+  {
+    id: "ccna-v2-routing",
+    level: "advanced", domain: "v2-routing", objective: "3.1–3.4",
+    titleAr: "منهج v2.0: توجيه IPv4 وIPv6 وOSPFv3",
+    titleEn: "v2.0: IPv4/IPv6 routing and OSPFv3",
+    bodyAr: [
+      "اقرأ جدول التوجيه لتحديد البروتوكول والبادئة والقناع وAdministrative Distance وMetric والبوابة الافتراضية، ثم استنتج Next Hop الصحيح للحزمة.",
+      "شخّص المسارات الثابتة لـIPv4 وIPv6: Default Route وNetwork Route وHost Route وFloating Static. افحص صحة الـNext Hop ومسار العودة والواجهة الخارجة.",
+      "إصدار v2.0 يوسع OSPF ليشمل OSPFv2 لـIPv4 وOSPFv3 لـIPv6 ضمن منطقة واحدة. راجع تكوين الجوار، Point-to-point وBroadcast وانتخاب DR/BDR وRouter ID.",
+      "افهم حالة التشغيل لبروتوكولات First Hop Redundancy، خصوصاً HSRP وVRRP، وتحقق من الجهاز Active/Master والبوابة الافتراضية عند فشل رابط."
+    ],
+    bodyEn: [
+      "Read the routing table to identify protocol, prefix/mask, administrative distance, metric and default route, then determine the correct next hop for a packet.",
+      "Troubleshoot IPv4 and IPv6 static routes: default, network, host and floating static routes. Check next-hop validity, return path and outgoing interface.",
+      "v2.0 expands OSPF to include OSPFv2 for IPv4 and OSPFv3 for IPv6 in a single area. Review neighbor adjacencies, point-to-point and broadcast networks, DR/BDR election and Router ID.",
+      "Interpret operational state of first-hop redundancy protocols, especially HSRP and VRRP, and verify the Active/Master device and virtual gateway after a link failure."
+    ],
+    quiz: [
+      { qAr: "أي بروتوكول يضيف دعم توجيه IPv6 في منهج v2.0؟", qEn: "Which OSPF version supports IPv6 in v2.0?", options: ["OSPFv3", "OSPFv2 only", "RIPng only"], answer: 0 },
+      { qAr: "ما الذي يجب التحقق منه في HSRP؟", qEn: "What should you verify in HSRP?", options: ["Active/Standby state", "DNS MX record", "Wi-Fi channel width"], answer: 0 }
+    ]
+  },
+  {
+    id: "ccna-v2-services-security",
+    level: "advanced", domain: "v2-services", objective: "4.1–4.7",
+    titleAr: "منهج v2.0: خدمات الشبكة والأمن",
+    titleEn: "v2.0: Network services and security",
+    bodyAr: [
+      "اضبط حسابات محلية على أجهزة الشبكة واستخدمها مع AAA client للاتصال بخوادم TACACS+ أو RADIUS لإدارة الدخول والصلاحيات والتدقيق.",
+      "تعلم نقل ملفات الإعدادات والبرمجيات بأمان باستخدام SFTP وSCP بدلاً من بروتوكولات نقل غير مشفرة. تحقق من هوية الخادم والصلاحيات ومسار الملف.",
+      "اضبط NAT/PAT على IOS XE، وشخّص سجلات DNS من الأنواع A وAAAA وCNAME وMX وNS وPTR عندما يتعذر الوصول إلى خدمة باسمها.",
+      "راجع VPN باستخدام IPsec للوصول عن بعد أو Site-to-site، وأنواع البروتوكولات وTransport Mode. اضبط IPv4 Standard وExtended ACLs المرقمة والمسماة.",
+      "ميزات Layer 2 Security في v2.0 تشمل DHCP Snooping وDynamic ARP Inspection وStorm Control وRA Guard وPort Security. طبّقها على المنافذ الصحيحة وتحقق من عدم تعطيل الحركة الشرعية."
+    ],
+    bodyEn: [
+      "Configure local usernames on network devices and use them with an AAA client to connect to TACACS+ or RADIUS servers for access, authorization and accounting.",
+      "Securely transfer configuration and software files using SFTP and SCP instead of unencrypted transfer protocols. Verify server identity, permissions and file paths.",
+      "Configure NAT/PAT on IOS XE and troubleshoot DNS record types A, AAAA, CNAME, MX, NS and PTR when services cannot be reached by name.",
+      "Review remote-access and site-to-site IPsec VPNs, protocol choices and transport mode. Configure numbered and named IPv4 standard and extended ACLs.",
+      "v2.0 Layer 2 security includes DHCP Snooping, Dynamic ARP Inspection, Storm Control, RA Guard and Port Security. Apply each feature to the correct ports and verify legitimate traffic remains available."
+    ],
+    quiz: [
+      { qAr: "ما البروتوكولان الآمنان لنقل الملفات في v2.0؟", qEn: "Which secure file-transfer protocols are covered in v2.0?", options: ["SFTP and SCP", "TFTP and Telnet", "HTTP and FTP"], answer: 0 },
+      { qAr: "ما سجل DNS المستخدم لربط اسم بريد بخادم البريد؟", qEn: "Which DNS record maps a mail domain to its mail server?", options: ["MX", "PTR", "AAAA"], answer: 0 }
+    ]
+  },
+  {
+    id: "ccna-v2-ai-operations",
+    level: "intermediate", domain: "v2-operations", objective: "5.1–5.6",
+    titleAr: "منهج v2.0: الذكاء الاصطناعي وتشغيل الشبكات",
+    titleEn: "v2.0: AI and network operations",
+    bodyAr: [
+      "Agentic AI قد يخطط وينفذ سلسلة إجراءات تشغيلية عبر أدوات متصلة، مثل جمع معلومات الأجهزة وتحليلها واقتراح إجراء. يجب تقييد صلاحياته ومراجعة العمليات الحساسة قبل التنفيذ.",
+      "عند اختيار Prompt لنظام توليدي، حدد تصنيف البيانات المسموح مشاركتها، ودور المساعد، والسياق، والتعليمات، وشكل المخرجات المطلوب. لا ترسل كلمات مرور أو أسراراً أو بيانات حساسة.",
+      "أساليب إدارة الشبكة تشمل الإدارة المباشرة لكل جهاز، والإدارة السحابية Cloud-based، والمتحكم Controller-based، والأتمتة Automation-based، وInfrastructure as Code.",
+      "SNMP يجمع معلومات المراقبة، وSyslog يوفر رسائل الأحداث ومستويات الخطورة والـFacility. ويمكن استخدام Ansible لتنفيذ أوامر وإعدادات متكررة على أجهزة متعددة.",
+      "تعامل مع نتائج AI وملفات الإعداد كاقتراحات تحتاج تحققاً: قارن المخرجات بالحالة الفعلية، اختبر في بيئة آمنة، واحتفظ بخطة رجوع."
+    ],
+    bodyEn: [
+      "Agentic AI may plan and execute multi-step operational tasks through connected tools, such as collecting device data, analyzing it and proposing actions. Restrict its permissions and review sensitive operations before execution.",
+      "When selecting a prompt for generative AI, specify allowed data classification, persona, context, instructions and output format. Never send passwords, secrets or sensitive information.",
+      "Network management approaches include device-based, cloud-based, controller-based, automation-based and infrastructure as code.",
+      "SNMP collects monitoring data; Syslog provides event messages, severity and facility. Ansible can execute repeated commands and configurations across multiple devices.",
+      "Treat AI output and configuration files as proposals that require validation: compare results with the real state, test safely and keep a rollback plan."
+    ],
+    quiz: [
+      { qAr: "ما الذي يجب تحديده في Prompt تشغيلي جيد؟", qEn: "What should a good operational prompt specify?", options: ["Data classification and output format", "Passwords and private keys", "Only a device name"], answer: 0 },
+      { qAr: "أي أداة تنفذ أوامر متكررة عبر أجهزة متعددة؟", qEn: "Which tool can execute repeated tasks across many devices?", options: ["Ansible", "DNS", "STP"], answer: 0 }
     ]
   }
 ];
