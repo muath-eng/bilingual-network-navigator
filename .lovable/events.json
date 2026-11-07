@@ -40,6 +40,40 @@
           }
         }
       }
+    },
+    "project.quiz_submitted": {
+      "event_schema_version": 1,
+      "description": "A learner submits all lesson quiz answers for checking, including retries; only aggregate score and pass status are collected.",
+      "privacy": {
+        "contains_pii": false,
+        "purpose": "product_analytics"
+      },
+      "properties_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "lesson_id",
+          "score",
+          "question_count",
+          "passed"
+        ],
+        "properties": {
+          "lesson_id": {
+            "type": "string"
+          },
+          "score": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "question_count": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "passed": {
+            "type": "boolean"
+          }
+        }
+      }
     }
   }
 }
