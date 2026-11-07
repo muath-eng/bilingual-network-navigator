@@ -18,7 +18,7 @@ export const Route = createFileRoute("/lab")({
   component: Lab,
 });
 
-type Kind = "pc" | "switch" | "router";
+type Kind = Device["kind"];
 type Dev = Device;
 type LinkT = Cable;
 const initialTopology = createTopology();
@@ -30,6 +30,7 @@ function Lab() {
   const [links, setLinks] = useState<LinkT[]>(initialTopology.links);
   const [sel, setSel] = useState<string | null>("d1");
   const [linking, setLinking] = useState<string | null>(null);
+  const [selectedLink, setSelectedLink] = useState<number | null>(null);
   const [log, setLog] = useState<string[]>([]);
   const [target, setTarget] = useState(initialTopology.target);
   const drag = useRef<{ id: string; dx: number; dy: number } | null>(null);
@@ -41,7 +42,7 @@ function Lab() {
   const add = (kind: Kind) => {
     const n = devs.filter((d) => d.kind === kind).length + 1;
     const id = "d" + Date.now();
-    const prefix = kind === "pc" ? "PC" : kind === "switch" ? "SW" : "R";
+    const prefix = kind === "pc" ? "PC" : kind === "switch" ? "SW" : kind === "router" ? "R" : "SRV";
     setDevs([...devs, { id, kind, name: prefix + n, x: 120 + Math.random() * 400, y: 60 + Math.random() * 260, ip: "", mask: "255.255.255.0", gw: "", vlan: 1, enabled: true }]);
     setSel(id);
     window.__lovableEvents?.track?.("project.lab_used", { action: "add_device", device_kind: kind });
@@ -93,6 +94,7 @@ function Lab() {
         <button onClick={() => add("pc")} className="flex items-center gap-1 rounded-lg border border-border px-3 py-2 text-sm hover:bg-secondary"><Monitor className="h-4 w-4" /> PC</button>
         <button onClick={() => add("switch")} className="flex items-center gap-1 rounded-lg border border-border px-3 py-2 text-sm hover:bg-secondary"><Server className="h-4 w-4" /> Switch</button>
         <button onClick={() => add("router")} className="flex items-center gap-1 rounded-lg border border-border px-3 py-2 text-sm hover:bg-secondary"><RouterIcon className="h-4 w-4" /> Router</button>
+        <button onClick={() => add("server")} className="flex items-center gap-1 rounded-lg border border-border px-3 py-2 text-sm hover:bg-secondary"><Server className="h-4 w-4" /> Server</button>
         {sel && (
           <button onClick={() => setLinking(linking ? null : sel)} className={`flex items-center gap-1 rounded-lg border px-3 py-2 text-sm ${linking ? "border-primary bg-primary/15" : "border-border hover:bg-secondary"}`}>
             <Link2 className="h-4 w-4" /> {linking ? t("اختر الجهاز الآخر…", "Pick the other device…") : t("وصل كابل", "Connect cable")}
@@ -118,9 +120,13 @@ function Lab() {
               const a = byId(l.a), b = byId(l.b);
               if (!a || !b) return null;
               return (
-                <line key={i} x1={a.x} y1={a.y} x2={b.x} y2={b.y} className="stroke-primary" strokeWidth={2.5}
+                <line key={i} x1={a.x} y1={a.y} x2={b.x} y2={b.y}
+                  className={selectedLink === i ? "stroke-primary" : l.enabled ? "stroke-primary/70" : "stroke-destructive"}
+                  strokeWidth={selectedLink === i ? 4 : 2.5} strokeDasharray={l.enabled ? undefined : "7 5"}
+                  onClick={(e) => { e.stopPropagation(); setSelectedLink(i); setSel(null); }}
                   onDoubleClick={() => {
                     setLinks(links.filter((_, j) => j !== i));
+                    setSelectedLink(null);
                     window.__lovableEvents?.track?.("project.lab_used", { action: "delete_cable" });
                   }} />
               );
@@ -146,26 +152,54 @@ function Lab() {
                 <input value={selected.name} onChange={(e) => update({ name: e.target.value })} className="w-32 rounded bg-transparent font-display font-semibold" />
                 <button onClick={() => { setDevs(devs.filter((d) => d.id !== sel)); setLinks(links.filter((l) => l.a !== sel && l.b !== sel)); setSel(null); window.__lovableEvents?.track?.("project.lab_used", { action: "delete_device", device_kind: selected.kind }); }} className="text-destructive"><Trash2 className="h-4 w-4" /></button>
               </div>
+              <div className="mt-3 flex items-center justify-between rounded-lg bg-secondary/60 px-3 py-2">
+                <label className="text-sm font-medium">{t("تشغيل الجهاز", "Device enabled")}</label>
+                <input type="checkbox" checked={selected.enabled} onChange={(e) => update({ enabled: e.target.checked })} className="h-4 w-4 accent-primary" />
+              </div>
               {selected.kind === "switch" ? (
-                <p className="mt-2 text-sm text-muted-foreground">{t("السويتش لا يحتاج عنوان IP؛ يمرر الإطارات داخل الشبكة.", "Switches need no IP; they forward frames within the LAN.")}</p>
+                <p className="mt-2 text-xs text-muted-foreground">{t("السويتش يمرر الإطارات وفق VLAN ولا يحتاج عنوان IP في هذا المختبر.", "The switch forwards frames by VLAN and needs no IP in this lab.")}</p>
               ) : (
                 <div dir="ltr" className="mt-3 space-y-2 text-sm">
-                  {([["ip", selected.kind === "router" ? "IP (Gi0/0)" : "IP"], ...(selected.kind === "router" ? [["ip2", "IP (Gi0/1)"]] : []), ["mask", "Mask"], ...(selected.kind === "pc" ? [["gw", "Gateway"]] : [])] as [keyof Dev, string][]).map(([k, label]) => (
+                  {([[ "ip", selected.kind === "router" ? "IP (Gi0/0)" : "IP"], ...(selected.kind === "router" ? [["ip2", "IP (Gi0/1)"], ["mask2", "Mask (Gi0/1)"]] : []), ["mask", "Mask"], ...(selected.kind === "pc" || selected.kind === "server" ? [["gw", "Gateway"]] : [])] as [keyof Dev, string][]).map(([k, label]) => (
                     <label key={k} className="block">
                       <span className="text-muted-foreground">{label}</span>
                       <input value={(selected[k] as string) ?? ""} onChange={(e) => {
                         update({ [k]: e.target.value });
-                        if (e.target.value !== selected[k]) {
-                          window.__lovableEvents?.track?.("project.lab_used", { action: "configure_device", device_kind: selected.kind });
-                        }
+                        window.__lovableEvents?.track?.("project.lab_used", { action: "configure_device", device_kind: selected.kind });
                       }} className="mt-1 w-full rounded-md border border-input bg-background px-2 py-1.5 font-mono" />
                     </label>
                   ))}
                 </div>
               )}
+              <div dir="ltr" className="mt-3 grid grid-cols-2 gap-2 text-sm">
+                <label className="block">
+                  <span className="text-muted-foreground">{selected.kind === "router" ? "VLAN (Gi0/0)" : "VLAN"}</span>
+                  <input type="number" min={1} max={4094} value={selected.vlan} onChange={(e) => update({ vlan: Math.max(1, Math.min(4094, Number(e.target.value) || 1)) })} className="mt-1 w-full rounded-md border border-input bg-background px-2 py-1.5 font-mono" />
+                </label>
+                {selected.kind === "router" && (
+                  <label className="block">
+                    <span className="text-muted-foreground">VLAN (Gi0/1)</span>
+                    <input type="number" min={1} max={4094} value={selected.vlan2 ?? 1} onChange={(e) => update({ vlan2: Math.max(1, Math.min(4094, Number(e.target.value) || 1)) })} className="mt-1 w-full rounded-md border border-input bg-background px-2 py-1.5 font-mono" />
+                  </label>
+                )}
+              </div>
             </div>
           ) : (
             <p className="text-sm text-muted-foreground">{t("اختر جهازاً لإعداده", "Select a device to configure")}</p>
+          )}
+          {selectedLink !== null && links[selectedLink] && (
+            <div className="rounded-xl border border-border bg-card p-4">
+              <div className="flex items-center justify-between">
+                <p className="font-semibold">{t("إعدادات الكابل", "Cable settings")}</p>
+                <button onClick={() => setSelectedLink(null)} className="text-xs text-muted-foreground">{t("إغلاق", "Close")}</button>
+              </div>
+              <p dir="ltr" className="mt-2 font-mono text-xs text-muted-foreground">{byId(links[selectedLink].a)?.name} ↔ {byId(links[selectedLink].b)?.name}</p>
+              <label className="mt-3 flex items-center justify-between text-sm">
+                <span>{t("الكابل فعال", "Cable enabled")}</span>
+                <input type="checkbox" checked={links[selectedLink].enabled} onChange={(e) => setLinks(links.map((link, index) => index === selectedLink ? { ...link, enabled: e.target.checked } : link))} className="h-4 w-4 accent-primary" />
+              </label>
+              <button onClick={() => { setLinks(links.filter((_, index) => index !== selectedLink)); setSelectedLink(null); }} className="mt-3 w-full rounded-md border border-destructive/40 px-3 py-2 text-sm text-destructive">{t("حذف الكابل", "Delete cable")}</button>
+            </div>
           )}
           <div className="rounded-xl border border-border bg-card p-4">
             <div dir="ltr" className="flex gap-2">
@@ -175,7 +209,7 @@ function Lab() {
             <button onClick={runDiagnostics} className="mt-2 w-full rounded-md border border-border px-3 py-2 text-sm hover:bg-secondary">{t("تشخيص الشبكة", "Diagnose network")}</button>
             <pre dir="ltr" className="mt-3 min-h-24 whitespace-pre-wrap rounded-md bg-background p-3 font-mono text-xs text-primary">{log.join("\n") || "_"}</pre>
           </div>
-          <p className="text-xs text-muted-foreground">{t("نقر مزدوج على الكابل لحذفه.", "Double-click a cable to delete it.")}</p>
+          <p className="text-xs text-muted-foreground">{t("اختر الكابل لفتح إعداداته، أو انقر عليه مرتين لحذفه.", "Select a cable to edit it, or double-click it to delete.")}</p>
         </aside>
       </div>
     </main>
