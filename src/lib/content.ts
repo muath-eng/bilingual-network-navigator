@@ -1,17 +1,7 @@
 import { ccnaLessons } from "./ccna-course";
+import type { Lesson } from "./lesson-types";
+export type { Lesson } from "./lesson-types";
 export { ccnaDomains } from "./ccna-course";
-
-export type Lesson = {
-  id: string;
-  level: "beginner" | "intermediate" | "advanced";
-  domain?: string;
-  objective?: string;
-  titleAr: string;
-  titleEn: string;
-  bodyAr: string[];
-  bodyEn: string[];
-  quiz: { qAr: string; qEn: string; options: string[]; answer: number }[];
-};
 
 const foundationLessons: Lesson[] = [
   {
