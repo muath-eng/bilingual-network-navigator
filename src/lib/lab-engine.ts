@@ -19,8 +19,16 @@ export function segment(devs: Device[], links: Cable[], start: string, vlan: num
   const d = devs.find(x => x.id === id); if (!d?.enabled) continue;
   if (id !== start && !interfaces(d).some(i => i.vlan === vlan) && d.kind !== 'switch') continue;
   seen.add(id);
-  if (id === start || d.kind === 'switch') {
+  if (d.kind === 'switch') {
    for (const l of links.filter(x => x.enabled && (x.a === id || x.b === id))) q.push(l.a === id ? l.b : l.a);
+  } else if (id === start && d.kind === 'router' && interfaces(d).some(i => i.vlan === vlan)) {
+   // A router is a boundary between broadcast domains: only traverse links
+   // whose directly attached endpoint belongs to the requested VLAN.
+   for (const l of links.filter(x => x.enabled && (x.a === id || x.b === id))) {
+    const otherId = l.a === id ? l.b : l.a;
+    const other = devs.find(x => x.id === otherId);
+    if (other && (other.kind === 'switch' || interfaces(other).some(i => i.vlan === vlan))) q.push(otherId);
+   }
   }
  }
  return [...seen];
@@ -77,8 +85,8 @@ export function createTopology(template = 'routed'): {devs:Device[];links:Cable[
  {id:'d1',kind:'pc',name:'PC1',x:80,y:80,ip:'192.168.1.10',mask:'255.255.255.0',gw:'192.168.1.1',vlan:1,enabled:true},
  {id:'d2',kind:'pc',name:'PC2',x:80,y:260,ip:'192.168.1.11',mask:'255.255.255.0',gw:'192.168.1.1',vlan:1,enabled:true},
  {id:'d3',kind:'switch',name:'SW1',x:260,y:170,ip:'',mask:'',gw:'',vlan:1,enabled:true},
- {id:'d4',kind:'router',name:'R1',x:440,y:170,ip:'192.168.1.1',mask:'255.255.255.0',gw:'',ip2:'10.0.0.1',mask2:'255.255.255.0',vlan:1,vlan2:1,enabled:true},
- {id:'d5',kind:'pc',name:'PC3',x:600,y:170,ip:'10.0.0.20',mask:'255.255.255.0',gw:'10.0.0.1',vlan:1,enabled:true},
+ {id:'d4',kind:'router',name:'R1',x:440,y:170,ip:'192.168.1.1',mask:'255.255.255.0',gw:'',ip2:'10.0.0.1',mask2:'255.255.255.0',vlan:1,vlan2:2,enabled:true},
+ {id:'d5',kind:'pc',name:'PC3',x:600,y:170,ip:'10.0.0.20',mask:'255.255.255.0',gw:'10.0.0.1',vlan:2,enabled:true},
  ];
  const links:Cable[] = [{a:'d1',b:'d3',enabled:true},{a:'d2',b:'d3',enabled:true},{a:'d3',b:'d4',enabled:true},{a:'d4',b:'d5',enabled:true}];
  const pc1=devs[0],pc2=devs[1],r=devs[3],pc3=devs[4];
