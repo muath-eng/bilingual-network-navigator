@@ -17,6 +17,7 @@ export function segment(devs: Device[], links: Cable[], start: string, vlan: num
  while (q.length) {
   const id = q.shift(); if (!id || seen.has(id)) continue;
   const d = devs.find(x => x.id === id); if (!d?.enabled) continue;
+  if (d.kind === 'switch' && d.vlan !== vlan) continue;
   if (id !== start && !interfaces(d).some(i => i.vlan === vlan) && d.kind !== 'switch') continue;
   seen.add(id);
   if (d.kind === 'switch' || (id === start && d.kind !== 'router')) {
