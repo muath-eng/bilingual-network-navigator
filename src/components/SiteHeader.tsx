@@ -13,6 +13,7 @@ export function SiteHeader() {
     { to: "/practice", ar: "تدريب الأوامر", en: "CLI practice" },
     { to: "/exam", ar: "الاختبارات", en: "Exams" },
     { to: "/profile", ar: "ملفي", en: "Profile" },
+    { to: "/about", ar: "حول", en: "About" },
   ] as const;
   return (
     <header className="sticky top-0 z-20 border-b border-border bg-background/85 backdrop-blur">
