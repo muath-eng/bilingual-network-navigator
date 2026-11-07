@@ -60,7 +60,7 @@ function Lab() {
         window.__lovableEvents?.track?.("project.lab_used", { action: "connect_cable" });
       }
       setLinking(null);
-    } else setSel(id);
+    } else { setSel(id); setSelectedLink(null); }
   };
 
   const ping = () => {
@@ -134,7 +134,7 @@ function Lab() {
             {devs.map((d) => {
               const Icon = icons[d.kind];
               return (
-                <g key={d.id} transform={`translate(${d.x},${d.y})`} className="cursor-pointer"
+                <g key={d.id} transform={`translate(${d.x},${d.y})`} className={d.enabled ? "cursor-pointer" : "cursor-pointer opacity-40"}
                   onPointerDown={(e) => { const p = pt(e); drag.current = { id: d.id, dx: p.x - d.x, dy: p.y - d.y }; clickDev(d.id); }}>
                   <circle r={26} className={sel === d.id ? "fill-primary/25 stroke-primary" : "fill-card stroke-border"} strokeWidth={2} />
                   <Icon x={-12} y={-12} width={24} height={24} className="text-foreground" />
@@ -150,7 +150,7 @@ function Lab() {
             <div className="rounded-xl border border-border bg-card p-4">
               <div className="flex items-center justify-between">
                 <input value={selected.name} onChange={(e) => update({ name: e.target.value })} className="w-32 rounded bg-transparent font-display font-semibold" />
-                <button onClick={() => { setDevs(devs.filter((d) => d.id !== sel)); setLinks(links.filter((l) => l.a !== sel && l.b !== sel)); setSel(null); window.__lovableEvents?.track?.("project.lab_used", { action: "delete_device", device_kind: selected.kind }); }} className="text-destructive"><Trash2 className="h-4 w-4" /></button>
+                <button onClick={() => { setDevs(devs.filter((d) => d.id !== sel)); setLinks(links.filter((l) => l.a !== sel && l.b !== sel)); setSel(null); setSelectedLink(null); window.__lovableEvents?.track?.("project.lab_used", { action: "delete_device", device_kind: selected.kind }); }} className="text-destructive"><Trash2 className="h-4 w-4" /></button>
               </div>
               <div className="mt-3 flex items-center justify-between rounded-lg bg-secondary/60 px-3 py-2">
                 <label className="text-sm font-medium">{t("تشغيل الجهاز", "Device enabled")}</label>
