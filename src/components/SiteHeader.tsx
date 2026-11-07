@@ -12,6 +12,7 @@ export function SiteHeader() {
     { to: "/mikrotik", ar: "MikroTik", en: "MikroTik" },
     { to: "/practice", ar: "تدريب الأوامر", en: "CLI practice" },
     { to: "/exam", ar: "الاختبارات", en: "Exams" },
+    { to: "/profile", ar: "ملفي", en: "Profile" },
   ] as const;
   return (
     <header className="sticky top-0 z-20 border-b border-border bg-background/85 backdrop-blur">
