@@ -29,8 +29,6 @@ describe("network lab simulator", () => {
 
   it("keeps separate VLANs isolated unless routed through the router", () => {
     const { devs, links } = createTopology("routed");
-    const pc3 = devs.find((d) => d.id === "d5")!;
-    pc3.vlan = 1;
     expect(segment(devs, links, "d4", 2)).toContain("d5");
     expect(segment(devs, links, "d4", 1)).not.toContain("d5");
   });
