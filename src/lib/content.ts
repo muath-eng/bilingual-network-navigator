@@ -20,8 +20,18 @@ const foundationLessons: Lesson[] = [
       "Core components: end devices (PC, phone), network devices (switch, router), and media (cables or wireless).",
     ],
     quiz: [
-      { qAr: "ما نوع شبكة المنزل؟", qEn: "What type is a home network?", options: ["LAN", "WAN", "MAN"], answer: 0 },
-      { qAr: "الإنترنت مثال على:", qEn: "The Internet is an example of:", options: ["LAN", "WAN", "PAN"], answer: 1 },
+      {
+        qAr: "ما نوع شبكة المنزل؟",
+        qEn: "What type is a home network?",
+        options: ["LAN", "WAN", "MAN"],
+        answer: 0,
+      },
+      {
+        qAr: "الإنترنت مثال على:",
+        qEn: "The Internet is an example of:",
+        options: ["LAN", "WAN", "PAN"],
+        answer: 1,
+      },
     ],
   },
   {
@@ -40,8 +50,18 @@ const foundationLessons: Lesson[] = [
       "TCP and UDP live in the Transport layer. HTTP and DNS are in the Application layer.",
     ],
     quiz: [
-      { qAr: "الراوتر يعمل في الطبقة:", qEn: "A router works at layer:", options: ["1", "2", "3"], answer: 2 },
-      { qAr: "TCP ينتمي لطبقة:", qEn: "TCP belongs to:", options: ["Transport", "Network", "Physical"], answer: 0 },
+      {
+        qAr: "الراوتر يعمل في الطبقة:",
+        qEn: "A router works at layer:",
+        options: ["1", "2", "3"],
+        answer: 2,
+      },
+      {
+        qAr: "TCP ينتمي لطبقة:",
+        qEn: "TCP belongs to:",
+        options: ["Transport", "Network", "Physical"],
+        answer: 0,
+      },
     ],
   },
   {
@@ -62,8 +82,18 @@ const foundationLessons: Lesson[] = [
       "Private ranges: 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16.",
     ],
     quiz: [
-      { qAr: "كم جهازاً في /24؟", qEn: "How many hosts in a /24?", options: ["256", "254", "128"], answer: 1 },
-      { qAr: "أي عنوان خاص؟", qEn: "Which is private?", options: ["8.8.8.8", "192.168.5.1", "1.1.1.1"], answer: 1 },
+      {
+        qAr: "كم جهازاً في /24؟",
+        qEn: "How many hosts in a /24?",
+        options: ["256", "254", "128"],
+        answer: 1,
+      },
+      {
+        qAr: "أي عنوان خاص؟",
+        qEn: "Which is private?",
+        options: ["8.8.8.8", "192.168.5.1", "1.1.1.1"],
+        answer: 1,
+      },
     ],
   },
   {
@@ -82,8 +112,18 @@ const foundationLessons: Lesson[] = [
       "A trunk port carries multiple VLANs between switches using 802.1Q tags.",
     ],
     quiz: [
-      { qAr: "السويتش يعتمد على:", qEn: "A switch forwards using:", options: ["MAC", "IP", "DNS"], answer: 0 },
-      { qAr: "معيار وسم VLAN:", qEn: "VLAN tagging standard:", options: ["802.11", "802.1Q", "802.3af"], answer: 1 },
+      {
+        qAr: "السويتش يعتمد على:",
+        qEn: "A switch forwards using:",
+        options: ["MAC", "IP", "DNS"],
+        answer: 0,
+      },
+      {
+        qAr: "معيار وسم VLAN:",
+        qEn: "VLAN tagging standard:",
+        options: ["802.11", "802.1Q", "802.3af"],
+        answer: 1,
+      },
     ],
   },
   {
@@ -102,7 +142,12 @@ const foundationLessons: Lesson[] = [
       "OSPF is used inside organisations; BGP connects Internet providers.",
     ],
     quiz: [
-      { qAr: "بروتوكول بين مزودي الإنترنت:", qEn: "Protocol between ISPs:", options: ["OSPF", "BGP", "RIP"], answer: 1 },
+      {
+        qAr: "بروتوكول بين مزودي الإنترنت:",
+        qEn: "Protocol between ISPs:",
+        options: ["OSPF", "BGP", "RIP"],
+        answer: 1,
+      },
     ],
   },
   {
@@ -121,7 +166,12 @@ const foundationLessons: Lesson[] = [
       "If ping to an IP works but not to a name, the issue is usually DNS.",
     ],
     quiz: [
-      { qAr: "ping للـIP يعمل وللاسم لا:", qEn: "Ping IP works, name fails:", options: ["Cable", "DNS", "Switch"], answer: 1 },
+      {
+        qAr: "ping للـIP يعمل وللاسم لا:",
+        qEn: "Ping IP works, name fails:",
+        options: ["Cable", "DNS", "Switch"],
+        answer: 1,
+      },
     ],
   },
 ];
@@ -163,7 +213,8 @@ export const scenarios = [
     optionsEn: ["IP conflict", "Devices on different VLANs", "Switch is broken"],
     answer: 1,
     explainAr: "VLANs مختلفة تعني شبكات منفصلة؛ ضعهما في نفس VLAN أو أضف توجيه بين VLANs.",
-    explainEn: "Different VLANs are separate networks; put them in one VLAN or add inter-VLAN routing.",
+    explainEn:
+      "Different VLANs are separate networks; put them in one VLAN or add inter-VLAN routing.",
   },
   {
     id: "s4",

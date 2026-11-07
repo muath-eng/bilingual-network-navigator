@@ -35,16 +35,24 @@ function LessonPage() {
 
   return (
     <main className="mx-auto max-w-3xl px-4 py-10">
-      <Link to="/learn" className="text-sm text-muted-foreground hover:text-primary">← {t("الدروس", "Lessons")}</Link>
+      <Link to="/learn" className="text-sm text-muted-foreground hover:text-primary">
+        ← {t("الدروس", "Lessons")}
+      </Link>
       <h1 className="mt-3 font-display text-3xl font-bold">{t(lesson.titleAr, lesson.titleEn)}</h1>
       {domain && (
         <div className="mt-3 flex flex-wrap items-center gap-2 text-xs">
-          <span className="rounded-full bg-primary/10 px-3 py-1 font-semibold text-primary">{domain.version} · {t(domain.ar, domain.en)} · {domain.weight}%</span>
-          <span className="rounded-full border border-border px-3 py-1 text-muted-foreground">{t("أهداف الاختبار", "Exam objectives")}: {lesson.objective}</span>
+          <span className="rounded-full bg-primary/10 px-3 py-1 font-semibold text-primary">
+            {domain.version} · {t(domain.ar, domain.en)} · {domain.weight}%
+          </span>
+          <span className="rounded-full border border-border px-3 py-1 text-muted-foreground">
+            {t("أهداف الاختبار", "Exam objectives")}: {lesson.objective}
+          </span>
         </div>
       )}
       <div className="mt-6 space-y-4 text-lg leading-relaxed">
-        {(lang === "ar" ? lesson.bodyAr : lesson.bodyEn).map((p, i) => <p key={i}>{p}</p>)}
+        {(lang === "ar" ? lesson.bodyAr : lesson.bodyEn).map((p, i) => (
+          <p key={i}>{p}</p>
+        ))}
       </div>
 
       <section className="mt-10 rounded-xl border border-border bg-card p-6">
@@ -55,9 +63,21 @@ function LessonPage() {
             <div className="mt-2 flex flex-wrap gap-2">
               {q.options.map((o, j) => {
                 const sel = answers[i] === j;
-                const state = checked ? (j === q.answer ? "border-primary bg-primary/15" : sel ? "border-destructive bg-destructive/15" : "border-border") : sel ? "border-primary" : "border-border";
+                const state = checked
+                  ? j === q.answer
+                    ? "border-primary bg-primary/15"
+                    : sel
+                      ? "border-destructive bg-destructive/15"
+                      : "border-border"
+                  : sel
+                    ? "border-primary"
+                    : "border-border";
                 return (
-                  <button key={j} onClick={() => !checked && setAnswers({ ...answers, [i]: j })} className={`rounded-lg border px-4 py-2 ${state}`}>
+                  <button
+                    key={j}
+                    onClick={() => !checked && setAnswers({ ...answers, [i]: j })}
+                    className={`rounded-lg border px-4 py-2 ${state}`}
+                  >
                     {o}
                   </button>
                 );
@@ -72,13 +92,17 @@ function LessonPage() {
               onClick={() => {
                 setChecked(true);
                 window.__lovableEvents?.track?.("project.quiz_submitted", {
-                  lesson_id: lesson.id, score, question_count: lesson.quiz.length,
+                  lesson_id: lesson.id,
+                  score,
+                  question_count: lesson.quiz.length,
                   passed: score === lesson.quiz.length,
                 });
                 if (score === lesson.quiz.length) {
                   mark(lesson.id);
                   if (!done.includes(lesson.id)) {
-                    window.__lovableEvents?.track?.("project.lesson_completed", { lesson_id: lesson.id });
+                    window.__lovableEvents?.track?.("project.lesson_completed", {
+                      lesson_id: lesson.id,
+                    });
                   }
                 }
               }}
@@ -88,18 +112,37 @@ function LessonPage() {
             </button>
           ) : (
             <>
-              <span className="font-mono">{score}/{lesson.quiz.length}</span>
+              <span className="font-mono">
+                {score}/{lesson.quiz.length}
+              </span>
               {score === lesson.quiz.length ? (
-                <span className="text-primary">{t("ممتاز! تم إكمال الدرس ✓", "Great! Lesson completed ✓")}</span>
+                <span className="text-primary">
+                  {t("ممتاز! تم إكمال الدرس ✓", "Great! Lesson completed ✓")}
+                </span>
               ) : (
-                <button onClick={() => { setChecked(false); setAnswers({}); }} className="underline">{t("حاول مجدداً", "Try again")}</button>
+                <button
+                  onClick={() => {
+                    setChecked(false);
+                    setAnswers({});
+                  }}
+                  className="underline"
+                >
+                  {t("حاول مجدداً", "Try again")}
+                </button>
               )}
             </>
           )}
         </div>
       </section>
       {next && (
-        <Link to="/learn/$id" params={{ id: next.id }} onClick={() => window.__lovableEvents?.track?.("project.lesson_started", { lesson_id: next.id })} className="mt-6 inline-block text-primary hover:underline">
+        <Link
+          to="/learn/$id"
+          params={{ id: next.id }}
+          onClick={() =>
+            window.__lovableEvents?.track?.("project.lesson_started", { lesson_id: next.id })
+          }
+          className="mt-6 inline-block text-primary hover:underline"
+        >
           {t("الدرس التالي:", "Next:")} {t(next.titleAr, next.titleEn)} →
         </Link>
       )}
