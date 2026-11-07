@@ -1,6 +1,6 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useState } from "react";
-import { lessons } from "@/lib/content";
+import { ccnaDomains, lessons } from "@/lib/content";
 import { useLang, useProgress } from "@/lib/i18n";
 
 export const Route = createFileRoute("/learn/$id")({
@@ -31,11 +31,18 @@ function LessonPage() {
   const score = lesson.quiz.filter((q, i) => answers[i] === q.answer).length;
   const idx = lessons.findIndex((l) => l.id === lesson.id);
   const next = lessons[idx + 1];
+  const domain = lesson.domain ? ccnaDomains.find((item) => item.id === lesson.domain) : undefined;
 
   return (
     <main className="mx-auto max-w-3xl px-4 py-10">
       <Link to="/learn" className="text-sm text-muted-foreground hover:text-primary">← {t("الدروس", "Lessons")}</Link>
       <h1 className="mt-3 font-display text-3xl font-bold">{t(lesson.titleAr, lesson.titleEn)}</h1>
+      {domain && (
+        <div className="mt-3 flex flex-wrap items-center gap-2 text-xs">
+          <span className="rounded-full bg-primary/10 px-3 py-1 font-semibold text-primary">{t(domain.ar, domain.en)} · {domain.weight}%</span>
+          <span className="rounded-full border border-border px-3 py-1 text-muted-foreground">{t("أهداف الاختبار", "Exam objectives")}: {lesson.objective}</span>
+        </div>
+      )}
       <div className="mt-6 space-y-4 text-lg leading-relaxed">
         {(lang === "ar" ? lesson.bodyAr : lesson.bodyEn).map((p, i) => <p key={i}>{p}</p>)}
       </div>
