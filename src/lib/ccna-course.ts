@@ -1,4 +1,4 @@
-import type { Lesson } from "./content";
+import type { Lesson } from "./lesson-types";
 
 export const ccnaDomains = [
   { id: "fundamentals", ar: "أساسيات الشبكات", en: "Network Fundamentals", weight: 20, objectives: "1.1–1.13" },
