@@ -78,7 +78,8 @@ function ExamPage() {
               {questions.length} {t("سؤالاً", "questions")}
             </span>
             <span className="text-sm text-muted-foreground">
-              {Object.keys(answers).length}/{questions.length} {t("تمت الإجابة", "answered")}
+              {Object.keys(answers).length}/{questions.length}{" "}
+              {t("تمت الإجابة", "answered")}
             </span>
             <div className="h-2 w-full overflow-hidden rounded-full bg-secondary">
               <div
@@ -90,7 +91,10 @@ function ExamPage() {
           {questions.length > 0 ? (
             <div className="mt-5 space-y-4">
               {questions.map((q, i) => (
-                <section key={q.id} className="rounded-xl border border-border bg-card p-5">
+                <section
+                  key={q.id}
+                  className="rounded-xl border border-border bg-card p-5"
+                >
                   <p className="font-mono text-xs text-primary">
                     QUESTION {i + 1} / {questions.length}
                   </p>
@@ -100,7 +104,11 @@ function ExamPage() {
                       <button
                         key={j}
                         onClick={() => setAnswers((a) => ({ ...a, [q.id]: j }))}
-                        className={`rounded-lg border p-3 text-start text-sm ${answers[q.id] === j ? "border-primary bg-primary/10" : "border-border hover:bg-secondary"}`}
+                        className={`rounded-lg border p-3 text-start text-sm ${
+                          answers[q.id] === j
+                            ? "border-primary bg-primary/10"
+                            : "border-border hover:bg-secondary"
+                        }`}
                       >
                         {o}
                       </button>
@@ -118,7 +126,10 @@ function ExamPage() {
             </p>
           )}
           <button
-            disabled={questions.length === 0 || Object.keys(answers).length !== questions.length}
+            disabled={
+              questions.length === 0 ||
+              Object.keys(answers).length !== questions.length
+            }
             onClick={() => setSubmitted(true)}
             className="mt-6 rounded-lg bg-primary px-6 py-3 font-semibold text-primary-foreground disabled:opacity-40"
           >
@@ -172,8 +183,9 @@ function ExamPage() {
                 <strong>{pct}%</strong>
               </p>
               <p className="mt-3 font-mono text-xs text-muted-foreground">
-                NM-{new Date().toISOString().slice(0, 10).replaceAll("-", "")}-{questions.length}-
-                {score}
+                NM-
+                {new Date().toISOString().slice(0, 10).replaceAll("-", "")}-
+                {questions.length}-{score}
               </p>
               <p className="mt-4 text-xs text-muted-foreground">
                 {t(
