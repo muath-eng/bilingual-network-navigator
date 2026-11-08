@@ -42,6 +42,8 @@ jobs:
           src/routes/troubleshoot.tsx
           src/routes/about.tsx
           src/components/SiteHeader.tsx
+          src/routes/auth.tsx
+          src/lib/i18n.tsx
       - name: Run tests
         run: bun run test
       - name: Lint updated files
