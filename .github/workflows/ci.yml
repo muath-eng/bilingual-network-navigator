@@ -46,8 +46,6 @@ jobs:
           src/lib/routeros-simulator.ts
           src/lib/routeros-simulator.test.ts
           src/routes/lab.tsx
-          src/lib/routeros-simulator.ts
-          src/lib/routeros-simulator.test.ts
           src/routes/learn.index.tsx
           'src/routes/learn.$id.tsx'
           src/routes/mikrotik.tsx
@@ -70,6 +68,8 @@ jobs:
           src/lib/lesson-types.ts
           src/lib/lab-engine.ts
           src/lib/lab-engine.test.ts
+          src/lib/routeros-simulator.ts
+          src/lib/routeros-simulator.test.ts
           src/routes/lab.tsx
           src/routes/learn.index.tsx
           'src/routes/learn.$id.tsx'
