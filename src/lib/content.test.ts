@@ -15,7 +15,12 @@ describe("lesson content integrity", () => {
     expect(scenarios).toHaveLength(10);
     expect(new Set(scenarios.map((scenario) => scenario.id)).size).toBe(10);
     for (const scenario of scenarios) {
-      for (const value of [scenario.infoAr, scenario.infoEn, scenario.explainAr, scenario.explainEn]) {
+      for (const value of [
+        scenario.infoAr,
+        scenario.infoEn,
+        scenario.explainAr,
+        scenario.explainEn,
+      ]) {
         expect(typeof value).toBe("string");
         expect(value.trim().length).toBeGreaterThan(0);
       }
@@ -24,7 +29,9 @@ describe("lesson content integrity", () => {
       for (const options of [scenario.optionsAr, scenario.optionsEn]) {
         expect(Array.isArray(options)).toBe(true);
         expect(options.length).toBeGreaterThan(1);
-        expect(options.every((option) => typeof option === "string" && option.trim().length > 0)).toBe(true);
+        expect(
+          options.every((option) => typeof option === "string" && option.trim().length > 0),
+        ).toBe(true);
         expect(scenario.answer).toBeGreaterThanOrEqual(0);
         expect(scenario.answer).toBeLessThan(options.length);
       }

@@ -17,15 +17,24 @@ describe("Troubleshooting regression", () => {
   for (const lang of ["ar", "en"] as const) {
     it(`renders and answers all ten drills in ${lang} without missing options`, () => {
       localStorage.setItem("nm-lang", lang);
-      render(<LangProvider>{createElement(Route.options.component as ComponentType)}</LangProvider>);
+      render(
+        <LangProvider>{createElement(Route.options.component as ComponentType)}</LangProvider>,
+      );
       for (const scenario of scenarios) {
-        const heading = screen.getByRole("heading", { name: lang === "ar" ? scenario.titleAr : scenario.titleEn });
+        const heading = screen.getByRole("heading", {
+          name: lang === "ar" ? scenario.titleAr : scenario.titleEn,
+        });
         const block = heading.parentElement;
         if (!block) throw new Error(`Missing scenario ${scenario.id}`);
         const scope = within(block);
         const options = lang === "ar" ? scenario.optionsAr : scenario.optionsEn;
         expect(scope.getAllByRole("button")).toHaveLength(options.length);
-        fireEvent.click(scope.getByRole("button", { name: options[(scenario.answer + 1) % options.length], exact: true }));
+        fireEvent.click(
+          scope.getByRole("button", {
+            name: options[(scenario.answer + 1) % options.length],
+            exact: true,
+          }),
+        );
         expect(scope.getByText(/^(ليس تماماً\.|Not quite\.)/)).toBeInTheDocument();
         fireEvent.click(scope.getByRole("button", { name: options[scenario.answer], exact: true }));
         expect(scope.getByText(/^(صحيح!|Correct!)/)).toBeInTheDocument();
