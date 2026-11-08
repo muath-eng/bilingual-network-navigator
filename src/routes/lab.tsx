@@ -35,7 +35,7 @@ export const Route = createFileRoute("/lab")({
 type Kind = Device["kind"];
 type Dev = Device;
 type LinkT = Cable;
-const initialTopology = createTopology();
+const initialTopology = { devs: [] as Device[], links: [] as Cable[], target: "" };
 const icons: Record<Device["kind"], typeof Monitor> = {
   pc: Monitor,
   switch: Server,
@@ -47,12 +47,14 @@ function Lab() {
   const { t } = useLang();
   const [devs, setDevs] = useState<Dev[]>(initialTopology.devs);
   const [links, setLinks] = useState<LinkT[]>(initialTopology.links);
-  const [sel, setSel] = useState<string | null>("d1");
+  const [sel, setSel] = useState<string | null>(null);
   const [linking, setLinking] = useState<string | null>(null);
   const [selectedLink, setSelectedLink] = useState<number | null>(null);
   const [log, setLog] = useState<string[]>([]);
   const [target, setTarget] = useState(initialTopology.target);
-  const [template, setTemplate] = useState("routed");
+  const [template, setTemplate] = useState("custom");
+  const [trace, setTrace] = useState<{ deviceId: string; title: string; detail: string }[]>([]);
+  const [traceIndex, setTraceIndex] = useState(0);
   const drag = useRef<{ id: string; dx: number; dy: number } | null>(null);
   const svgRef = useRef<SVGSVGElement>(null);
   const importRef = useRef<HTMLInputElement>(null);
@@ -61,15 +63,9 @@ function Lab() {
   const selected = devs.find((d) => d.id === sel);
   const activeTemplate = labTemplates.find((item) => item.id === template);
   const loadTemplate = (id: string) => {
-    const topology = createTopology(id);
-    setTemplate(id);
-    setDevs(topology.devs);
-    setLinks(topology.links);
-    setTarget(topology.target);
-    setSel("d1");
-    setSelectedLink(null);
-    setLinking(null);
-    setLog([]);
+    const topology = id === "custom" ? initialTopology : createTopology(id);
+    setTemplate(id); setDevs(topology.devs); setLinks(topology.links); setTarget(topology.target);
+    setSel(null); setSelectedLink(null); setLinking(null); setLog([]); setTrace([]); setTraceIndex(0);
   };
   const update = (patch: Partial<Dev>) =>
     setDevs(devs.map((d) => (d.id === sel ? { ...d, ...patch } : d)));
@@ -163,8 +159,7 @@ function Lab() {
       setLinks(importedLinks);
       setTarget(typeof payload.target === "string" ? payload.target.slice(0, 40) : "");
       setTemplate("custom");
-      setSel(imported[0].id);
-      setSelectedLink(null);
+      setSel(null); setSelectedLink(null); setTrace([]); setTraceIndex(0);
       setLinking(null);
       setLog([]);
       setFileMessage(t("تم استيراد الشبكة بنجاح.", "Network topology imported successfully."));
@@ -200,7 +195,7 @@ function Lab() {
         enabled: true,
       },
     ]);
-    setSel(id);
+    setSel(id); setTrace([]); setTraceIndex(0);
     window.__lovableEvents?.track?.("project.lab_used", {
       action: "add_device",
       device_kind: kind,
@@ -227,17 +222,33 @@ function Lab() {
 
   const ping = () => {
     window.__lovableEvents?.track?.("project.lab_used", { action: "ping" });
+    const destination = devs.find((d) => (d.kind === "pc" || d.kind === "server") && d.ip === target);
     const result = simulatePing(devs, links, sel, target);
-    const out = [`> ping ${target} (${selected?.name ?? "—"})`];
-    if (result.ok) {
-      out.push(
-        `Reply from ${target}: bytes=32 time<1ms`,
-        `✓ ${t(result.ar, result.en)}`,
-        `Path: ${result.path.join(" → ")}`,
-      );
-    } else {
-      out.push("Request timed out.", `✗ ${t(result.ar, result.en)} [${result.code}]`);
-    }
+    const out = ["> ping " + target + " (" + (selected?.name ?? "—") + ")"];
+    if (result.ok && selected && destination) {
+      const queue = [selected.id], previous = new Map<string, string | null>([[selected.id, null]]);
+      while (queue.length) {
+        const current = queue.shift()!;
+        if (current === destination.id) break;
+        for (const cable of links.filter((l) => l.enabled && (l.a === current || l.b === current))) {
+          const next = cable.a === current ? cable.b : cable.a;
+          const device = devs.find((d) => d.id === next);
+          if (device?.enabled && !previous.has(next)) { previous.set(next, current); queue.push(next); }
+        }
+      }
+      const ids: string[] = [];
+      if (previous.has(destination.id)) { let cursor: string | null = destination.id; while (cursor) { ids.unshift(cursor); cursor = previous.get(cursor) ?? null; } }
+      const steps: { deviceId: string; title: string; detail: string }[] = [
+        { deviceId: selected.id, title: "ARP Request", detail: t("يبحث الجهاز عن عنوان MAC للوجهة أو البوابة.", "The host resolves the destination or gateway MAC address.") },
+      ];
+      ids.forEach((id) => {
+        const device = devs.find((d) => d.id === id)!;
+        steps.push({ deviceId: id, title: device.kind === "router" ? "IP routing" : "ICMP Echo Request", detail: device.kind === "router" ? t("يفحص الراوتر جدول التوجيه ويمرر الحزمة للواجهة المناسبة.", "The router checks its routing table and forwards the packet.") : t("تمر الحزمة عبر هذا الجهاز.", "The packet passes through this device.") });
+      });
+      [...ids].reverse().forEach((id) => steps.push({ deviceId: id, title: "ICMP Echo Reply", detail: t("يعود رد ICMP باتجاه جهاز المصدر.", "The ICMP reply travels back toward the source.") }));
+      setTrace(steps); setTraceIndex(0);
+      out.push("Reply from " + target + ": bytes=32 time<1ms", "✓ " + t(result.ar, result.en), "Path: " + ids.map((id) => devs.find((d) => d.id === id)?.name).join(" → "));
+    } else { setTrace([]); setTraceIndex(0); out.push("Request timed out.", "✗ " + t(result.ar, result.en) + " [" + result.code + "]"); }
     setLog(out);
   };
 
