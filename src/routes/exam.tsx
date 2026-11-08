@@ -51,9 +51,7 @@ function ExamPage() {
   const [certId, setCertId] = useState("");
   const score = questions.filter((q) => answers[q.id] === q.answer).length;
   const pct = Math.round((score / Math.max(questions.length, 1)) * 100);
-  const progress = questions.length
-    ? (Object.keys(answers).length / questions.length) * 100
-    : 0;
+  const progress = questions.length ? (Object.keys(answers).length / questions.length) * 100 : 0;
   const passed = submitted && pct >= 70;
   const reset = () => {
     setAnswers({});
@@ -78,23 +76,16 @@ function ExamPage() {
               {questions.length} {t("سؤالاً", "questions")}
             </span>
             <span className="text-sm text-muted-foreground">
-              {Object.keys(answers).length}/{questions.length}{" "}
-              {t("تمت الإجابة", "answered")}
+              {Object.keys(answers).length}/{questions.length} {t("تمت الإجابة", "answered")}
             </span>
             <div className="h-2 w-full overflow-hidden rounded-full bg-secondary">
-              <div
-                className="h-full bg-primary"
-                style={{ width: `${progress}%` }}
-              />
+              <div className="h-full bg-primary" style={{ width: `${progress}%` }} />
             </div>
           </div>
           {questions.length > 0 ? (
             <div className="mt-5 space-y-4">
               {questions.map((q, i) => (
-                <section
-                  key={q.id}
-                  className="rounded-xl border border-border bg-card p-5"
-                >
+                <section key={q.id} className="rounded-xl border border-border bg-card p-5">
                   <p className="font-mono text-xs text-primary">
                     QUESTION {i + 1} / {questions.length}
                   </p>
@@ -126,10 +117,7 @@ function ExamPage() {
             </p>
           )}
           <button
-            disabled={
-              questions.length === 0 ||
-              Object.keys(answers).length !== questions.length
-            }
+            disabled={questions.length === 0 || Object.keys(answers).length !== questions.length}
             onClick={() => setSubmitted(true)}
             className="mt-6 rounded-lg bg-primary px-6 py-3 font-semibold text-primary-foreground disabled:opacity-40"
           >
@@ -140,9 +128,7 @@ function ExamPage() {
         <>
           <section className="mt-6 rounded-xl border border-border bg-card p-6 text-center">
             <Award className="mx-auto h-12 w-12 text-primary" />
-            <p className="mt-3 text-sm text-muted-foreground">
-              {t("نتيجتك", "Your result")}
-            </p>
+            <p className="mt-3 text-sm text-muted-foreground">{t("نتيجتك", "Your result")}</p>
             <p className="mt-1 font-mono text-4xl font-bold">
               {score}/{questions.length}
             </p>
@@ -163,16 +149,10 @@ function ExamPage() {
               </div>
               <Award className="mx-auto my-4 h-12 w-12 text-primary" />
               <h2 className="font-display text-2xl font-bold">
-                {t(
-                  "شهادة اجتياز اختبار تدريبي",
-                  "Practice Exam Achievement Certificate",
-                )}
+                {t("شهادة اجتياز اختبار تدريبي", "Practice Exam Achievement Certificate")}
               </h2>
               <p className="mt-4 text-sm text-muted-foreground">
-                {t(
-                  "تشهد منصة Network Master بأن",
-                  "Network Master recognizes that",
-                )}
+                {t("تشهد منصة Network Master بأن", "Network Master recognizes that")}
               </p>
               <label className="mx-auto mt-3 block max-w-sm text-start text-sm">
                 {t("اسم المتعلم", "Learner name")}
@@ -192,10 +172,10 @@ function ExamPage() {
               </p>
               <p className="mt-3 font-mono text-xs text-muted-foreground">
                 NM-
-                {new Date().toISOString().slice(0, 10).replaceAll("-", "")}-
-                {questions.length}-{score}
+                {new Date().toISOString().slice(0, 10).replaceAll("-", "")}-{questions.length}-
+                {score}
               </p>
-                  <p className="mt-4 text-xs text-muted-foreground">
+              <p className="mt-4 text-xs text-muted-foreground">
                 {t(
                   "هذه شهادة إنجاز تدريبية صادرة عن المنصة، وليست شهادة Cisco أو اعتماداً مهنياً رسمياً.",
                   "This is a platform-issued learning achievement, not a Cisco certification or formal professional accreditation.",
@@ -220,10 +200,7 @@ function ExamPage() {
         </>
       )}
       <div className="mt-8">
-        <Link
-          to="/learn"
-          className="text-sm font-semibold text-primary hover:underline"
-        >
+        <Link to="/learn" className="text-sm font-semibold text-primary hover:underline">
           {t("العودة إلى الدروس ←", "← Back to lessons")}
         </Link>
       </div>
