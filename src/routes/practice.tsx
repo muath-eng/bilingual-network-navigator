@@ -8,7 +8,10 @@ export const Route = createFileRoute("/practice")({
     meta: [
       { title: "CLI Practice — Network Master" },
       { property: "og:title", content: "CLI Practice — Network Master" },
-      { property: "og:description", content: "Practice common Cisco IOS networking commands in a guided terminal." },
+      {
+        property: "og:description",
+        content: "Practice common Cisco IOS networking commands in a guided terminal.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       {

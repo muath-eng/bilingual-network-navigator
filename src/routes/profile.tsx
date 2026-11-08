@@ -28,7 +28,10 @@ export const Route = createFileRoute("/profile")({
     meta: [
       { title: "ملفي التعليمي — Network Master" },
       { property: "og:title", content: "Learning Profile — Network Master" },
-      { property: "og:description", content: "Manage your learner profile and back up your local learning progress." },
+      {
+        property: "og:description",
+        content: "Manage your learner profile and back up your local learning progress.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       {

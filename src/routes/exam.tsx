@@ -9,7 +9,11 @@ export const Route = createFileRoute("/exam")({
     meta: [
       { title: "Practice Exam & Certificate — Network Master" },
       { property: "og:title", content: "Practice Exam & Certificate — Network Master" },
-      { property: "og:description", content: "Take a bilingual networking practice exam and earn a course completion certificate." },
+      {
+        property: "og:description",
+        content:
+          "Take a bilingual networking practice exam and earn a course completion certificate.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       {
