@@ -140,7 +140,9 @@ function ExamPage() {
         <>
           <section className="mt-6 rounded-xl border border-border bg-card p-6 text-center">
             <Award className="mx-auto h-12 w-12 text-primary" />
-            <p className="mt-3 text-sm text-muted-foreground">{t("نتيجتك", "Your result")}</p>
+            <p className="mt-3 text-sm text-muted-foreground">
+              {t("نتيجتك", "Your result")}
+            </p>
             <p className="mt-1 font-mono text-4xl font-bold">
               {score}/{questions.length}
             </p>
@@ -161,10 +163,16 @@ function ExamPage() {
               </div>
               <Award className="mx-auto my-4 h-12 w-12 text-primary" />
               <h2 className="font-display text-2xl font-bold">
-                {t("شهادة اجتياز اختبار تدريبي", "Practice Exam Achievement Certificate")}
+                {t(
+                  "شهادة اجتياز اختبار تدريبي",
+                  "Practice Exam Achievement Certificate",
+                )}
               </h2>
               <p className="mt-4 text-sm text-muted-foreground">
-                {t("تشهد منصة Network Master بأن", "Network Master recognizes that")}
+                {t(
+                  "تشهد منصة Network Master بأن",
+                  "Network Master recognizes that",
+                )}
               </p>
               <label className="mx-auto mt-3 block max-w-sm text-start text-sm">
                 {t("اسم المتعلم", "Learner name")}
@@ -187,7 +195,7 @@ function ExamPage() {
                 {new Date().toISOString().slice(0, 10).replaceAll("-", "")}-
                 {questions.length}-{score}
               </p>
-              <p className="mt-4 text-xs text-muted-foreground">
+                  <p className="mt-4 text-xs text-muted-foreground">
                 {t(
                   "هذه شهادة إنجاز تدريبية صادرة عن المنصة، وليست شهادة Cisco أو اعتماداً مهنياً رسمياً.",
                   "This is a platform-issued learning achievement, not a Cisco certification or formal professional accreditation.",
@@ -212,7 +220,10 @@ function ExamPage() {
         </>
       )}
       <div className="mt-8">
-        <Link to="/learn" className="text-sm font-semibold text-primary hover:underline">
+        <Link
+          to="/learn"
+          className="text-sm font-semibold text-primary hover:underline"
+        >
           {t("العودة إلى الدروس ←", "← Back to lessons")}
         </Link>
       </div>
