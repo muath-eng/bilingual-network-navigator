@@ -3,7 +3,12 @@ import { useRef, useState } from "react";
 import { Download, Upload } from "lucide-react";
 import { Monitor, Router as RouterIcon, Server, Trash2, Link2 } from "lucide-react";
 import { useLang } from "@/lib/i18n";
-import { createRouterOsState, runRouterOsCommand, type RouterOsState, type RouterOsStep } from "@/lib/routeros-simulator";
+import {
+  createRouterOsState,
+  runRouterOsCommand,
+  type RouterOsState,
+  type RouterOsStep,
+} from "@/lib/routeros-simulator";
 import {
   createTopology,
   diagnose,
@@ -894,7 +899,9 @@ function Lab() {
                       {routerStepIndex + 1} / {routerSteps.length}
                     </span>
                   </div>
-                  <p className="mt-2 text-sm font-semibold">{routerSteps[routerStepIndex]?.title}</p>
+                  <p className="mt-2 text-sm font-semibold">
+                    {routerSteps[routerStepIndex]?.title}
+                  </p>
                   <p className="mt-1 text-xs leading-5 text-muted-foreground">
                     {routerSteps[routerStepIndex]?.detail}
                   </p>
@@ -907,7 +914,9 @@ function Lab() {
                       {t("السابق", "Previous")}
                     </button>
                     <button
-                      onClick={() => setRouterStepIndex((index) => Math.min(routerSteps.length - 1, index + 1))}
+                      onClick={() =>
+                        setRouterStepIndex((index) => Math.min(routerSteps.length - 1, index + 1))
+                      }
                       disabled={routerStepIndex >= routerSteps.length - 1}
                       className="rounded border border-border px-3 py-1 text-xs disabled:opacity-40"
                     >
