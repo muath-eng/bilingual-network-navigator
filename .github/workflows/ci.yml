@@ -26,11 +26,11 @@ jobs:
         run: bun install --frozen-lockfile
       - name: Format student account and cloud sync files
         run: |
-          bunx prettier --write src/routes/profile.tsx src/routes/auth.tsx src/lib/i18n.tsx
+          bunx prettier --write src/routes/profile.tsx src/routes/auth.tsx src/lib/i18n.tsx src/routes/dashboard.tsx
           if ! git diff --quiet; then
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add src/routes/profile.tsx src/routes/auth.tsx src/lib/i18n.tsx
+            git add src/routes/profile.tsx src/routes/auth.tsx src/lib/i18n.tsx src/routes/dashboard.tsx
             git commit -m "Format student account and cloud sync files"
             git push
           fi
@@ -54,6 +54,7 @@ jobs:
           src/routes/profile.tsx
           src/routes/auth.tsx
           src/lib/i18n.tsx
+          src/routes/dashboard.tsx
       - name: Run tests
         run: bun run test
       - name: Lint updated files
@@ -76,5 +77,6 @@ jobs:
           src/components/SiteHeader.tsx
           src/routes/auth.tsx
           src/lib/i18n.tsx
+          src/routes/dashboard.tsx
       - name: Build production app
         run: bun run build

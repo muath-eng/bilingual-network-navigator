@@ -19,6 +19,7 @@ import { Route as PracticeRouteImport } from './routes/practice'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as SubnetRouteImport } from './routes/subnet'
 import { Route as TroubleshootRouteImport } from './routes/troubleshoot'
+import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as LearnIndexRouteImport } from './routes/learn.index'
 import { Route as LearnIdRouteImport } from './routes/learn.$id'
 
@@ -72,6 +73,11 @@ const TroubleshootRoute = TroubleshootRouteImport.update({
   path: '/troubleshoot',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DashboardRoute = DashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LearnIndexRoute = LearnIndexRouteImport.update({
   id: '/learn/',
   path: '/learn/',
@@ -96,6 +102,7 @@ export interface FileRoutesByFullPath {
   '/troubleshoot': typeof TroubleshootRoute
   '/learn/$id': typeof LearnIdRoute
   '/learn/': typeof LearnIndexRoute
+  '/dashboard': typeof DashboardRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -110,6 +117,7 @@ export interface FileRoutesByTo {
   '/troubleshoot': typeof TroubleshootRoute
   '/learn/$id': typeof LearnIdRoute
   '/learn': typeof LearnIndexRoute
+  '/dashboard': typeof DashboardRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -125,10 +133,12 @@ export interface FileRoutesById {
   '/troubleshoot': typeof TroubleshootRoute
   '/learn/$id': typeof LearnIdRoute
   '/learn/': typeof LearnIndexRoute
+  '/dashboard': typeof DashboardRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
+    | '/dashboard'
     | '/'
     | '/about'
     | '/auth'
@@ -143,6 +153,7 @@ export interface FileRouteTypes {
     | '/learn/'
   fileRoutesByTo: FileRoutesByTo
   to:
+    | '/dashboard'
     | '/'
     | '/about'
     | '/exam'
@@ -156,6 +167,7 @@ export interface FileRouteTypes {
     | '/learn'
   id:
     | '__root__'
+    | '/dashboard'
     | '/'
     | '/about'
     | '/auth'
@@ -181,6 +193,7 @@ export interface RootRouteChildren {
   ProfileRoute: typeof ProfileRoute
   SubnetRoute: typeof SubnetRoute
   TroubleshootRoute: typeof TroubleshootRoute
+  DashboardRoute: typeof DashboardRoute
   LearnIdRoute: typeof LearnIdRoute
   LearnIndexRoute: typeof LearnIndexRoute
 }
@@ -250,6 +263,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SubnetRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dashboard': {
+      id: '/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof DashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/troubleshoot': {
       id: '/troubleshoot'
       path: '/troubleshoot'
@@ -285,6 +305,7 @@ const rootRouteChildren: RootRouteChildren = {
   ProfileRoute: ProfileRoute,
   SubnetRoute: SubnetRoute,
   TroubleshootRoute: TroubleshootRoute,
+  DashboardRoute: DashboardRoute,
   LearnIdRoute: LearnIdRoute,
   LearnIndexRoute: LearnIndexRoute,
 }
