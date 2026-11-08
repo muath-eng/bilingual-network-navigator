@@ -24,14 +24,14 @@ jobs:
         uses: oven-sh/setup-bun@v2
       - name: Install dependencies
         run: bun install --frozen-lockfile
-      - name: Format student account and cloud sync files
+      - name: Format student account, command training and cloud sync files
         run: |
-          bunx prettier --write src/routes/profile.tsx src/routes/auth.tsx src/lib/i18n.tsx src/routes/dashboard.tsx
+          bunx prettier --write src/routes/profile.tsx src/routes/auth.tsx src/lib/i18n.tsx src/routes/dashboard.tsx src/routes/practice.tsx
           if ! git diff --quiet; then
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add src/routes/profile.tsx src/routes/auth.tsx src/lib/i18n.tsx src/routes/dashboard.tsx
-            git commit -m "Format student account and cloud sync files"
+            git add src/routes/profile.tsx src/routes/auth.tsx src/lib/i18n.tsx src/routes/dashboard.tsx src/routes/practice.tsx
+            git commit -m "Format student account and command training files"
             git push
           fi
       - name: Format files changed in this update
