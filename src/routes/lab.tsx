@@ -280,9 +280,7 @@ function Lab() {
             onChange={(e) => loadTemplate(e.target.value)}
             className="mt-2 w-full rounded-md border border-input bg-background px-3 py-2 font-normal"
           >
-            {template === "custom" && (
-              <option value="custom">{t("شبكتي المستوردة", "Imported topology")}</option>
-            )}
+            <option value="custom">{t("شبكة فارغة — ابنها بنفسك", "Blank network — build it yourself")}</option>
             {labTemplates.map((item) => (
               <option key={item.id} value={item.id}>
                 {t(item.ar, item.en)}
@@ -291,10 +289,9 @@ function Lab() {
           </select>
         </label>
         {activeTemplate && (
-          <p className="mt-2 text-sm leading-6 text-muted-foreground">
-            {t(activeTemplate.goalAr, activeTemplate.goalEn)}
-          </p>
+          <p className="mt-2 text-sm leading-6 text-muted-foreground">{t(activeTemplate.goalAr, activeTemplate.goalEn)}</p>
         )}
+        {template === "custom" && <p className="mt-2 text-sm text-muted-foreground">{t("ابدأ بمساحة فارغة، أضف الأجهزة التي تريدها ثم اربطها بنفسك.", "Start with an empty canvas, add only the devices you need, then connect them yourself.")}</p>}
       </section>
       <section className="mt-3 flex flex-wrap items-center gap-2 rounded-xl border border-border bg-card p-3">
         <button
@@ -421,6 +418,7 @@ function Lab() {
             })}
             {devs.map((d) => {
               const Icon = icons[d.kind];
+              const activeTraceDevice = trace[traceIndex]?.deviceId === d.id;
               return (
                 <g
                   key={d.id}
@@ -435,9 +433,9 @@ function Lab() {
                   <circle
                     r={26}
                     className={
-                      sel === d.id ? "fill-primary/25 stroke-primary" : "fill-card stroke-border"
+                      activeTraceDevice ? "fill-amber-400/30 stroke-amber-500" : sel === d.id ? "fill-primary/25 stroke-primary" : "fill-card stroke-border"
                     }
-                    strokeWidth={2}
+                    strokeWidth={activeTraceDevice ? 4 : 2}
                   />
                   <Icon x={-12} y={-12} width={24} height={24} className="text-foreground" />
                   <text
@@ -615,27 +613,35 @@ function Lab() {
             </div>
           )}
           <div className="rounded-xl border border-border bg-card p-4">
-            <div dir="ltr" className="flex gap-2">
-              <input
-                value={target}
-                onChange={(e) => setTarget(e.target.value)}
-                className="flex-1 rounded-md border border-input bg-background px-2 py-1.5 font-mono text-sm"
-              />
-              <button
-                onClick={ping}
-                className="rounded-md bg-primary px-4 text-sm font-semibold text-primary-foreground"
-              >
-                ping
-              </button>
+            <label className="block text-xs font-medium text-muted-foreground">{t("حدد المصدر بالنقر على PC أو Server، ثم اختر الوجهة:", "Select the source by clicking a PC or Server, then choose the destination:")}</label>
+            <div className="mt-2 flex gap-2">
+              <select value={target} onChange={(e) => setTarget(e.target.value)} className="min-w-0 flex-1 rounded-md border border-input bg-background px-2 py-2 font-mono text-sm" dir="ltr">
+                <option value="">{t("اختر جهاز الوجهة", "Choose destination")}</option>
+                {devs.filter((d) => (d.kind === "pc" || d.kind === "server") && d.ip).map((d) => <option key={d.id} value={d.ip}>{d.name} — {d.ip}</option>)}
+              </select>
+              <button onClick={ping} disabled={!sel || !target} className="rounded-md bg-primary px-4 text-sm font-semibold text-primary-foreground disabled:opacity-40">ping</button>
             </div>
+            {selected && <p className="mt-2 text-xs text-muted-foreground">{t("المصدر المحدد:", "Selected source:")} <b>{selected.name}</b> ({selected.ip || t("لم يضبط IP", "No IP configured")})</p>}
             <button
               onClick={runDiagnostics}
               className="mt-2 w-full rounded-md border border-border px-3 py-2 text-sm hover:bg-secondary"
             >
               {t("تشخيص الشبكة", "Diagnose network")}
             </button>
-            <pre
-              dir="ltr"
+            {trace.length > 0 && (
+              <div className="mt-3 rounded-lg border border-border p-3">
+                <div className="flex items-center justify-between gap-2"><b className="text-sm">{t("تتبع الحزمة", "Packet trace")}</b><span className="text-xs text-muted-foreground" dir="ltr">{traceIndex + 1} / {trace.length}</span></div>
+                <p className="mt-2 font-mono text-sm text-primary">{trace[traceIndex]?.title}</p>
+                <p className="mt-1 text-xs leading-5 text-muted-foreground">{trace[traceIndex]?.detail}</p>
+                <p className="mt-1 text-xs" dir="ltr">{t("الجهاز الحالي:", "Current device:")} {devs.find((d) => d.id === trace[traceIndex]?.deviceId)?.name}</p>
+                <div className="mt-3 flex gap-2">
+                  <button onClick={() => setTraceIndex((i) => Math.max(0, i - 1))} disabled={traceIndex === 0} className="rounded border border-border px-3 py-1 text-xs disabled:opacity-40">{t("السابق", "Previous")}</button>
+                  <button onClick={() => setTraceIndex((i) => Math.min(trace.length - 1, i + 1))} disabled={traceIndex >= trace.length - 1} className="rounded border border-border px-3 py-1 text-xs disabled:opacity-40">{t("الخطوة التالية", "Next step")}</button>
+                  <button onClick={() => setTraceIndex(0)} className="rounded border border-border px-3 py-1 text-xs">{t("إعادة", "Replay")}</button>
+                </div>
+              </div>
+            )}
+            <pre dir="ltr"
               className="mt-3 min-h-24 whitespace-pre-wrap rounded-md bg-background p-3 font-mono text-xs text-primary"
             >
               {log.join("\n") || "_"}
