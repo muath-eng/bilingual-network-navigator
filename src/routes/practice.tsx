@@ -54,6 +54,7 @@ function PracticePage() {
   const [showHint, setShowHint] = useState(false);
   const [completed, setCompleted] = useState<string[]>([]);
   const [attempts, setAttempts] = useState(0);
+  const [progressLoaded, setProgressLoaded] = useState(false);
 
   useEffect(() => {
     try {
@@ -63,12 +64,14 @@ function PracticePage() {
         if (Array.isArray(parsed.completed)) setCompleted(parsed.completed.filter((id) => challenges.some((item) => item.id === id)));
       }
     } catch { /* Storage is optional. */ }
+    setProgressLoaded(true);
   }, []);
 
   useEffect(() => {
+    if (!progressLoaded) return;
     try { window.localStorage.setItem("network-master-cli-progress", JSON.stringify({ completed })); }
     catch { /* Keep the current session usable if storage is unavailable. */ }
-  }, [completed]);
+  }, [completed, progressLoaded]);
 
   const tasks = useMemo(() => challenges.filter((item) => item.category === category), [category]);
   const task = tasks[index] ?? tasks[0];
