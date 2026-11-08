@@ -42,7 +42,7 @@ const challenges: Challenge[] = [
   { id: "errors", category: "diagnostics", level: "Advanced", ar: "افحص عدادات الأخطاء على الواجهات.", en: "Inspect interface error counters.", goalAr: "اعرض أخطاء CRC والإطارات على الواجهات.", goalEn: "Display CRC and frame errors on interfaces.", command: "show interfaces counters errors", hintAr: "ابدأ بـ show interfaces counters.", hintEn: "Start with show interfaces counters.", explanationAr: "يساعد على اكتشاف أخطاء CRC والإطارات ومشكلات الطبقة الفيزيائية.", explanationEn: "Helps identify CRC, frame and physical-layer issues.", output: "Port   Align-Err  FCS-Err  Xmit-Err  Rcv-Err\nGi0/1  0          0        0         0\nGi0/2  0          4        0         4" },
 ];
 
-const norm = (value: string) => value.trim().replace(/\\s+/g, " ").toLowerCase();
+const norm = (value: string) => value.trim().replace(/\s+/g, " ").toLowerCase();
 
 function PracticePage() {
   const { t } = useLang();
