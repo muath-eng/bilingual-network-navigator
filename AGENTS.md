@@ -30,3 +30,4 @@ use the editor.
 <!-- LOVABLE:END -->
 
 - Emit product analytics directly in existing interaction handlers through the optional injected Lovable tracker; use only cataloged, non-personal properties so tracking remains safe without the SDK.
+- Keep troubleshooting records typed as TroubleshootingScenario, separate from Lesson; mandatory bilingual evidence, choices, answer indexes and explanations prevent invalid records from crashing the drills page.
