@@ -6,6 +6,10 @@ export const Route = createFileRoute("/about")({
   head: () => ({
     meta: [
       { title: "حول Network Master" },
+      { property: "og:title", content: "About — Network Master" },
+      { property: "og:description", content: "About Network Master and its developer." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
       {
         name: "description",
         content: "About Network Master and its developer.",

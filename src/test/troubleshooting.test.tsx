@@ -32,11 +32,10 @@ describe("Troubleshooting regression", () => {
         fireEvent.click(
           scope.getByRole("button", {
             name: options[(scenario.answer + 1) % options.length],
-            exact: true,
           }),
         );
         expect(scope.getByText(/^(ليس تماماً\.|Not quite\.)/)).toBeInTheDocument();
-        fireEvent.click(scope.getByRole("button", { name: options[scenario.answer], exact: true }));
+        fireEvent.click(scope.getByRole("button", { name: options[scenario.answer] }));
         expect(scope.getByText(/^(صحيح!|Correct!)/)).toBeInTheDocument();
       }
     });
