@@ -10,7 +10,12 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AboutRouteImport } from './routes/about'
+import { Route as ExamRouteImport } from './routes/exam'
 import { Route as LabRouteImport } from './routes/lab'
+import { Route as MikrotikRouteImport } from './routes/mikrotik'
+import { Route as PracticeRouteImport } from './routes/practice'
+import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as SubnetRouteImport } from './routes/subnet'
 import { Route as TroubleshootRouteImport } from './routes/troubleshoot'
 import { Route as LearnIndexRouteImport } from './routes/learn.index'
@@ -21,9 +26,34 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AboutRoute = AboutRouteImport.update({
+  id: '/about',
+  path: '/about',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ExamRoute = ExamRouteImport.update({
+  id: '/exam',
+  path: '/exam',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LabRoute = LabRouteImport.update({
   id: '/lab',
   path: '/lab',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MikrotikRoute = MikrotikRouteImport.update({
+  id: '/mikrotik',
+  path: '/mikrotik',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PracticeRoute = PracticeRouteImport.update({
+  id: '/practice',
+  path: '/practice',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProfileRoute = ProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SubnetRoute = SubnetRouteImport.update({
@@ -49,7 +79,12 @@ const LearnIdRoute = LearnIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/exam': typeof ExamRoute
   '/lab': typeof LabRoute
+  '/mikrotik': typeof MikrotikRoute
+  '/practice': typeof PracticeRoute
+  '/profile': typeof ProfileRoute
   '/subnet': typeof SubnetRoute
   '/troubleshoot': typeof TroubleshootRoute
   '/learn/$id': typeof LearnIdRoute
@@ -57,7 +92,12 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/exam': typeof ExamRoute
   '/lab': typeof LabRoute
+  '/mikrotik': typeof MikrotikRoute
+  '/practice': typeof PracticeRoute
+  '/profile': typeof ProfileRoute
   '/subnet': typeof SubnetRoute
   '/troubleshoot': typeof TroubleshootRoute
   '/learn/$id': typeof LearnIdRoute
@@ -66,7 +106,12 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/exam': typeof ExamRoute
   '/lab': typeof LabRoute
+  '/mikrotik': typeof MikrotikRoute
+  '/practice': typeof PracticeRoute
+  '/profile': typeof ProfileRoute
   '/subnet': typeof SubnetRoute
   '/troubleshoot': typeof TroubleshootRoute
   '/learn/$id': typeof LearnIdRoute
@@ -75,13 +120,39 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    '/' | '/lab' | '/subnet' | '/troubleshoot' | '/learn/$id' | '/learn/'
+    | '/'
+    | '/about'
+    | '/exam'
+    | '/lab'
+    | '/mikrotik'
+    | '/practice'
+    | '/profile'
+    | '/subnet'
+    | '/troubleshoot'
+    | '/learn/$id'
+    | '/learn/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/lab' | '/subnet' | '/troubleshoot' | '/learn/$id' | '/learn'
+  to:
+    | '/'
+    | '/about'
+    | '/exam'
+    | '/lab'
+    | '/mikrotik'
+    | '/practice'
+    | '/profile'
+    | '/subnet'
+    | '/troubleshoot'
+    | '/learn/$id'
+    | '/learn'
   id:
     | '__root__'
     | '/'
+    | '/about'
+    | '/exam'
     | '/lab'
+    | '/mikrotik'
+    | '/practice'
+    | '/profile'
     | '/subnet'
     | '/troubleshoot'
     | '/learn/$id'
@@ -90,7 +161,12 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AboutRoute: typeof AboutRoute
+  ExamRoute: typeof ExamRoute
   LabRoute: typeof LabRoute
+  MikrotikRoute: typeof MikrotikRoute
+  PracticeRoute: typeof PracticeRoute
+  ProfileRoute: typeof ProfileRoute
   SubnetRoute: typeof SubnetRoute
   TroubleshootRoute: typeof TroubleshootRoute
   LearnIdRoute: typeof LearnIdRoute
@@ -106,11 +182,46 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/about': {
+      id: '/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AboutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/exam': {
+      id: '/exam'
+      path: '/exam'
+      fullPath: '/exam'
+      preLoaderRoute: typeof ExamRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/lab': {
       id: '/lab'
       path: '/lab'
       fullPath: '/lab'
       preLoaderRoute: typeof LabRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mikrotik': {
+      id: '/mikrotik'
+      path: '/mikrotik'
+      fullPath: '/mikrotik'
+      preLoaderRoute: typeof MikrotikRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/practice': {
+      id: '/practice'
+      path: '/practice'
+      fullPath: '/practice'
+      preLoaderRoute: typeof PracticeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/profile': {
+      id: '/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof ProfileRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/subnet': {
@@ -146,7 +257,12 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AboutRoute: AboutRoute,
+  ExamRoute: ExamRoute,
   LabRoute: LabRoute,
+  MikrotikRoute: MikrotikRoute,
+  PracticeRoute: PracticeRoute,
+  ProfileRoute: ProfileRoute,
   SubnetRoute: SubnetRoute,
   TroubleshootRoute: TroubleshootRoute,
   LearnIdRoute: LearnIdRoute,
