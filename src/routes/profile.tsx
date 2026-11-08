@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { lessons } from "@/lib/content";
 import { useLang, useProgress } from "@/lib/i18n";
+import { supabase } from "@/integrations/supabase/client";
 
 type LearnerProfile = { name: string; goal: string; weeklyTarget: number };
 type BackupFile = {
@@ -49,31 +50,97 @@ function ProfilePage() {
   const [profile, setProfile] = useState<LearnerProfile>(defaults);
   const [ready, setReady] = useState(false);
   const [message, setMessage] = useState("");
+  const [accountEmail, setAccountEmail] = useState<string | null>(null);
+  const [cloudReady, setCloudReady] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    try {
-      const raw = localStorage.getItem(PROFILE_KEY);
-      if (raw) {
-        const parsed = JSON.parse(raw) as Partial<LearnerProfile>;
-        setProfile({
-          name: typeof parsed.name === "string" ? parsed.name : "",
-          goal: typeof parsed.goal === "string" ? parsed.goal : "ccna",
-          weeklyTarget:
-            typeof parsed.weeklyTarget === "number"
-              ? Math.min(20, Math.max(1, parsed.weeklyTarget))
-              : 5,
-        });
+    let active = true;
+    const loadProfile = async () => {
+      let localProfile = defaults;
+      try {
+        const raw = localStorage.getItem(PROFILE_KEY);
+        if (raw) {
+          const parsed = JSON.parse(raw) as Partial<LearnerProfile>;
+          localProfile = {
+            name: typeof parsed.name === "string" ? parsed.name : "",
+            goal: typeof parsed.goal === "string" ? parsed.goal : "ccna",
+            weeklyTarget:
+              typeof parsed.weeklyTarget === "number"
+                ? Math.min(20, Math.max(1, parsed.weeklyTarget))
+                : 5,
+          };
+        }
+      } catch {
+        localStorage.removeItem(PROFILE_KEY);
       }
-    } catch {
-      localStorage.removeItem(PROFILE_KEY);
-    }
-    setReady(true);
+      if (!active) return;
+      setProfile(localProfile);
+
+      const { data: sessionData } = await supabase.auth.getSession();
+      const user = sessionData.session?.user;
+      if (user) {
+        setAccountEmail(user.email ?? null);
+        const { data: cloudProfile, error: profileError } = await supabase
+          .from("profiles")
+          .select("display_name, learning_goal, weekly_target")
+          .eq("id", user.id)
+          .maybeSingle();
+        if (active && !profileError && cloudProfile) {
+          setProfile({
+            name: cloudProfile.display_name,
+            goal: cloudProfile.learning_goal,
+            weeklyTarget: cloudProfile.weekly_target,
+          });
+        } else if (active && !profileError) {
+          await supabase.from("profiles").upsert({
+            id: user.id,
+            display_name: localProfile.name,
+            learning_goal: localProfile.goal,
+            weekly_target: localProfile.weeklyTarget,
+          });
+        }
+      }
+      if (active) {
+        setCloudReady(Boolean(user));
+        setReady(true);
+      }
+    };
+    void loadProfile();
+    return () => {
+      active = false;
+    };
   }, []);
 
   useEffect(() => {
-    if (ready) localStorage.setItem(PROFILE_KEY, JSON.stringify(profile));
-  }, [profile, ready]);
+    if (!ready) return;
+    localStorage.setItem(PROFILE_KEY, JSON.stringify(profile));
+    let active = true;
+    const timer = window.setTimeout(async () => {
+      const { data } = await supabase.auth.getSession();
+      const user = data.session?.user;
+      if (!user || !active) return;
+      const { error: saveError } = await supabase.from("profiles").upsert({
+        id: user.id,
+        display_name: profile.name,
+        learning_goal: profile.goal,
+        weekly_target: profile.weeklyTarget,
+        updated_at: new Date().toISOString(),
+      });
+      if (active && saveError) {
+        setMessage(
+          t(
+            "تعذر مزامنة الملف السحابي حالياً؛ بياناتك المحلية محفوظة.",
+            "Cloud sync failed; your local profile is still saved.",
+          ),
+        );
+      }
+    }, 450);
+    return () => {
+      active = false;
+      window.clearTimeout(timer);
+    };
+  }, [profile, ready, t]);
 
   const completed = useMemo(
     () => lessons.filter((lesson) => done.includes(lesson.id)).length,
@@ -241,12 +308,44 @@ function ProfilePage() {
             </select>
           </label>
         </div>
-        <p className="mt-3 text-xs leading-6 text-muted-foreground">
-          {t(
-            "هذه البيانات والتقدم محفوظة محلياً في هذا المتصفح فقط حالياً. لا يوجد حساب سحابي أو مزامنة تلقائية بين الأجهزة بعد.",
-            "This profile and progress are currently stored only in this browser. Cloud accounts and automatic cross-device sync are not enabled yet.",
+        <div className="mt-4 rounded-lg border border-border bg-secondary/40 p-4">
+          {accountEmail ? (
+            <>
+              <p className="text-sm font-semibold text-foreground">
+                {t("الحساب المتصل", "Connected account")}
+              </p>
+              <p className="mt-1 text-sm text-muted-foreground" dir="ltr">
+                {accountEmail}
+              </p>
+              <p className="mt-2 text-xs text-muted-foreground">
+                {cloudReady
+                  ? t(
+                      "ملفك وتقدم الدروس تتم مزامنتهما مع حسابك السحابي.",
+                      "Your profile and lesson progress are synced with your cloud account.",
+                    )
+                  : t("جارٍ تجهيز المزامنة السحابية...", "Preparing cloud sync...")}
+              </p>
+            </>
+          ) : (
+            <>
+              <p className="text-sm font-semibold">
+                {t("استخدم حساباً لحفظ تقدمك", "Use an account to save your progress")}
+              </p>
+              <p className="mt-1 text-xs leading-6 text-muted-foreground">
+                {t(
+                  "يمكنك متابعة التعلم محلياً، أو تسجيل الدخول لمزامنة ملفك وتقدم الدروس بين أجهزتك.",
+                  "You can keep learning locally or sign in to sync your profile and lesson progress across devices.",
+                )}
+              </p>
+              <Link
+                to="/auth"
+                className="mt-3 inline-flex rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground"
+              >
+                {t("تسجيل الدخول أو إنشاء حساب", "Sign in or create account")}
+              </Link>
+            </>
           )}
-        </p>
+        </div>
       </section>
       <section className="mt-6 rounded-xl border border-border bg-card p-6">
         <div className="flex items-center gap-3">

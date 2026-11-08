@@ -13,6 +13,7 @@ export function SiteHeader() {
     { to: "/practice", ar: "تدريب الأوامر", en: "CLI practice" },
     { to: "/exam", ar: "الاختبارات", en: "Exams" },
     { to: "/profile", ar: "ملفي", en: "Profile" },
+    { to: "/auth", ar: "حساب الطالب", en: "Student account" },
     { to: "/about", ar: "حول", en: "About" },
   ] as const;
   return (
