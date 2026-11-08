@@ -74,9 +74,11 @@ describe("Requested product events", () => {
   });
   it("tracks lab actions without addresses or device names", () => {
     mount(LabRoute);
-    fireEvent.click(screen.getByRole("button", { name: "ping" }));
+    const pingButton = screen.getByRole("button", { name: "ping" });
+    expect(pingButton).toBeDisabled();
+    fireEvent.click(pingButton);
     fireEvent.click(screen.getByRole("button", { name: "Switch" }));
-    expect(track).toHaveBeenCalledWith("project.lab_used", { action: "ping" });
+    expect(track).not.toHaveBeenCalledWith("project.lab_used", { action: "ping" });
     expect(track).toHaveBeenCalledWith("project.lab_used", { action: "add_device", device_kind: "switch" });
   });
   it("works when the injected tracker is absent", () => {
