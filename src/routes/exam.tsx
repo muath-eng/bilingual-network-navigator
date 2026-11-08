@@ -23,12 +23,23 @@ function ExamPage() {
     () =>
       lessons
         .flatMap((l) =>
-          l.quiz.map((q, i) => ({
-            id: l.id + "-" + i,
-            lesson: l.titleAr,
-            lessonEn: l.titleEn,
-            ...q,
-          })),
+          (Array.isArray(l.quiz) ? l.quiz : [])
+            .filter((q) =>
+              q &&
+              typeof q.qAr === "string" &&
+              typeof q.qEn === "string" &&
+              Array.isArray(q.options) &&
+              q.options.length > 1 &&
+              Number.isInteger(q.answer) &&
+              q.answer >= 0 &&
+              q.answer < q.options.length,
+            )
+            .map((q, i) => ({
+              id: l.id + "-" + i,
+              lesson: l.titleAr,
+              lessonEn: l.titleEn,
+              ...q,
+            })),
         )
         .slice(0, 30),
     [],
@@ -68,10 +79,11 @@ function ExamPage() {
             <div className="h-2 w-full overflow-hidden rounded-full bg-secondary">
               <div
                 className="h-full bg-primary"
-                style={{ width: `${(Object.keys(answers).length / questions.length) * 100}%` }}
+                style={{ width: `${questions.length ? (Object.keys(answers).length / questions.length) * 100 : 0}%` }}
               />
             </div>
           </div>
+          {questions.length > 0 ? (
           <div className="mt-5 space-y-4">
             {questions.map((q, i) => (
               <section key={q.id} className="rounded-xl border border-border bg-card p-5">
@@ -93,8 +105,13 @@ function ExamPage() {
               </section>
             ))}
           </div>
+          ) : (
+            <p className="mt-5 rounded-xl border border-border bg-card p-5 text-muted-foreground">
+              {t("لا توجد أسئلة صالحة حالياً. يرجى مراجعة محتوى الدروس.", "No valid questions are available yet. Please review the lesson content.")}
+            </p>
+          )}
           <button
-            disabled={Object.keys(answers).length !== questions.length}
+            disabled={questions.length === 0 || Object.keys(answers).length !== questions.length}
             onClick={() => setSubmitted(true)}
             className="mt-6 rounded-lg bg-primary px-6 py-3 font-semibold text-primary-foreground disabled:opacity-40"
           >
