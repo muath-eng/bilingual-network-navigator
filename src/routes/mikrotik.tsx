@@ -174,26 +174,62 @@ function MikroTikPage() {
     0,
   );
   const optionTranslations: Record<string, { ar: string; en: string }> = {
-    "Change default credentials": { ar: "غيّر بيانات الدخول الافتراضية", en: "Change default credentials" },
-    "ترك كلمة المرور الافتراضية": { ar: "اترك كلمة المرور الافتراضية", en: "Leave the default password" },
-    "فتح الإدارة للجميع": { ar: "اسمح بالإدارة من أي مكان", en: "Allow management from anywhere" },
-    "توزيع إعدادات IP تلقائياً": { ar: "توزيع إعدادات IP تلقائياً", en: "Automatically assign IP settings" },
+    "Change default credentials": {
+      ar: "غيّر بيانات الدخول الافتراضية",
+      en: "Change default credentials",
+    },
+    "ترك كلمة المرور الافتراضية": {
+      ar: "اترك كلمة المرور الافتراضية",
+      en: "Leave the default password",
+    },
+    "فتح الإدارة للجميع": {
+      ar: "اسمح بالإدارة من أي مكان",
+      en: "Allow management from anywhere",
+    },
+    "توزيع إعدادات IP تلقائياً": {
+      ar: "توزيع إعدادات IP تلقائياً",
+      en: "Automatically assign IP settings",
+    },
     "تشفير Wi-Fi": { ar: "تشفير Wi-Fi", en: "Wi-Fi encryption" },
     "حجب المواقع": { ar: "حجب المواقع", en: "Website blocking" },
-    "توجيه الوجهات غير المعروفة للبوابة": { ar: "توجيه الوجهات غير المعروفة للبوابة", en: "Forward unknown destinations to the gateway" },
+    "توجيه الوجهات غير المعروفة للبوابة": {
+      ar: "توجيه الوجهات غير المعروفة للبوابة",
+      en: "Forward unknown destinations to the gateway",
+    },
     "تغيير MAC": { ar: "تغيير MAC", en: "Change MAC" },
     "توزيع DHCP": { ar: "توزيع DHCP", en: "DHCP assignment" },
-    "على خروج WAN": { ar: "على حركة الخروج عبر WAN", en: "On WAN egress" },
+    "على خروج WAN": {
+      ar: "على حركة الخروج عبر WAN",
+      en: "On WAN egress",
+    },
     "على DNS فقط": { ar: "على DNS فقط", en: "On DNS only" },
-    "على منفذ Console": { ar: "على منفذ Console", en: "On the console port" },
-    "السماح من أي مكان": { ar: "السماح من أي مكان", en: "Allow from anywhere" },
-    "تقييدها لعناوين موثوقة": { ar: "تقييدها لعناوين موثوقة", en: "Restrict it to trusted addresses" },
-    "تعطيل كل كلمات المرور": { ar: "تعطيل كل كلمات المرور", en: "Disable all passwords" },
+    "على منفذ Console": {
+      ar: "على منفذ Console",
+      en: "On the console port",
+    },
+    "السماح من أي مكان": {
+      ar: "السماح من أي مكان",
+      en: "Allow from anywhere",
+    },
+    "تقييدها لعناوين موثوقة": {
+      ar: "تقييدها لعناوين موثوقة",
+      en: "Restrict it to trusted addresses",
+    },
+    "تعطيل كل كلمات المرور": {
+      ar: "تعطيل كل كلمات المرور",
+      en: "Disable all passwords",
+    },
     "تداخل القنوات": { ar: "تداخل القنوات", en: "Channel overlap" },
     "عنوان IPv4": { ar: "عنوان IPv4", en: "IPv4 address" },
-    "بوابة مصادقة للمستخدمين": { ar: "بوابة مصادقة للمستخدمين", en: "User authentication portal" },
+    "بوابة مصادقة للمستخدمين": {
+      ar: "بوابة مصادقة للمستخدمين",
+      en: "User authentication portal",
+    },
     "تحديث BIOS": { ar: "تحديث BIOS", en: "Update BIOS" },
-    "تغيير عنوان MAC تلقائياً": { ar: "تغيير عنوان MAC تلقائياً", en: "Automatically change MAC address" },
+    "تغيير عنوان MAC تلقائياً": {
+      ar: "تغيير عنوان MAC تلقائياً",
+      en: "Automatically change MAC address",
+    },
   };
   const optionLabel = (option: string) =>
     optionTranslations[option]
@@ -302,16 +338,19 @@ function MikroTikPage() {
         </div>
         {checked && (
           <>
-          <p className="mt-4 flex items-center gap-2 font-semibold">
-            <CheckCircle2 className="h-5 w-5 text-primary" />
-            {score} / {total} · {Math.round((score / total) * 100)}%
-          </p>
-          <button
-            onClick={() => { setAnswers({}); setChecked(false); }}
-            className="mt-3 rounded-lg border border-border px-4 py-2 text-sm font-semibold hover:bg-secondary"
-          >
-            {t("إعادة المحاولة", "Try again")}
-          </button>
+            <p className="mt-4 flex items-center gap-2 font-semibold">
+              <CheckCircle2 className="h-5 w-5 text-primary" />
+              {score} / {total} · {Math.round((score / total) * 100)}%
+            </p>
+            <button
+              onClick={() => {
+                setAnswers({});
+                setChecked(false);
+              }}
+              className="mt-3 rounded-lg border border-border px-4 py-2 text-sm font-semibold hover:bg-secondary"
+            >
+              {t("إعادة المحاولة", "Try again")}
+            </button>
           </>
         )}
       </div>
