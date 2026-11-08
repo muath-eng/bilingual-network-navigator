@@ -289,18 +289,16 @@ function Lab() {
               : t("تمر الحزمة عبر هذا الجهاز.", "The packet passes through this device."),
         });
       });
-      [...ids]
-        .reverse()
-        .forEach((id) =>
-          steps.push({
-            deviceId: id,
-            title: "ICMP Echo Reply",
-            detail: t(
-              "يعود رد ICMP باتجاه جهاز المصدر.",
-              "The ICMP reply travels back toward the source.",
-            ),
-          }),
-        );
+      [...ids].reverse().forEach((id) =>
+        steps.push({
+          deviceId: id,
+          title: "ICMP Echo Reply",
+          detail: t(
+            "يعود رد ICMP باتجاه جهاز المصدر.",
+            "The ICMP reply travels back toward the source.",
+          ),
+        }),
+      );
       setTrace(steps);
       setTraceIndex(0);
       out.push(
