@@ -38,12 +38,9 @@ jobs:
           src/routes/mikrotik.tsx
           src/routes/practice.tsx
           src/routes/exam.tsx
-          src/routes/profile.tsx
           src/routes/troubleshoot.tsx
           src/routes/about.tsx
           src/components/SiteHeader.tsx
-          src/routes/auth.tsx
-          src/lib/i18n.tsx
       - name: Run tests
         run: bun run test
       - name: Lint updated files
@@ -64,5 +61,7 @@ jobs:
           src/routes/troubleshoot.tsx
           src/routes/about.tsx
           src/components/SiteHeader.tsx
+          src/routes/auth.tsx
+          src/lib/i18n.tsx
       - name: Build production app
         run: bun run build
