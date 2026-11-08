@@ -50,6 +50,7 @@ function ExamPage() {
   const [certId, setCertId] = useState("");
   const score = questions.filter((q) => answers[q.id] === q.answer).length;
   const pct = Math.round((score / Math.max(questions.length, 1)) * 100);
+  const progress = questions.length ? (Object.keys(answers).length / questions.length) * 100 : 0;
   const passed = submitted && pct >= 70;
   const reset = () => {
     setAnswers({});
@@ -79,9 +80,7 @@ function ExamPage() {
             <div className="h-2 w-full overflow-hidden rounded-full bg-secondary">
               <div
                 className="h-full bg-primary"
-                style={{
-                  width: `${questions.length ? (Object.keys(answers).length / questions.length) * 100 : 0}%`,
-                }}
+                style={{ width: `${progress}%` }}
               />
             </div>
           </div>
@@ -116,7 +115,9 @@ function ExamPage() {
             </p>
           )}
           <button
-            disabled={questions.length === 0 || Object.keys(answers).length !== questions.length}
+            disabled={
+              questions.length === 0 || Object.keys(answers).length !== questions.length
+            }
             onClick={() => setSubmitted(true)}
             className="mt-6 rounded-lg bg-primary px-6 py-3 font-semibold text-primary-foreground disabled:opacity-40"
           >
