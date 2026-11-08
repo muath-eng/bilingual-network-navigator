@@ -18,7 +18,7 @@ export const createRouterOsState = (identity = "MikroTik"): RouterOsState => ({
 const validIPv4 = (value: string) => {
   const parts = value.split(".");
   return parts.length === 4 && parts.every((part) =>
-    /^\\d{1,3}$/.test(part) && Number(part) >= 0 && Number(part) <= 255
+    /^\d{1,3}$/.test(part) && Number(part) >= 0 && Number(part) <= 255
   );
 };
 
@@ -30,21 +30,21 @@ const prefixMask = (prefix: number) => {
 const parseAddress = (value: string) => {
   const [ip, prefixText] = value.split("/");
   const prefix = Number(prefixText);
-  if (!ip || !validIPv4(ip) || !/^\\d{1,2}$/.test(prefixText ?? "") || prefix < 1 || prefix > 32)
+  if (!ip || !validIPv4(ip) || !/^\d{1,2}$/.test(prefixText ?? "") || prefix < 1 || prefix > 32)
     return null;
   return { ip, prefix, mask: prefixMask(prefix) };
 };
 
 const parseArgs = (command: string) =>
   Object.fromEntries(
-    [...command.matchAll(/([a-z-]+)=([^\\s]+)/gi)].map((match) => [
+    [...command.matchAll(/([a-z-]+)=([^\s]+)/gi)].map((match) => [
       match[1]!.toLowerCase(),
       match[2]!,
     ]),
   );
 
 export function runRouterOsCommand(current: RouterOsState, rawCommand: string): RouterOsResult {
-  const command = rawCommand.trim().replace(/\\s+/g, " ");
+  const command = rawCommand.trim().replace(/\s+/g, " ");
   const lower = command.toLowerCase();
   const state: RouterOsState = {
     identity: current.identity,
@@ -64,7 +64,7 @@ export function runRouterOsCommand(current: RouterOsState, rawCommand: string): 
     ]);
 
   if (lower.startsWith("/system identity set ")) {
-    const name = command.slice("/system identity set ".length).match(/name=(?:"([^"]+)"|([^\\s]+))/i);
+    const name = command.slice("/system identity set ".length).match(/name=(?:"([^"]+)"|([^\s]+))/i);
     if (!name) return result(["expected: /system identity set name=Router1"]);
     state.identity = (name[1] ?? name[2] ?? "").slice(0, 32);
     return result(["identity changed to " + state.identity], [
@@ -120,7 +120,7 @@ export function runRouterOsCommand(current: RouterOsState, rawCommand: string): 
     const args = parseArgs(command);
     const destination = args["dst-address"];
     const gateway = args.gateway;
-    if (!destination || !gateway || !validIPv4(gateway) || !/^0\\.0\\.0\\.0\\/0$/.test(destination))
+    if (!destination || !gateway || !validIPv4(gateway) || !/^0\.0\.0\.0\/0$/.test(destination))
       return result(["supported example: /ip route add dst-address=0.0.0.0/0 gateway=192.168.10.254"]);
     if (state.routes.some((item) => item.destination === destination))
       return result(["failure: route " + destination + " already exists"]);
