@@ -174,6 +174,60 @@ const foundationLessons: Lesson[] = [
       },
     ],
   },
+];
+
+export const lessons: Lesson[] = [...foundationLessons, ...ccnaLessons];
+
+export const scenarios = [
+  {
+    id: "s1",
+    titleAr: "الجهاز لا يصل للإنترنت",
+    titleEn: "PC can't reach the Internet",
+    infoAr: "PC: IP 192.168.1.20 / 255.255.255.0 / Gateway 192.168.2.1 — الراوتر: 192.168.1.1",
+    infoEn: "PC: IP 192.168.1.20 / 255.255.255.0 / Gateway 192.168.2.1 — Router: 192.168.1.1",
+    optionsAr: ["الكابل مفصول", "البوابة الافتراضية خاطئة", "DNS معطل"],
+    optionsEn: ["Cable unplugged", "Wrong default gateway", "DNS down"],
+    answer: 1,
+    explainAr: "البوابة يجب أن تكون 192.168.1.1 أي في نفس شبكة الجهاز.",
+    explainEn: "The gateway must be 192.168.1.1, in the same subnet as the PC.",
+  },
+  {
+    id: "s2",
+    titleAr: "المواقع لا تفتح لكن ping 8.8.8.8 يعمل",
+    titleEn: "Websites fail but ping 8.8.8.8 works",
+    infoAr: "ping 8.8.8.8 ناجح، ping google.com يعطي: could not find host",
+    infoEn: "ping 8.8.8.8 succeeds, ping google.com: could not find host",
+    optionsAr: ["مشكلة DNS", "مشكلة كابل", "قناع خاطئ"],
+    optionsEn: ["DNS problem", "Cable problem", "Wrong mask"],
+    answer: 0,
+    explainAr: "الاتصال يعمل، لكن ترجمة الأسماء فشلت = DNS.",
+    explainEn: "Connectivity works but name resolution fails = DNS.",
+  },
+  {
+    id: "s3",
+    titleAr: "جهازان على نفس السويتش لا يتواصلان",
+    titleEn: "Two PCs on the same switch can't talk",
+    infoAr: "PC1: 10.0.0.5/24 في VLAN 10 — PC2: 10.0.0.6/24 في VLAN 20",
+    infoEn: "PC1: 10.0.0.5/24 on VLAN 10 — PC2: 10.0.0.6/24 on VLAN 20",
+    optionsAr: ["عناوين متضاربة", "الأجهزة في VLANs مختلفة", "السويتش معطل"],
+    optionsEn: ["IP conflict", "Devices on different VLANs", "Switch is broken"],
+    answer: 1,
+    explainAr: "VLANs مختلفة تعني شبكات منفصلة؛ ضعهما في نفس VLAN أو أضف توجيه بين VLANs.",
+    explainEn:
+      "Different VLANs are separate networks; put them in one VLAN or add inter-VLAN routing.",
+  },
+  {
+    id: "s4",
+    titleAr: "رسالة تعارض عنوان IP",
+    titleEn: "IP address conflict warning",
+    infoAr: "جهازان مضبوطان يدوياً على 192.168.1.50",
+    infoEn: "Two devices manually set to 192.168.1.50",
+    optionsAr: ["غيّر عنوان أحدهما أو استخدم DHCP", "أعد تشغيل الراوتر فقط", "غيّر DNS"],
+    optionsEn: ["Change one IP or use DHCP", "Just reboot router", "Change DNS"],
+    answer: 0,
+    explainAr: "كل جهاز يحتاج عنواناً فريداً في الشبكة.",
+    explainEn: "Each device needs a unique address on the network.",
+  },
   {
     id: "s5",
     titleAr: "لا يمكن الوصول إلى جهاز في VLAN أخرى",
@@ -280,59 +334,5 @@ const foundationLessons: Lesson[] = [
       "الاتصال يحتاج مساراً ذهاباً وإياباً. افحص جدول التوجيه في الطرفين، والبوابات الافتراضية، وقواعد ACL أو Firewall التي قد تمنع ICMP أو حركة التطبيق.",
     explainEn:
       "Connectivity requires both forward and return paths. Check routing tables on both ends, default gateways, and ACL or firewall rules that may block ICMP or application traffic.",
-  },
-];
-
-export const lessons: Lesson[] = [...foundationLessons, ...ccnaLessons];
-
-export const scenarios = [
-  {
-    id: "s1",
-    titleAr: "الجهاز لا يصل للإنترنت",
-    titleEn: "PC can't reach the Internet",
-    infoAr: "PC: IP 192.168.1.20 / 255.255.255.0 / Gateway 192.168.2.1 — الراوتر: 192.168.1.1",
-    infoEn: "PC: IP 192.168.1.20 / 255.255.255.0 / Gateway 192.168.2.1 — Router: 192.168.1.1",
-    optionsAr: ["الكابل مفصول", "البوابة الافتراضية خاطئة", "DNS معطل"],
-    optionsEn: ["Cable unplugged", "Wrong default gateway", "DNS down"],
-    answer: 1,
-    explainAr: "البوابة يجب أن تكون 192.168.1.1 أي في نفس شبكة الجهاز.",
-    explainEn: "The gateway must be 192.168.1.1, in the same subnet as the PC.",
-  },
-  {
-    id: "s2",
-    titleAr: "المواقع لا تفتح لكن ping 8.8.8.8 يعمل",
-    titleEn: "Websites fail but ping 8.8.8.8 works",
-    infoAr: "ping 8.8.8.8 ناجح، ping google.com يعطي: could not find host",
-    infoEn: "ping 8.8.8.8 succeeds, ping google.com: could not find host",
-    optionsAr: ["مشكلة DNS", "مشكلة كابل", "قناع خاطئ"],
-    optionsEn: ["DNS problem", "Cable problem", "Wrong mask"],
-    answer: 0,
-    explainAr: "الاتصال يعمل، لكن ترجمة الأسماء فشلت = DNS.",
-    explainEn: "Connectivity works but name resolution fails = DNS.",
-  },
-  {
-    id: "s3",
-    titleAr: "جهازان على نفس السويتش لا يتواصلان",
-    titleEn: "Two PCs on the same switch can't talk",
-    infoAr: "PC1: 10.0.0.5/24 في VLAN 10 — PC2: 10.0.0.6/24 في VLAN 20",
-    infoEn: "PC1: 10.0.0.5/24 on VLAN 10 — PC2: 10.0.0.6/24 on VLAN 20",
-    optionsAr: ["عناوين متضاربة", "الأجهزة في VLANs مختلفة", "السويتش معطل"],
-    optionsEn: ["IP conflict", "Devices on different VLANs", "Switch is broken"],
-    answer: 1,
-    explainAr: "VLANs مختلفة تعني شبكات منفصلة؛ ضعهما في نفس VLAN أو أضف توجيه بين VLANs.",
-    explainEn:
-      "Different VLANs are separate networks; put them in one VLAN or add inter-VLAN routing.",
-  },
-  {
-    id: "s4",
-    titleAr: "رسالة تعارض عنوان IP",
-    titleEn: "IP address conflict warning",
-    infoAr: "جهازان مضبوطان يدوياً على 192.168.1.50",
-    infoEn: "Two devices manually set to 192.168.1.50",
-    optionsAr: ["غيّر عنوان أحدهما أو استخدم DHCP", "أعد تشغيل الراوتر فقط", "غيّر DNS"],
-    optionsEn: ["Change one IP or use DHCP", "Just reboot router", "Change DNS"],
-    answer: 0,
-    explainAr: "كل جهاز يحتاج عنواناً فريداً في الشبكة.",
-    explainEn: "Each device needs a unique address on the network.",
   },
 ];
