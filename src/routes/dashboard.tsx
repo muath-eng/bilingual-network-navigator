@@ -191,7 +191,10 @@ function StudentDashboard() {
             <CheckCircle2 className="h-4 w-4 text-primary" />
             {t("الدروس المكتملة", "Completed lessons")}
           </div>
-          <p className="mt-3 font-mono text-3xl font-bold">{completedCount}<span className="text-base font-medium text-muted-foreground"> / {lessons.length}</span></p>
+          <p className="mt-3 font-mono text-3xl font-bold">
+            {completedCount}
+            <span className="text-base font-medium text-muted-foreground"> / {lessons.length}</span>
+          </p>
         </div>
         <div className="rounded-xl border border-border bg-card p-5">
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -212,7 +215,12 @@ function StudentDashboard() {
             <Award className="h-4 w-4 text-primary" />
             {t("هدفك الأسبوعي", "Weekly target")}
           </div>
-          <p className="mt-3 font-mono text-3xl font-bold">{profile.weeklyTarget}<span className="ms-2 text-sm font-medium text-muted-foreground">{t("دروس", "lessons")}</span></p>
+          <p className="mt-3 font-mono text-3xl font-bold">
+            {profile.weeklyTarget}
+            <span className="ms-2 text-sm font-medium text-muted-foreground">
+              {t("دروس", "lessons")}
+            </span>
+          </p>
         </div>
       </section>
 
@@ -220,29 +228,51 @@ function StudentDashboard() {
         <div className="rounded-2xl border border-border bg-card p-6">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
-              <h2 className="font-display text-xl font-bold">{t("رحلتك التعليمية", "Your learning journey")}</h2>
-              <p className="mt-1 text-sm text-muted-foreground">{t("تقدمك في مستويات المنهج", "Your progress across the curriculum levels")}</p>
+              <h2 className="font-display text-xl font-bold">
+                {t("رحلتك التعليمية", "Your learning journey")}
+              </h2>
+              <p className="mt-1 text-sm text-muted-foreground">
+                {t("تقدمك في مستويات المنهج", "Your progress across the curriculum levels")}
+              </p>
             </div>
-            <span className="rounded-full bg-primary/10 px-3 py-1 text-sm font-semibold text-primary">{completion}%</span>
+            <span className="rounded-full bg-primary/10 px-3 py-1 text-sm font-semibold text-primary">
+              {completion}%
+            </span>
           </div>
-          <div className="mt-5 h-3 overflow-hidden rounded-full bg-secondary" role="progressbar" aria-label={t("التقدم الكلي", "Overall progress")} aria-valuenow={completion} aria-valuemin={0} aria-valuemax={100}>
-            <div className="h-full rounded-full bg-primary transition-all duration-500" style={{ width: `${completion}%` }} />
+          <div
+            className="mt-5 h-3 overflow-hidden rounded-full bg-secondary"
+            role="progressbar"
+            aria-label={t("التقدم الكلي", "Overall progress")}
+            aria-valuenow={completion}
+            aria-valuemin={0}
+            aria-valuemax={100}
+          >
+            <div
+              className="h-full rounded-full bg-primary transition-all duration-500"
+              style={{ width: `${completion}%` }}
+            />
           </div>
           <div className="mt-6 space-y-5">
             {levelStats.map((item) => {
-              const levelName = item.level === "beginner"
-                ? t("مبتدئ", "Beginner")
-                : item.level === "intermediate"
-                  ? t("متوسط", "Intermediate")
-                  : t("متقدم", "Advanced");
+              const levelName =
+                item.level === "beginner"
+                  ? t("مبتدئ", "Beginner")
+                  : item.level === "intermediate"
+                    ? t("متوسط", "Intermediate")
+                    : t("متقدم", "Advanced");
               return (
                 <div key={item.level}>
                   <div className="mb-2 flex items-center justify-between gap-3 text-sm">
                     <span className="font-medium">{levelName}</span>
-                    <span className="font-mono text-muted-foreground">{item.completed}/{item.total}</span>
+                    <span className="font-mono text-muted-foreground">
+                      {item.completed}/{item.total}
+                    </span>
                   </div>
                   <div className="h-2 overflow-hidden rounded-full bg-secondary">
-                    <div className="h-full rounded-full bg-primary/80" style={{ width: `${item.percent}%` }} />
+                    <div
+                      className="h-full rounded-full bg-primary/80"
+                      style={{ width: `${item.percent}%` }}
+                    />
                   </div>
                 </div>
               );
@@ -253,13 +283,21 @@ function StudentDashboard() {
         <div className="rounded-2xl border border-border bg-card p-6">
           <div className="flex items-center gap-2 text-primary">
             <Target className="h-5 w-5" />
-            <h2 className="font-display text-xl font-bold text-foreground">{t("هدفك التعليمي", "Your learning goal")}</h2>
+            <h2 className="font-display text-xl font-bold text-foreground">
+              {t("هدفك التعليمي", "Your learning goal")}
+            </h2>
           </div>
           <p className="mt-4 text-2xl font-bold">{t(goalLabel.ar, goalLabel.en)}</p>
           <p className="mt-2 text-sm leading-6 text-muted-foreground">
-            {t("يمكنك تعديل هدفك وعدد الدروس الأسبوعي من صفحة ملفك التعليمي.", "You can change your goal and weekly lesson target from your learning profile.")}
+            {t(
+              "يمكنك تعديل هدفك وعدد الدروس الأسبوعي من صفحة ملفك التعليمي.",
+              "You can change your goal and weekly lesson target from your learning profile.",
+            )}
           </p>
-          <Link to="/profile" className="mt-5 inline-flex rounded-lg border border-border px-4 py-2 text-sm font-semibold hover:bg-secondary">
+          <Link
+            to="/profile"
+            className="mt-5 inline-flex rounded-lg border border-border px-4 py-2 text-sm font-semibold hover:bg-secondary"
+          >
             {t("تعديل الهدف", "Edit goal")}
           </Link>
         </div>
@@ -268,26 +306,50 @@ function StudentDashboard() {
       <section className="mt-6 rounded-2xl border border-border bg-card p-6 md:p-7">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <h2 className="font-display text-xl font-bold">{t("خطوتك التالية", "Your next step")}</h2>
-            <p className="mt-1 text-sm text-muted-foreground">{t("استمر من حيث وصلت.", "Pick up where you left off.")}</p>
+            <h2 className="font-display text-xl font-bold">
+              {t("خطوتك التالية", "Your next step")}
+            </h2>
+            <p className="mt-1 text-sm text-muted-foreground">
+              {t("استمر من حيث وصلت.", "Pick up where you left off.")}
+            </p>
           </div>
           <BookOpen className="h-6 w-6 text-primary" />
         </div>
         {nextLesson ? (
           <div className="mt-5 flex flex-col gap-4 rounded-xl bg-secondary/50 p-5 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <p className="text-xs font-semibold text-primary">{t("الدرس التالي في المنهج", "NEXT LESSON IN THE CURRICULUM")}</p>
-              <h3 className="mt-2 text-lg font-bold">{t(nextLesson.titleAr, nextLesson.titleEn)}</h3>
-              <p className="mt-1 text-sm text-muted-foreground">{t("أكمل هذا الدرس لزيادة تقدمك.", "Complete this lesson to move your progress forward.")}</p>
+              <p className="text-xs font-semibold text-primary">
+                {t("الدرس التالي في المنهج", "NEXT LESSON IN THE CURRICULUM")}
+              </p>
+              <h3 className="mt-2 text-lg font-bold">
+                {t(nextLesson.titleAr, nextLesson.titleEn)}
+              </h3>
+              <p className="mt-1 text-sm text-muted-foreground">
+                {t(
+                  "أكمل هذا الدرس لزيادة تقدمك.",
+                  "Complete this lesson to move your progress forward.",
+                )}
+              </p>
             </div>
-            <Link to="/learn/$id" params={{ id: nextLesson.id }} className="inline-flex shrink-0 items-center justify-center rounded-lg bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground hover:opacity-90">
+            <Link
+              to="/learn/$id"
+              params={{ id: nextLesson.id }}
+              className="inline-flex shrink-0 items-center justify-center rounded-lg bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground hover:opacity-90"
+            >
               {t("متابعة الدرس", "Continue lesson")}
             </Link>
           </div>
         ) : (
           <div className="mt-5 rounded-xl bg-secondary/50 p-5">
-            <p className="font-semibold">{t("أكملت جميع الدروس المتاحة!", "You completed all available lessons!")}</p>
-            <Link to="/lab" className="mt-3 inline-flex rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground">{t("انتقل إلى المختبر", "Go to the lab")}</Link>
+            <p className="font-semibold">
+              {t("أكملت جميع الدروس المتاحة!", "You completed all available lessons!")}
+            </p>
+            <Link
+              to="/lab"
+              className="mt-3 inline-flex rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground"
+            >
+              {t("انتقل إلى المختبر", "Go to the lab")}
+            </Link>
           </div>
         )}
       </section>
@@ -295,14 +357,25 @@ function StudentDashboard() {
       <section className="mt-6">
         <div className="mb-4">
           <h2 className="font-display text-xl font-bold">{t("الوصول السريع", "Quick access")}</h2>
-          <p className="mt-1 text-sm text-muted-foreground">{t("أدواتك التعليمية الأساسية في مكان واحد.", "Your essential learning tools in one place.")}</p>
+          <p className="mt-1 text-sm text-muted-foreground">
+            {t(
+              "أدواتك التعليمية الأساسية في مكان واحد.",
+              "Your essential learning tools in one place.",
+            )}
+          </p>
         </div>
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           {quickLinks.map((item) => (
-            <Link key={item.to} to={item.to} className="rounded-xl border border-border bg-card p-5 transition hover:border-primary">
+            <Link
+              key={item.to}
+              to={item.to}
+              className="rounded-xl border border-border bg-card p-5 transition hover:border-primary"
+            >
               <item.icon className="h-6 w-6 text-primary" />
               <h3 className="mt-3 font-semibold">{t(item.titleAr, item.titleEn)}</h3>
-              <p className="mt-2 text-sm leading-6 text-muted-foreground">{t(item.descriptionAr, item.descriptionEn)}</p>
+              <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                {t(item.descriptionAr, item.descriptionEn)}
+              </p>
             </Link>
           ))}
         </div>
@@ -310,7 +383,12 @@ function StudentDashboard() {
 
       <section className="mt-6 rounded-xl border border-border bg-card p-6">
         <h2 className="font-display text-lg font-bold">{t("إنجازاتك", "Your achievements")}</h2>
-        <p className="mt-1 text-sm text-muted-foreground">{t("تظهر الإنجازات تلقائياً مع تقدمك في المنهج.", "Achievements unlock as you progress through the curriculum.")}</p>
+        <p className="mt-1 text-sm text-muted-foreground">
+          {t(
+            "تظهر الإنجازات تلقائياً مع تقدمك في المنهج.",
+            "Achievements unlock as you progress through the curriculum.",
+          )}
+        </p>
         <div className="mt-4 flex flex-wrap gap-2">
           {[
             { threshold: 1, ar: "أول خطوة", en: "First step" },
@@ -321,7 +399,10 @@ function StudentDashboard() {
           ].map((achievement) => {
             const unlocked = completedCount >= achievement.threshold;
             return (
-              <span key={achievement.threshold} className={`inline-flex items-center gap-2 rounded-full border px-3 py-2 text-xs font-semibold ${unlocked ? "border-primary/40 bg-primary/10 text-primary" : "border-border text-muted-foreground"}`}>
+              <span
+                key={achievement.threshold}
+                className={`inline-flex items-center gap-2 rounded-full border px-3 py-2 text-xs font-semibold ${unlocked ? "border-primary/40 bg-primary/10 text-primary" : "border-border text-muted-foreground"}`}
+              >
                 <Award className="h-4 w-4" />
                 {t(achievement.ar, achievement.en)}
                 {unlocked ? <CheckCircle2 className="h-3.5 w-3.5" /> : null}
