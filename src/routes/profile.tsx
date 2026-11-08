@@ -128,7 +128,12 @@ function ProfilePage() {
         updated_at: new Date().toISOString(),
       });
       if (active && saveError) {
-        setMessage(t("تعذر مزامنة الملف السحابي حالياً؛ بياناتك المحلية محفوظة.", "Cloud sync failed; your local profile is still saved."));
+        setMessage(
+          t(
+            "تعذر مزامنة الملف السحابي حالياً؛ بياناتك المحلية محفوظة.",
+            "Cloud sync failed; your local profile is still saved.",
+          ),
+        );
       }
     }, 450);
     return () => {
@@ -306,21 +311,36 @@ function ProfilePage() {
         <div className="mt-4 rounded-lg border border-border bg-secondary/40 p-4">
           {accountEmail ? (
             <>
-              <p className="text-sm font-semibold text-foreground">{t("الحساب المتصل", "Connected account")}</p>
-              <p className="mt-1 text-sm text-muted-foreground" dir="ltr">{accountEmail}</p>
+              <p className="text-sm font-semibold text-foreground">
+                {t("الحساب المتصل", "Connected account")}
+              </p>
+              <p className="mt-1 text-sm text-muted-foreground" dir="ltr">
+                {accountEmail}
+              </p>
               <p className="mt-2 text-xs text-muted-foreground">
                 {cloudReady
-                  ? t("ملفك وتقدم الدروس تتم مزامنتهما مع حسابك السحابي.", "Your profile and lesson progress are synced with your cloud account.")
+                  ? t(
+                      "ملفك وتقدم الدروس تتم مزامنتهما مع حسابك السحابي.",
+                      "Your profile and lesson progress are synced with your cloud account.",
+                    )
                   : t("جارٍ تجهيز المزامنة السحابية...", "Preparing cloud sync...")}
               </p>
             </>
           ) : (
             <>
-              <p className="text-sm font-semibold">{t("استخدم حساباً لحفظ تقدمك", "Use an account to save your progress")}</p>
-              <p className="mt-1 text-xs leading-6 text-muted-foreground">
-                {t("يمكنك متابعة التعلم محلياً، أو تسجيل الدخول لمزامنة ملفك وتقدم الدروس بين أجهزتك.", "You can keep learning locally or sign in to sync your profile and lesson progress across devices.")}
+              <p className="text-sm font-semibold">
+                {t("استخدم حساباً لحفظ تقدمك", "Use an account to save your progress")}
               </p>
-              <Link to="/auth" className="mt-3 inline-flex rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground">
+              <p className="mt-1 text-xs leading-6 text-muted-foreground">
+                {t(
+                  "يمكنك متابعة التعلم محلياً، أو تسجيل الدخول لمزامنة ملفك وتقدم الدروس بين أجهزتك.",
+                  "You can keep learning locally or sign in to sync your profile and lesson progress across devices.",
+                )}
+              </p>
+              <Link
+                to="/auth"
+                className="mt-3 inline-flex rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground"
+              >
                 {t("تسجيل الدخول أو إنشاء حساب", "Sign in or create account")}
               </Link>
             </>

@@ -82,10 +82,12 @@ export function useProgress() {
     void supabase.auth.getSession().then(({ data }) => {
       const user = data.session?.user;
       if (!user) return;
-      return supabase.from("lesson_progress").upsert(
-        { user_id: user.id, lesson_id: id },
-        { onConflict: "user_id,lesson_id", ignoreDuplicates: true },
-      );
+      return supabase
+        .from("lesson_progress")
+        .upsert(
+          { user_id: user.id, lesson_id: id },
+          { onConflict: "user_id,lesson_id", ignoreDuplicates: true },
+        );
     });
   };
 
