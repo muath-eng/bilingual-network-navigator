@@ -79,35 +79,40 @@ function ExamPage() {
             <div className="h-2 w-full overflow-hidden rounded-full bg-secondary">
               <div
                 className="h-full bg-primary"
-                style={{ width: `${questions.length ? (Object.keys(answers).length / questions.length) * 100 : 0}%` }}
+                style={{
+                  width: `${questions.length ? (Object.keys(answers).length / questions.length) * 100 : 0}%`,
+                }}
               />
             </div>
           </div>
           {questions.length > 0 ? (
-          <div className="mt-5 space-y-4">
-            {questions.map((q, i) => (
-              <section key={q.id} className="rounded-xl border border-border bg-card p-5">
-                <p className="font-mono text-xs text-primary">
-                  QUESTION {i + 1} / {questions.length}
-                </p>
-                <p className="mt-2 font-semibold">{t(q.qAr, q.qEn)}</p>
-                <div className="mt-3 grid gap-2 sm:grid-cols-3">
-                  {q.options.map((o, j) => (
-                    <button
-                      key={j}
-                      onClick={() => setAnswers((a) => ({ ...a, [q.id]: j }))}
-                      className={`rounded-lg border p-3 text-start text-sm ${answers[q.id] === j ? "border-primary bg-primary/10" : "border-border hover:bg-secondary"}`}
-                    >
-                      {o}
-                    </button>
-                  ))}
-                </div>
-              </section>
-            ))}
-          </div>
+            <div className="mt-5 space-y-4">
+              {questions.map((q, i) => (
+                <section key={q.id} className="rounded-xl border border-border bg-card p-5">
+                  <p className="font-mono text-xs text-primary">
+                    QUESTION {i + 1} / {questions.length}
+                  </p>
+                  <p className="mt-2 font-semibold">{t(q.qAr, q.qEn)}</p>
+                  <div className="mt-3 grid gap-2 sm:grid-cols-3">
+                    {q.options.map((o, j) => (
+                      <button
+                        key={j}
+                        onClick={() => setAnswers((a) => ({ ...a, [q.id]: j }))}
+                        className={`rounded-lg border p-3 text-start text-sm ${answers[q.id] === j ? "border-primary bg-primary/10" : "border-border hover:bg-secondary"}`}
+                      >
+                        {o}
+                      </button>
+                    ))}
+                  </div>
+                </section>
+              ))}
+            </div>
           ) : (
             <p className="mt-5 rounded-xl border border-border bg-card p-5 text-muted-foreground">
-              {t("لا توجد أسئلة صالحة حالياً. يرجى مراجعة محتوى الدروس.", "No valid questions are available yet. Please review the lesson content.")}
+              {t(
+                "لا توجد أسئلة صالحة حالياً. يرجى مراجعة محتوى الدروس.",
+                "No valid questions are available yet. Please review the lesson content.",
+              )}
             </p>
           )}
           <button
