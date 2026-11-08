@@ -24,15 +24,16 @@ function ExamPage() {
       lessons
         .flatMap((l) =>
           (Array.isArray(l.quiz) ? l.quiz : [])
-            .filter((q) =>
-              q &&
-              typeof q.qAr === "string" &&
-              typeof q.qEn === "string" &&
-              Array.isArray(q.options) &&
-              q.options.length > 1 &&
-              Number.isInteger(q.answer) &&
-              q.answer >= 0 &&
-              q.answer < q.options.length,
+            .filter(
+              (q) =>
+                q &&
+                typeof q.qAr === "string" &&
+                typeof q.qEn === "string" &&
+                Array.isArray(q.options) &&
+                q.options.length > 1 &&
+                Number.isInteger(q.answer) &&
+                q.answer >= 0 &&
+                q.answer < q.options.length,
             )
             .map((q, i) => ({
               id: l.id + "-" + i,
