@@ -195,6 +195,10 @@ function MikroTikPage() {
     "تحديث BIOS": { ar: "تحديث BIOS", en: "Update BIOS" },
     "تغيير عنوان MAC تلقائياً": { ar: "تغيير عنوان MAC تلقائياً", en: "Automatically change MAC address" },
   };
+  const optionLabel = (option: string) =>
+    optionTranslations[option]
+      ? t(optionTranslations[option].ar, optionTranslations[option].en)
+      : option;
   return (
     <main className="mx-auto max-w-5xl px-4 py-10">
       <div className="rounded-2xl border border-border bg-card p-6 md:p-9">
@@ -253,7 +257,7 @@ function MikroTikPage() {
                             onClick={() => setAnswers((a) => ({ ...a, [id]: k }))}
                             className={`rounded-lg border px-3 py-2 text-sm ${answers[id] === k ? "border-primary bg-primary/10" : "border-border"}`}
                           >
-                            {optionTranslations[o] ? t(optionTranslations[o].ar, optionTranslations[o].en) : o}
+                            {optionLabel(o)}
                           </button>
                         ))}
                       </div>
@@ -264,7 +268,7 @@ function MikroTikPage() {
                           {answers[id] === l[7]
                             ? t("إجابة صحيحة", "Correct")
                             : t("الإجابة الصحيحة: ", "Correct answer: ") +
-                              (l[6] as string[])[l[7] as number]}
+                              optionLabel((l[6] as string[])[l[7] as number])}
                         </p>
                       )}
                     </article>
