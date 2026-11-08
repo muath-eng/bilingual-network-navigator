@@ -4,6 +4,7 @@ on:
   pull_request:
     branches:
       - main
+      - lovable-sync
   workflow_dispatch:
 
 permissions:
