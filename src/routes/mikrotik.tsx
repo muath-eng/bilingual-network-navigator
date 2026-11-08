@@ -7,6 +7,13 @@ export const Route = createFileRoute("/mikrotik")({
   head: () => ({
     meta: [
       { title: "MikroTik Academy — Network Master" },
+      { property: "og:title", content: "MikroTik Academy — Network Master" },
+      {
+        property: "og:description",
+        content: "Learn RouterOS configuration step by step in Arabic and English.",
+      },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
       {
         name: "description",
         content: "Learn RouterOS configuration step by step in Arabic and English.",
