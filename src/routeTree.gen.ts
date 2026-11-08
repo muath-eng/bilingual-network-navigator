@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AboutRouteImport } from './routes/about'
+import { Route as AuthRouteImport } from './routes/auth'
 import { Route as ExamRouteImport } from './routes/exam'
 import { Route as LabRouteImport } from './routes/lab'
 import { Route as MikrotikRouteImport } from './routes/mikrotik'
@@ -24,6 +25,11 @@ import { Route as LearnIdRouteImport } from './routes/learn.$id'
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AboutRoute = AboutRouteImport.update({
@@ -80,6 +86,9 @@ const LearnIdRoute = LearnIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/auth': typeof AuthRoute
+  '/auth': typeof AuthRoute
+  '/auth': typeof AuthRoute
   '/exam': typeof ExamRoute
   '/lab': typeof LabRoute
   '/mikrotik': typeof MikrotikRoute
@@ -122,6 +131,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/about'
+    | '/auth'
     | '/exam'
     | '/lab'
     | '/mikrotik'
@@ -162,6 +172,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
+  AuthRoute: typeof AuthRoute
   ExamRoute: typeof ExamRoute
   LabRoute: typeof LabRoute
   MikrotikRoute: typeof MikrotikRoute
@@ -180,6 +191,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/about': {
@@ -258,6 +276,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
+  AuthRoute: AuthRoute,
   ExamRoute: ExamRoute,
   LabRoute: LabRoute,
   MikrotikRoute: MikrotikRoute,
