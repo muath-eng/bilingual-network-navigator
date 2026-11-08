@@ -35,13 +35,28 @@ export function subnetInfo(ip: string, prefix: number) {
   const mask = prefix === 0 ? 0 : (0xffffffff << (32 - prefix)) >>> 0;
   const network = (n & mask) >>> 0;
   const broadcast = (network | (~mask >>> 0)) >>> 0;
-  const hosts = prefix >= 31 ? 0 : Math.pow(2, 32 - prefix) - 2;
+  const hosts =
+    prefix === 31 ? 2 : prefix === 32 ? 1 : Math.pow(2, 32 - prefix) - 2;
   return {
     mask: intToIp(mask),
     network: intToIp(network),
-    broadcast: intToIp(broadcast),
-    first: hosts ? intToIp(network + 1) : "-",
-    last: hosts ? intToIp(broadcast - 1) : "-",
+    // RFC 3021 point-to-point /31 links have no directed broadcast address.
+    // A /32 is a single-host route, not a conventional multi-host subnet.
+    broadcast: prefix >= 31 ? "-" : intToIp(broadcast),
+    first: prefix >= 31 ? intToIp(network) : intToIp(network + 1),
+    last: prefix === 31 ? intToIp(broadcast) : prefix === 32 ? intToIp(network) : intToIp(broadcast - 1),
     hosts,
+    noteAr:
+      prefix === 31
+        ? "وصلة point-to-point: العنوانان قابلان للاستخدام ولا يوجد عنوان بث تقليدي."
+        : prefix === 32
+          ? "مسار مضيف Host Route: عنوان واحد، وليس شبكة أجهزة تقليدية."
+          : "",
+    noteEn:
+      prefix === 31
+        ? "Point-to-point link: both addresses are usable; there is no traditional broadcast address."
+        : prefix === 32
+          ? "Host route: one address, not a conventional multi-host subnet."
+          : "",
   };
 }
