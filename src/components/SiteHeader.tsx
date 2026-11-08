@@ -5,6 +5,7 @@ import { useLang } from "@/lib/i18n";
 export function SiteHeader() {
   const { t, lang, setLang } = useLang();
   const links = [
+    { to: "/dashboard", ar: "لوحة الطالب", en: "Dashboard" },
     { to: "/learn", ar: "الدروس", en: "Lessons" },
     { to: "/lab", ar: "المختبر", en: "Lab" },
     { to: "/troubleshoot", ar: "الأعطال", en: "Troubleshoot" },
