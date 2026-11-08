@@ -179,54 +179,132 @@ const foundationLessons: Lesson[] = [
     level: "advanced",
     titleAr: "لا يمكن الوصول إلى جهاز في VLAN أخرى",
     titleEn: "Cannot reach a host in another VLAN",
-    bodyAr: ["افحص عنوان IP وVLAN لكل جهاز. وجود الجهازين في VLANs مختلفة يعني أنهما في نطاقي بث منفصلين.", "الحل هو إعداد توجيه بين VLANs عبر SVI أو Router-on-a-stick، مع التحقق من trunk والبوابات الافتراضية."],
-    bodyEn: ["Check each device's IP address and VLAN. Different VLANs are separate broadcast domains.", "Configure inter-VLAN routing using SVIs or router-on-a-stick, and verify trunks and default gateways."],
-    quiz: [{ qAr: "ما المطلوب لتمكين الاتصال بين VLAN 10 وVLAN 20؟", qEn: "What is required for communication between VLAN 10 and VLAN 20?", options: ["Inter-VLAN routing", "Changing DNS only", "A crossover cable"], answer: 0 }],
+    bodyAr: [
+      "افحص عنوان IP وVLAN لكل جهاز. وجود الجهازين في VLANs مختلفة يعني أنهما في نطاقي بث منفصلين.",
+      "الحل هو إعداد توجيه بين VLANs عبر SVI أو Router-on-a-stick، مع التحقق من trunk والبوابات الافتراضية.",
+    ],
+    bodyEn: [
+      "Check each device's IP address and VLAN. Different VLANs are separate broadcast domains.",
+      "Configure inter-VLAN routing using SVIs or router-on-a-stick, and verify trunks and default gateways.",
+    ],
+    quiz: [
+      {
+        qAr: "ما المطلوب لتمكين الاتصال بين VLAN 10 وVLAN 20؟",
+        qEn: "What is required for communication between VLAN 10 and VLAN 20?",
+        options: ["Inter-VLAN routing", "Changing DNS only", "A crossover cable"],
+        answer: 0,
+      },
+    ],
   },
   {
     id: "s6",
     level: "advanced",
     titleAr: "واجهة الراوتر في حالة administratively down",
     titleEn: "Router interface is administratively down",
-    bodyAr: ["يعرض الأمر show ip interface brief حالة الواجهة administratively down/down، وهذا يدل على إيقافها من الإعدادات.", "بعد التأكد من المنفذ والطرف الآخر، ادخل إلى إعداد الواجهة ونفّذ no shutdown ثم أعد فحص الحالة."],
-    bodyEn: ["show ip interface brief reports administratively down/down, indicating that the interface is disabled by configuration.", "After checking the port and far end, enter interface configuration, run no shutdown and verify the state again."],
-    quiz: [{ qAr: "ما الأمر الذي يعيد تشغيل الواجهة المغلقة إدارياً؟", qEn: "Which command re-enables an administratively shut interface?", options: ["no shutdown", "ip helper-address", "shutdown"], answer: 0 }],
+    bodyAr: [
+      "يعرض الأمر show ip interface brief حالة الواجهة administratively down/down، وهذا يدل على إيقافها من الإعدادات.",
+      "بعد التأكد من المنفذ والطرف الآخر، ادخل إلى إعداد الواجهة ونفّذ no shutdown ثم أعد فحص الحالة.",
+    ],
+    bodyEn: [
+      "show ip interface brief reports administratively down/down, indicating that the interface is disabled by configuration.",
+      "After checking the port and far end, enter interface configuration, run no shutdown and verify the state again.",
+    ],
+    quiz: [
+      {
+        qAr: "ما الأمر الذي يعيد تشغيل الواجهة المغلقة إدارياً؟",
+        qEn: "Which command re-enables an administratively shut interface?",
+        options: ["no shutdown", "ip helper-address", "shutdown"],
+        answer: 0,
+      },
+    ],
   },
   {
     id: "s7",
     level: "advanced",
     titleAr: "المنفذ يعمل لكن أخطاء CRC تتزايد",
     titleEn: "Link is up but CRC errors keep increasing",
-    bodyAr: ["حالة Link up لا تعني أن جودة الإشارة سليمة. راقب عدادات CRC وinput errors في show interfaces.", "افحص الكابل والموصلات والطرفين واحتمال وجود تشويش أو منفذ معيب، ثم قارن العدادات بعد الإصلاح."],
-    bodyEn: ["A link-up state does not guarantee a clean physical connection. Inspect CRC and input-error counters with show interfaces.", "Check the cable, connectors, both endpoints, possible interference and faulty ports, then compare counters after remediation."],
-    quiz: [{ qAr: "ما السبب الأكثر احتمالاً لزيادة أخطاء CRC؟", qEn: "What is a likely cause of increasing CRC errors?", options: ["Physical cable or port issue", "Wrong default gateway", "Disabled DHCP"], answer: 0 }],
+    bodyAr: [
+      "حالة Link up لا تعني أن جودة الإشارة سليمة. راقب عدادات CRC وinput errors في show interfaces.",
+      "افحص الكابل والموصلات والطرفين واحتمال وجود تشويش أو منفذ معيب، ثم قارن العدادات بعد الإصلاح.",
+    ],
+    bodyEn: [
+      "A link-up state does not guarantee a clean physical connection. Inspect CRC and input-error counters with show interfaces.",
+      "Check the cable, connectors, both endpoints, possible interference and faulty ports, then compare counters after remediation.",
+    ],
+    quiz: [
+      {
+        qAr: "ما السبب الأكثر احتمالاً لزيادة أخطاء CRC؟",
+        qEn: "What is a likely cause of increasing CRC errors?",
+        options: ["Physical cable or port issue", "Wrong default gateway", "Disabled DHCP"],
+        answer: 0,
+      },
+    ],
   },
   {
     id: "s8",
     level: "advanced",
     titleAr: "الأجهزة تحصل على عنوان 169.254.x.x",
     titleEn: "Clients receive a 169.254.x.x address",
-    bodyAr: ["العنوان 169.254.x.x هو APIPA، ويظهر غالباً عندما لا يتلقى الجهاز استجابة من خادم DHCP.", "تحقق من تشغيل الخادم ونطاق العناوين وVLAN وDHCP relay وإمكانية وصول رسائل DHCP إلى الخادم."],
-    bodyEn: ["A 169.254.x.x address is APIPA and commonly appears when a client receives no DHCP response.", "Check the DHCP server and scope, VLAN, DHCP relay and whether DHCP messages can reach the server."],
-    quiz: [{ qAr: "ما أول خدمة يجب فحصها عند ظهور APIPA؟", qEn: "Which service should be checked first when APIPA appears?", options: ["DHCP", "DNS", "NTP"], answer: 0 }],
+    bodyAr: [
+      "العنوان 169.254.x.x هو APIPA، ويظهر غالباً عندما لا يتلقى الجهاز استجابة من خادم DHCP.",
+      "تحقق من تشغيل الخادم ونطاق العناوين وVLAN وDHCP relay وإمكانية وصول رسائل DHCP إلى الخادم.",
+    ],
+    bodyEn: [
+      "A 169.254.x.x address is APIPA and commonly appears when a client receives no DHCP response.",
+      "Check the DHCP server and scope, VLAN, DHCP relay and whether DHCP messages can reach the server.",
+    ],
+    quiz: [
+      {
+        qAr: "ما أول خدمة يجب فحصها عند ظهور APIPA؟",
+        qEn: "Which service should be checked first when APIPA appears?",
+        options: ["DHCP", "DNS", "NTP"],
+        answer: 0,
+      },
+    ],
   },
   {
     id: "s9",
     level: "advanced",
     titleAr: "الاتصال بعنوان IP يعمل لكن التصفح بطيء أو يفشل",
     titleEn: "IP connectivity works but browsing is slow or fails",
-    bodyAr: ["نجاح ping إلى عنوان IP مع فشل أسماء النطاقات يشير غالباً إلى مشكلة DNS وليس إلى انقطاع الاتصال بالكامل.", "استخدم nslookup لفحص خادم DNS، وتحقق من إعداد DNS على العميل ومن القيمة التي يوزعها DHCP."],
-    bodyEn: ["Successful pings to IP addresses while domain names fail usually indicate a DNS issue rather than total connectivity loss.", "Use nslookup to test the DNS server and verify the client's DNS configuration and DHCP-provided settings."],
-    quiz: [{ qAr: "ما الأداة المناسبة لاختبار تحليل أسماء النطاقات؟", qEn: "Which tool is suitable for testing DNS name resolution?", options: ["nslookup", "traceroute only", "show vlan brief"], answer: 0 }],
+    bodyAr: [
+      "نجاح ping إلى عنوان IP مع فشل أسماء النطاقات يشير غالباً إلى مشكلة DNS وليس إلى انقطاع الاتصال بالكامل.",
+      "استخدم nslookup لفحص خادم DNS، وتحقق من إعداد DNS على العميل ومن القيمة التي يوزعها DHCP.",
+    ],
+    bodyEn: [
+      "Successful pings to IP addresses while domain names fail usually indicate a DNS issue rather than total connectivity loss.",
+      "Use nslookup to test the DNS server and verify the client's DNS configuration and DHCP-provided settings.",
+    ],
+    quiz: [
+      {
+        qAr: "ما الأداة المناسبة لاختبار تحليل أسماء النطاقات؟",
+        qEn: "Which tool is suitable for testing DNS name resolution?",
+        options: ["nslookup", "traceroute only", "show vlan brief"],
+        answer: 0,
+      },
+    ],
   },
   {
     id: "s10",
     level: "advanced",
     titleAr: "المسار موجود لكن الاتصال لا يكتمل",
     titleEn: "Route exists but end-to-end connectivity fails",
-    bodyAr: ["وجود مسار في اتجاه الذهاب لا يضمن اكتمال الاتصال؛ يجب أن يعرف الطرف البعيد طريق العودة إلى المصدر.", "افحص جداول التوجيه في الطرفين والبوابات الافتراضية وقواعد ACL أو Firewall التي قد تمنع حركة المرور."],
-    bodyEn: ["A forward route alone does not guarantee end-to-end connectivity; the remote side must know how to return traffic to the source.", "Inspect routing tables on both ends, default gateways and ACL or firewall rules that may block traffic."],
-    quiz: [{ qAr: "ما الذي يجب فحصه عندما يوجد مسار ذهاب لكن الاتصال يفشل؟", qEn: "What should be checked when a forward route exists but connectivity fails?", options: ["Return route and ACLs", "MAC address only", "Spanning Tree only"], answer: 0 }],
+    bodyAr: [
+      "وجود مسار في اتجاه الذهاب لا يضمن اكتمال الاتصال؛ يجب أن يعرف الطرف البعيد طريق العودة إلى المصدر.",
+      "افحص جداول التوجيه في الطرفين والبوابات الافتراضية وقواعد ACL أو Firewall التي قد تمنع حركة المرور.",
+    ],
+    bodyEn: [
+      "A forward route alone does not guarantee end-to-end connectivity; the remote side must know how to return traffic to the source.",
+      "Inspect routing tables on both ends, default gateways and ACL or firewall rules that may block traffic.",
+    ],
+    quiz: [
+      {
+        qAr: "ما الذي يجب فحصه عندما يوجد مسار ذهاب لكن الاتصال يفشل؟",
+        qEn: "What should be checked when a forward route exists but connectivity fails?",
+        options: ["Return route and ACLs", "MAC address only", "Spanning Tree only"],
+        answer: 0,
+      },
+    ],
   },
 ];
 
