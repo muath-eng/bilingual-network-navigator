@@ -218,11 +218,11 @@ function MikroTikPage() {
                   const id = m.id + l[0];
                   return (
                     <article key={id} className="rounded-lg bg-secondary/50 p-4">
-                      <h3 className="font-semibold">{t(l[0], l[1])}</h3>
+                      <h3 className="font-semibold">{t(String(l[0]), String(l[1]))}</h3>
                       <p className="mt-2 text-sm leading-7 text-muted-foreground">
-                        {t(l[2], l[3])}
+                        {t(String(l[2]), String(l[3]))}
                       </p>
-                      <p className="mt-4 font-medium">{t(l[4], l[5])}</p>
+                      <p className="mt-4 font-medium">{t(String(l[4]), String(l[5]))}</p>
                       <div className="mt-2 flex flex-wrap gap-2">
                         {(l[6] as string[]).map((o, k) => (
                           <button
