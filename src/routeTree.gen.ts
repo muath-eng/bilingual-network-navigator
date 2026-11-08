@@ -87,8 +87,6 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/auth': typeof AuthRoute
-  '/auth': typeof AuthRoute
-  '/auth': typeof AuthRoute
   '/exam': typeof ExamRoute
   '/lab': typeof LabRoute
   '/mikrotik': typeof MikrotikRoute
@@ -102,6 +100,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/auth': typeof AuthRoute
   '/exam': typeof ExamRoute
   '/lab': typeof LabRoute
   '/mikrotik': typeof MikrotikRoute
@@ -116,6 +115,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/auth': typeof AuthRoute
   '/exam': typeof ExamRoute
   '/lab': typeof LabRoute
   '/mikrotik': typeof MikrotikRoute
@@ -158,6 +158,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/about'
+    | '/auth'
     | '/exam'
     | '/lab'
     | '/mikrotik'
