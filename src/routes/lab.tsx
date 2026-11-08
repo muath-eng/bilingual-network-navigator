@@ -4,6 +4,12 @@ import { Download, Upload } from "lucide-react";
 import { Monitor, Router as RouterIcon, Server, Trash2, Link2 } from "lucide-react";
 import { useLang } from "@/lib/i18n";
 import {
+  createRouterOsState,
+  runRouterOsCommand,
+  type RouterOsState,
+  type RouterOsStep,
+} from "@/lib/routeros-simulator";
+import {
   createTopology,
   diagnose,
   labTemplates,
@@ -59,6 +65,11 @@ function Lab() {
   const svgRef = useRef<SVGSVGElement>(null);
   const importRef = useRef<HTMLInputElement>(null);
   const [fileMessage, setFileMessage] = useState("");
+  const [routerStates, setRouterStates] = useState<Record<string, RouterOsState>>({});
+  const [routerCommand, setRouterCommand] = useState("");
+  const [routerOutput, setRouterOutput] = useState<string[]>([]);
+  const [routerSteps, setRouterSteps] = useState<RouterOsStep[]>([]);
+  const [routerStepIndex, setRouterStepIndex] = useState(0);
 
   const selected = devs.find((d) => d.id === sel);
   const activeTemplate = labTemplates.find((item) => item.id === template);
@@ -312,6 +323,28 @@ function Lab() {
       out.push("Request timed out.", "✗ " + t(result.ar, result.en) + " [" + result.code + "]");
     }
     setLog(out);
+  };
+
+  const runRouterCommand = () => {
+    if (!selected || selected.kind !== "router" || !routerCommand.trim()) return;
+    const current = routerStates[selected.id] ?? createRouterOsState(selected.name);
+    const result = runRouterOsCommand(current, routerCommand);
+    setRouterStates((states) => ({ ...states, [selected.id]: result.state }));
+    if (result.devicePatch) {
+      setDevs((devices) =>
+        devices.map((device) =>
+          device.id === selected.id ? { ...device, ...result.devicePatch } : device,
+        ),
+      );
+    }
+    setRouterOutput(["> " + routerCommand, ...result.output]);
+    setRouterSteps(result.steps);
+    setRouterStepIndex(0);
+    setRouterCommand("");
+    window.__lovableEvents?.track?.("project.lab_used", {
+      action: "routeros_command",
+      command_group: routerCommand.split(" ").slice(0, 2).join(" "),
+    });
   };
 
   const runDiagnostics = () => {
@@ -779,6 +812,121 @@ function Lab() {
               {log.join("\n") || "_"}
             </pre>
           </div>
+          {selected?.kind === "router" && (
+            <section className="rounded-xl border border-primary/30 bg-card p-4">
+              <div className="flex items-center justify-between gap-2">
+                <div>
+                  <p className="font-semibold">RouterOS CLI</p>
+                  <p className="text-xs text-muted-foreground">
+                    {t("طرفية تدريبية للراوتر المحدد", "Training terminal for the selected router")}
+                  </p>
+                </div>
+                <span className="rounded-full bg-primary/10 px-2 py-1 text-xs text-primary">
+                  {routerStates[selected.id]?.identity ?? selected.name}
+                </span>
+              </div>
+              <p className="mt-2 text-xs leading-5 text-muted-foreground">
+                {t(
+                  "محاكاة تعليمية محلية وليست اتصالاً بجهاز حقيقي. الأوامر المدعومة تظهر أدناه.",
+                  "Local educational simulation, not a connection to a real device. Supported commands are listed below.",
+                )}
+              </p>
+              <div className="mt-3 flex flex-wrap gap-1.5">
+                {[
+                  "/system identity print",
+                  "/interface print",
+                  "/ip address print",
+                  "/ip route print",
+                ].map((example) => (
+                  <button
+                    key={example}
+                    onClick={() => setRouterCommand(example)}
+                    className="rounded border border-border px-2 py-1 font-mono text-[10px] hover:bg-secondary"
+                  >
+                    {example}
+                  </button>
+                ))}
+              </div>
+              <form
+                className="mt-3 flex gap-2"
+                onSubmit={(event) => {
+                  event.preventDefault();
+                  runRouterCommand();
+                }}
+              >
+                <input
+                  aria-label="RouterOS command"
+                  value={routerCommand}
+                  onChange={(event) => setRouterCommand(event.target.value)}
+                  placeholder="/ip address add address=192.168.10.1/24 interface=ether1"
+                  className="min-w-0 flex-1 rounded-md border border-input bg-background px-2 py-2 font-mono text-xs"
+                  dir="ltr"
+                />
+                <button
+                  type="submit"
+                  disabled={!routerCommand.trim()}
+                  className="rounded-md bg-primary px-3 py-2 text-xs font-semibold text-primary-foreground disabled:opacity-40"
+                >
+                  {t("تنفيذ", "Run")}
+                </button>
+              </form>
+              <div className="mt-3 flex flex-wrap gap-1.5">
+                {[
+                  "/ip address add address=192.168.10.1/24 interface=ether1",
+                  "/ip route add dst-address=0.0.0.0/0 gateway=192.168.10.254",
+                  "/ping 192.168.10.20",
+                ].map((example) => (
+                  <button
+                    key={example}
+                    onClick={() => setRouterCommand(example)}
+                    className="rounded border border-border px-2 py-1 font-mono text-[10px] text-muted-foreground hover:bg-secondary"
+                  >
+                    {example}
+                  </button>
+                ))}
+              </div>
+              <pre
+                dir="ltr"
+                className="mt-3 min-h-20 whitespace-pre-wrap rounded-md bg-background p-3 font-mono text-xs text-primary"
+              >
+                {routerOutput.join("\n") || "_"}
+              </pre>
+              {routerSteps.length > 0 && (
+                <div className="mt-3 rounded-lg border border-border p-3">
+                  <div className="flex items-center justify-between gap-2">
+                    <b className="text-sm">{t("شرح التنفيذ", "Execution walkthrough")}</b>
+                    <span className="text-xs text-muted-foreground" dir="ltr">
+                      {routerStepIndex + 1} / {routerSteps.length}
+                    </span>
+                  </div>
+                  <p className="mt-2 text-sm font-semibold">
+                    {routerSteps[routerStepIndex]?.title}
+                  </p>
+                  <p className="mt-1 text-xs leading-5 text-muted-foreground">
+                    {routerSteps[routerStepIndex]?.detail}
+                  </p>
+                  <div className="mt-3 flex gap-2">
+                    <button
+                      onClick={() => setRouterStepIndex((index) => Math.max(0, index - 1))}
+                      disabled={routerStepIndex === 0}
+                      className="rounded border border-border px-3 py-1 text-xs disabled:opacity-40"
+                    >
+                      {t("السابق", "Previous")}
+                    </button>
+                    <button
+                      onClick={() =>
+                        setRouterStepIndex((index) => Math.min(routerSteps.length - 1, index + 1))
+                      }
+                      disabled={routerStepIndex >= routerSteps.length - 1}
+                      className="rounded border border-border px-3 py-1 text-xs disabled:opacity-40"
+                    >
+                      {t("التالي", "Next")}
+                    </button>
+                  </div>
+                </div>
+              )}
+            </section>
+          )}
           <p className="text-xs text-muted-foreground">
             {t(
               "اختر الكابل لفتح إعداداته، أو انقر عليه مرتين لحذفه.",
