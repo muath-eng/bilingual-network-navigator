@@ -54,6 +54,7 @@ jobs:
           src/routes/profile.tsx
           src/routes/auth.tsx
           src/lib/i18n.tsx
+          src/routes/dashboard.tsx
       - name: Run tests
         run: bun run test
       - name: Lint updated files
@@ -76,5 +77,6 @@ jobs:
           src/components/SiteHeader.tsx
           src/routes/auth.tsx
           src/lib/i18n.tsx
+          src/routes/dashboard.tsx
       - name: Build production app
         run: bun run build
