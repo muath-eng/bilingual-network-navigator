@@ -39,6 +39,11 @@ function Subnet() {
           {Array.from({ length: 25 }, (_, i) => i + 8).map((p) => <option key={p} value={p}>/{p}</option>)}
         </select>
       </div>
+      {info?.noteAr && (
+        <p className="mt-4 rounded-lg border border-primary/30 bg-primary/5 p-4 text-sm leading-6">
+          {t(info.noteAr, info.noteEn)}
+        </p>
+      )}
       {rows ? (
         <div className="mt-6 divide-y divide-border rounded-xl border border-border bg-card">
           {rows.map(([k, v]) => (

@@ -23,12 +23,24 @@ function ExamPage() {
     () =>
       lessons
         .flatMap((l) =>
-          l.quiz.map((q, i) => ({
-            id: l.id + "-" + i,
-            lesson: l.titleAr,
-            lessonEn: l.titleEn,
-            ...q,
-          })),
+          (Array.isArray(l.quiz) ? l.quiz : [])
+            .filter(
+              (q) =>
+                q &&
+                typeof q.qAr === "string" &&
+                typeof q.qEn === "string" &&
+                Array.isArray(q.options) &&
+                q.options.length > 1 &&
+                Number.isInteger(q.answer) &&
+                q.answer >= 0 &&
+                q.answer < q.options.length,
+            )
+            .map((q, i) => ({
+              id: l.id + "-" + i,
+              lesson: l.titleAr,
+              lessonEn: l.titleEn,
+              ...q,
+            })),
         )
         .slice(0, 30),
     [],
@@ -39,6 +51,7 @@ function ExamPage() {
   const [certId, setCertId] = useState("");
   const score = questions.filter((q) => answers[q.id] === q.answer).length;
   const pct = Math.round((score / Math.max(questions.length, 1)) * 100);
+  const progress = questions.length ? (Object.keys(answers).length / questions.length) * 100 : 0;
   const passed = submitted && pct >= 70;
   const reset = () => {
     setAnswers({});
@@ -66,35 +79,45 @@ function ExamPage() {
               {Object.keys(answers).length}/{questions.length} {t("تمت الإجابة", "answered")}
             </span>
             <div className="h-2 w-full overflow-hidden rounded-full bg-secondary">
-              <div
-                className="h-full bg-primary"
-                style={{ width: `${(Object.keys(answers).length / questions.length) * 100}%` }}
-              />
+              <div className="h-full bg-primary" style={{ width: `${progress}%` }} />
             </div>
           </div>
-          <div className="mt-5 space-y-4">
-            {questions.map((q, i) => (
-              <section key={q.id} className="rounded-xl border border-border bg-card p-5">
-                <p className="font-mono text-xs text-primary">
-                  QUESTION {i + 1} / {questions.length}
-                </p>
-                <p className="mt-2 font-semibold">{t(q.qAr, q.qEn)}</p>
-                <div className="mt-3 grid gap-2 sm:grid-cols-3">
-                  {q.options.map((o, j) => (
-                    <button
-                      key={j}
-                      onClick={() => setAnswers((a) => ({ ...a, [q.id]: j }))}
-                      className={`rounded-lg border p-3 text-start text-sm ${answers[q.id] === j ? "border-primary bg-primary/10" : "border-border hover:bg-secondary"}`}
-                    >
-                      {o}
-                    </button>
-                  ))}
-                </div>
-              </section>
-            ))}
-          </div>
+          {questions.length > 0 ? (
+            <div className="mt-5 space-y-4">
+              {questions.map((q, i) => (
+                <section key={q.id} className="rounded-xl border border-border bg-card p-5">
+                  <p className="font-mono text-xs text-primary">
+                    QUESTION {i + 1} / {questions.length}
+                  </p>
+                  <p className="mt-2 font-semibold">{t(q.qAr, q.qEn)}</p>
+                  <div className="mt-3 grid gap-2 sm:grid-cols-3">
+                    {q.options.map((o, j) => (
+                      <button
+                        key={j}
+                        onClick={() => setAnswers((a) => ({ ...a, [q.id]: j }))}
+                        className={`rounded-lg border p-3 text-start text-sm ${
+                          answers[q.id] === j
+                            ? "border-primary bg-primary/10"
+                            : "border-border hover:bg-secondary"
+                        }`}
+                      >
+                        {o}
+                      </button>
+                    ))}
+                  </div>
+                </section>
+              ))}
+            </div>
+          ) : (
+            <p className="mt-5 rounded-xl border border-border bg-card p-5 text-muted-foreground">
+              {t(
+                "لا توجد أسئلة صالحة حالياً. يرجى مراجعة محتوى الدروس.",
+                "No valid questions are available yet. Please review the lesson content.",
+              )}
+            </p>
+          )}
           <button
-            disabled={Object.keys(answers).length !== questions.length}
+            disabled={questions.length === 0 || Object.keys(answers).length !== questions.length}
             onClick={() => setSubmitted(true)}
             className="mt-6 rounded-lg bg-primary px-6 py-3 font-semibold text-primary-foreground disabled:opacity-40"
           >
@@ -148,7 +171,8 @@ function ExamPage() {
                 <strong>{pct}%</strong>
               </p>
               <p className="mt-3 font-mono text-xs text-muted-foreground">
-                NM-{new Date().toISOString().slice(0, 10).replaceAll("-", "")}-{questions.length}-
+                NM-
+                {new Date().toISOString().slice(0, 10).replaceAll("-", "")}-{questions.length}-
                 {score}
               </p>
               <p className="mt-4 text-xs text-muted-foreground">
