@@ -61,7 +61,7 @@ const isUsableGateway = (state: RouterOsState, gateway: string) =>
     const network = (own & mask) >>> 0;
     const broadcast = (network | (~mask >>> 0)) >>> 0;
     if (parsed.prefix <= 30 && (target === network || target === broadcast)) return false;
-    return target !== own && ((target & mask) >>> 0) === network;
+    return target !== own && (target & mask) >>> 0 === network;
   });
 
 export function runRouterOsCommand(current: RouterOsState, rawCommand: string): RouterOsResult {
@@ -188,7 +188,8 @@ export function runRouterOsCommand(current: RouterOsState, rawCommand: string): 
         [
           {
             title: "تعذر الوصول إلى البوابة",
-            detail: "يجب أن تقع البوابة ضمن شبكة متصلة مباشرة بإحدى واجهات الراوتر، وألا تكون عنوان الشبكة أو البث أو عنوان الراوتر نفسه.",
+            detail:
+              "يجب أن تقع البوابة ضمن شبكة متصلة مباشرة بإحدى واجهات الراوتر، وألا تكون عنوان الشبكة أو البث أو عنوان الراوتر نفسه.",
           },
         ],
       );
@@ -218,7 +219,8 @@ export function runRouterOsCommand(current: RouterOsState, rawCommand: string): 
       return (toNumber(parsed.ip) & mask) === (toNumber(destination) & mask);
     });
     const defaultRoute = state.routes.find((route) => route.destination === "0.0.0.0/0");
-    const reachable = onConnectedNetwork || (!!defaultRoute && isUsableGateway(state, defaultRoute.gateway));
+    const reachable =
+      onConnectedNetwork || (!!defaultRoute && isUsableGateway(state, defaultRoute.gateway));
     return result(
       [
         "PING " + destination,

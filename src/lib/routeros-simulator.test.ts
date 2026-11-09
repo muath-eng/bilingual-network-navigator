@@ -53,13 +53,9 @@ describe("RouterOS command simulator", () => {
       address.state,
       "/ip route add dst-address=0.0.0.0/0 gateway=192.168.10.254",
     );
-    expect(added.state.routes).toEqual([
-      { destination: "0.0.0.0/0", gateway: "192.168.10.254" },
-    ]);
+    expect(added.state.routes).toEqual([{ destination: "0.0.0.0/0", gateway: "192.168.10.254" }]);
     expect(added.output.join(" ")).toContain("gateway reachable");
-    expect(runRouterOsCommand(added.state, "/ip route print").output[1]).toContain(
-      "0.0.0.0/0",
-    );
+    expect(runRouterOsCommand(added.state, "/ip route print").output[1]).toContain("0.0.0.0/0");
   });
 
   it("simulates ping only when a connected network or reachable default gateway exists", () => {
