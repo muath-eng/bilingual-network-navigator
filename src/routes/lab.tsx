@@ -876,6 +876,12 @@ function Lab() {
                 <p className="mt-1 text-xs leading-5 text-muted-foreground">
                   {trace[traceIndex]?.detail}
                 </p>
+                <p className="mt-2 text-[11px] leading-5 text-muted-foreground">
+                  {t(
+                    "النقطة المتحركة تمثيل تعليمي لحزمة افتراضية، وليست حركة بيانات حقيقية على الشبكة.",
+                    "The moving dot is an educational representation of a simulated packet, not live network traffic.",
+                  )}
+                </p>
                 <p className="mt-1 text-xs" dir="ltr">
                   {t("الجهاز الحالي:", "Current device:")}{" "}
                   {devs.find((d) => d.id === trace[traceIndex]?.deviceId)?.name}
