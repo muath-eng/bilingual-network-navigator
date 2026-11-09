@@ -15,6 +15,8 @@ import {
   labTemplates,
   simulatePing,
   findCablePath,
+  diagnosePingFailure,
+  type PingFailureGuide,
   segment,
   type Cable,
   type Device,
@@ -70,6 +72,7 @@ function Lab() {
   const [template, setTemplate] = useState("custom");
   const [trace, setTrace] = useState<PacketTraceStep[]>([]);
   const [traceIndex, setTraceIndex] = useState(0);
+  const [pingDiagnosis, setPingDiagnosis] = useState<PingFailureGuide | null>(null);
   const drag = useRef<{ id: string; dx: number; dy: number } | null>(null);
   const svgRef = useRef<SVGSVGElement>(null);
   const importRef = useRef<HTMLInputElement>(null);
@@ -94,6 +97,7 @@ function Lab() {
     setLog([]);
     setTrace([]);
     setTraceIndex(0);
+    setPingDiagnosis(null);
   };
   const update = (patch: Partial<Dev>) =>
     setDevs(devs.map((d) => (d.id === sel ? { ...d, ...patch } : d)));
@@ -254,6 +258,7 @@ function Lab() {
   };
 
   const ping = () => {
+    setPingDiagnosis(null);
     window.__lovableEvents?.track?.("project.lab_used", { action: "ping" });
     const source = selected;
     const destination = devs.find(
@@ -393,6 +398,7 @@ function Lab() {
     } else {
       setTrace([]);
       setTraceIndex(0);
+      setPingDiagnosis(diagnosePingFailure(result, devs, sel, target));
       out.push("Request timed out.", "✗ " + t(result.ar, result.en) + " [" + result.code + "]");
     }
     setLog(out);
@@ -635,6 +641,8 @@ function Lab() {
                     className={
                       activeTraceDevice
                         ? "fill-amber-400/30 stroke-amber-500"
+                        : pingDiagnosis?.deviceId === d.id
+                          ? "fill-destructive/20 stroke-destructive"
                         : sel === d.id
                           ? "fill-primary/25 stroke-primary"
                           : "fill-card stroke-border"
@@ -859,6 +867,39 @@ function Lab() {
             >
               {t("تشخيص الشبكة", "Diagnose network")}
             </button>
+
+            {pingDiagnosis && (
+              <div role="alert" className="mt-3 rounded-lg border border-destructive/40 bg-destructive/5 p-3">
+                <div className="flex items-center gap-2 text-sm font-semibold text-destructive">
+                  <span aria-hidden="true">!</span>
+                  {t("توقف الاتصال عند هذه المرحلة", "Ping stopped at this stage")}
+                </div>
+                <p className="mt-2 text-xs font-semibold">
+                  {t(pingDiagnosis.stageAr, pingDiagnosis.stageEn)}
+                </p>
+                <p className="mt-1 text-xs leading-5 text-muted-foreground">
+                  {t(pingDiagnosis.reasonAr, pingDiagnosis.reasonEn)}
+                </p>
+                <div className="mt-2 rounded-md bg-background/80 p-2">
+                  <p className="text-xs font-semibold">{t("كيف تصلح المشكلة؟", "How to fix it")}</p>
+                  <p className="mt-1 text-xs leading-5 text-muted-foreground">
+                    {t(pingDiagnosis.fixAr, pingDiagnosis.fixEn)}
+                  </p>
+                </div>
+                {pingDiagnosis.deviceId && (
+                  <button
+                    onClick={() => {
+                      setSel(pingDiagnosis.deviceId!);
+                      setSelectedLink(null);
+                    }}
+                    className="mt-2 rounded-md border border-border px-3 py-1.5 text-xs font-medium hover:bg-secondary"
+                  >
+                    {t("تحديد الجهاز المعني", "Select related device")}
+                  </button>
+                )}
+              </div>
+            )}
+
             {trace.length > 0 && (
               <div className="mt-3 rounded-lg border border-border p-3">
                 <div className="flex items-center justify-between gap-2">
