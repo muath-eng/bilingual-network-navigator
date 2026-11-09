@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#07182d"/><stop offset="1" stop-color="#102f50"/></linearGradient>
+    <linearGradient id="glow" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#38bdf8"/><stop offset="1" stop-color="#2563eb"/></linearGradient>
+    <pattern id="grid" width="44" height="44" patternUnits="userSpaceOnUse"><path d="M44 0H0V44" fill="none" stroke="#8acfff" stroke-opacity=".08" stroke-width="1"/></pattern>
+  </defs>
+  <rect width="1200" height="630" rx="28" fill="url(#bg)"/><rect width="1200" height="630" rx="28" fill="url(#grid)"/>
+  <circle cx="970" cy="300" r="230" fill="#0ea5e9" opacity=".08"/><circle cx="970" cy="300" r="165" fill="none" stroke="#38bdf8" stroke-opacity=".2" stroke-width="2"/>
+  <g stroke="#38bdf8" stroke-width="5" stroke-linecap="round" opacity=".8" fill="none"><path d="M870 225L970 155L1070 225L1070 355L970 425L870 355Z"/><path d="M870 225L1070 355M1070 225L870 355M970 155V425"/></g>
+  <g fill="#0b2139" stroke="#7dd3fc" stroke-width="4"><rect x="930" y="115" width="80" height="64" rx="13"/><rect x="830" y="190" width="80" height="64" rx="13"/><rect x="1030" y="190" width="80" height="64" rx="13"/><rect x="830" y="325" width="80" height="64" rx="13"/><rect x="1030" y="325" width="80" height="64" rx="13"/><rect x="930" y="400" width="80" height="64" rx="13"/></g>
+  <g fill="#7dd3fc"><circle cx="970" cy="147" r="9"/><circle cx="870" cy="222" r="9"/><circle cx="1070" cy="222" r="9"/><circle cx="870" cy="357" r="9"/><circle cx="1070" cy="357" r="9"/><circle cx="970" cy="432" r="9"/></g>
+  <g font-family="Arial, sans-serif" fill="#f8fafc" text-anchor="end">
+    <text x="760" y="190" font-size="28" fill="#7dd3fc" letter-spacing="5">LEARN • BUILD • CONNECT</text>
+    <text x="760" y="285" font-size="76" font-weight="700">NETWORK</text><text x="760" y="375" font-size="76" font-weight="700" fill="#38bdf8">MASTER</text>
+    <text x="760" y="445" font-size="31">تعلّم الشبكات من الصفر حتى الاحتراف</text>
+    <text x="760" y="495" font-size="23" fill="#bfdbfe">دروس تفاعلية • مختبر محاكاة • تدريب Cisco وMikroTik</text>
+  </g>
+  <rect x="72" y="548" width="1056" height="2" fill="#7dd3fc" opacity=".25"/>
+  <text x="72" y="590" font-family="Arial, sans-serif" font-size="22" fill="#bae6fd">alsalhi-network-master.lovable.app</text>
+</svg>
