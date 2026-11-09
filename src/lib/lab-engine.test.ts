@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { createTopology, diagnose, segment, simulatePing } from "./lab-engine";
+import { createTopology, diagnose, findCablePath, segment, simulatePing } from "./lab-engine";
 
 describe("network lab simulator", () => {
   it("pings hosts directly on the same LAN", () => {
@@ -13,6 +13,21 @@ describe("network lab simulator", () => {
     expect(result.ok).toBe(true);
     expect(result.code).toBe("routed");
     expect(result.path).toEqual(["PC1", "R1", "PC3"]);
+  });
+
+  it("finds the real cable path through switches without crossing VLAN boundaries", () => {
+    const { devs, links } = createTopology("routed");
+    const sourceSegment = segment(devs, links, "d1", 1);
+    const firstHop = findCablePath(devs, links, "d1", "d4", sourceSegment);
+    const secondHop = findCablePath(devs, links, "d4", "d5", segment(devs, links, "d4", 2));
+    expect(firstHop).toEqual(["d1", "d3", "d4"]);
+    expect(secondHop).toEqual(["d4", "d5"]);
+    expect(findCablePath(devs, links, "d1", "d5", sourceSegment)).toEqual([]);
+  });
+
+  it("returns no cable path when a link is disabled", () => {
+    const { devs, links } = createTopology("cable");
+    expect(findCablePath(devs, links, "d1", "d4")).toEqual([]);
   });
 
   it("rejects an unreachable default gateway", () => {
