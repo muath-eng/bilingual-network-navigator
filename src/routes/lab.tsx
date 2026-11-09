@@ -23,6 +23,7 @@ import {
 } from "@/lib/lab-engine";
 
 export const Route = createFileRoute("/lab")({
+  staticData: { sitemap: true },
   head: () => ({
     meta: [
       { title: "مختبر المحاكاة — Network Master" },

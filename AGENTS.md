@@ -31,3 +31,4 @@ use the editor.
 
 - Emit product analytics directly in existing interaction handlers through the optional injected Lovable tracker; use only cataloged, non-personal properties so tracking remains safe without the SDK.
 - Keep troubleshooting records typed as TroubleshootingScenario, separate from Lesson; mandatory bilingual evidence, choices, answer indexes and explanations prevent invalid records from crashing the drills page.
+- Every route declares staticData.sitemap; src/routes/sitemap[.]xml.ts derives static URLs from the router and adds lesson pages from the local lessons list, so personal pages (dashboard, profile, auth) stay out and new lessons appear automatically.

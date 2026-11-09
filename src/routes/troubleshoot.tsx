@@ -4,6 +4,7 @@ import { scenarios } from "@/lib/content";
 import { useLang } from "@/lib/i18n";
 
 export const Route = createFileRoute("/troubleshoot")({
+  staticData: { sitemap: true },
   head: () => ({
     meta: [
       { title: "إصلاح الأعطال — Network Master" },
