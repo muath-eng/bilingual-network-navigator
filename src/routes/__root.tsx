@@ -80,11 +80,39 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Network Master" },
-      { name: "description", content: "Learn and simulate computer networks in Arabic and English." },
+      { title: "Network Master | تعلّم الشبكات عملياً" },
+      {
+        name: "description",
+        content:
+          "منصة تفاعلية بالعربية والإنجليزية لتعلم الشبكات، ومحاكاة الأجهزة، والتدرب على أوامر Cisco وMikroTik.",
+      },
       { property: "og:type", content: "website" },
+      { property: "og:site_name", content: "Network Master" },
+      { property: "og:locale", content: "ar_QA" },
+      { property: "og:title", content: "Network Master | تعلّم الشبكات عملياً" },
+      {
+        property: "og:description",
+        content:
+          "تعلّم الشبكات من الصفر حتى الاحتراف عبر دروس تفاعلية ومختبر محاكاة وتدريب عملي على Cisco وMikroTik.",
+      },
+      {
+        property: "og:image",
+        content: "https://alsalhi-network-master.lovable.app/network-master-social.svg",
+      },
+      { property: "og:image:width", content: "1200" },
+      { property: "og:image:height", content: "630" },
+      { property: "og:image:type", content: "image/svg+xml" },
+      { property: "og:url", content: "https://alsalhi-network-master.lovable.app/" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:title", content: "Network Master | تعلّم الشبكات عملياً" },
+      {
+        name: "twitter:description",
+        content: "دروس تفاعلية ومختبر محاكاة وتدريب عملي على Cisco وMikroTik.",
+      },
+      {
+        name: "twitter:image",
+        content: "https://alsalhi-network-master.lovable.app/network-master-social.svg",
+      },
     ],
     links: [
       {
@@ -93,7 +121,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
-      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&family=JetBrains+Mono:wght@400;600&display=swap" },
+      {
+        rel: "stylesheet",
+        href: "https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&family=JetBrains+Mono:wght@400;600&display=swap",
+      },
     ],
   }),
   shellComponent: RootShell,
