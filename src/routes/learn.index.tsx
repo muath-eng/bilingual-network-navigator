@@ -7,14 +7,27 @@ export const Route = createFileRoute("/learn/")({
   staticData: { sitemap: true },
   head: () => ({
     meta: [
-      { title: "الدروس — Network Master" },
-      { name: "description", content: "مسار تعليمي متدرج في الشبكات: مبتدئ، متوسط، متقدم." },
-      { property: "og:title", content: "Lessons — Network Master" },
+      { title: "تعلم الشبكات وCCNA من الصفر — دروس عربية | Network Master" },
+      {
+        name: "description",
+        content:
+          "دروس شبكات مجانية ومتدرجة بالعربية والإنجليزية: أساسيات الشبكات، CCNA 200-301، switching وVLAN وIP routing وخدمات الشبكة، مع أهداف واختبارات قصيرة.",
+      },
+      { property: "og:title", content: "تعلم الشبكات وCCNA من الصفر — Network Master" },
       { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary" },
+      { name: "twitter:card", content: "summary_large_image" },
       {
         property: "og:description",
-        content: "A graded networking curriculum: beginner, intermediate, advanced.",
+        content:
+          "منهج تفاعلي لتعلم الشبكات والتحضير لمفاهيم CCNA 200-301 بالعربية والإنجليزية، من الأساسيات حتى التوجيه وأمن الشبكات.",
+      },
+      {
+        name: "twitter:title",
+        content: "تعلم الشبكات وCCNA من الصفر — Network Master",
+      },
+      {
+        name: "twitter:description",
+        content: "دروس شبكات عربية، شرح CCNA، اختبارات قصيرة وتطبيق عملي.",
       },
     ],
   }),

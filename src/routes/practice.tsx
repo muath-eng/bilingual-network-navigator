@@ -15,8 +15,19 @@ export const Route = createFileRoute("/practice")({
   staticData: { sitemap: true },
   head: () => ({
     meta: [
-      { title: "CLI Practice — Network Master" },
-      { name: "description", content: "Interactive Cisco IOS command training." },
+      { title: "تدريب أوامر Cisco IOS بالعربية — Network Master" },
+      {
+        name: "description",
+        content:
+          "تدرب على أوامر Cisco IOS في بيئة تفاعلية: إعداد الواجهات وVLAN والتوجيه وخدمات الشبكة واستكشاف الأخطاء، مع تحديات متدرجة للمبتدئين.",
+      },
+      { property: "og:title", content: "تدريب أوامر Cisco IOS — Network Master" },
+      {
+        property: "og:description",
+        content: "مختبر أوامر Cisco IOS تفاعلي للتعلم والتطبيق وفهم مخرجات الأوامر.",
+      },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: PracticePage,

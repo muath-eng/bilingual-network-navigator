@@ -7,17 +7,27 @@ export const Route = createFileRoute("/mikrotik")({
   staticData: { sitemap: true },
   head: () => ({
     meta: [
-      { title: "MikroTik Academy — Network Master" },
-      { property: "og:title", content: "MikroTik Academy — Network Master" },
-      {
-        property: "og:description",
-        content: "Learn RouterOS configuration step by step in Arabic and English.",
-      },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary" },
+      { title: "شرح MikroTik وRouterOS بالعربية — أكاديمية Network Master" },
       {
         name: "description",
-        content: "Learn RouterOS configuration step by step in Arabic and English.",
+        content:
+          "تعلم MikroTik وRouterOS خطوة بخطوة بالعربية: إعداد IP وDHCP والتوجيه وNAT والجدار الناري وأوامر MikroTik العملية للمبتدئين.",
+      },
+      { property: "og:title", content: "شرح MikroTik وRouterOS بالعربية — Network Master" },
+      {
+        property: "og:description",
+        content:
+          "أكاديمية عملية لتعلم إعداد أجهزة MikroTik ونظام RouterOS، مع شرح الأوامر والتوجيه وخدمات الشبكة.",
+      },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
+      {
+        name: "twitter:title",
+        content: "شرح MikroTik وRouterOS بالعربية — Network Master",
+      },
+      {
+        name: "twitter:description",
+        content: "دروس MikroTik بالعربية وتدريب عملي على أوامر RouterOS.",
       },
     ],
   }),
