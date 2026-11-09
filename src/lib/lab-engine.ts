@@ -99,7 +99,6 @@ export function findCablePath(
   return path;
 }
 
-
 export type PingFailureGuide = {
   stageAr: string;
   stageEn: string;
@@ -123,7 +122,8 @@ export function diagnosePingFailure(
     (device) => host(device) && interfaces(device).some((item) => item.ip === target),
   );
   const disabledDestination = devs.find(
-    (device) => host(device) && !device.enabled && interfaces(device).some((item) => item.ip === target),
+    (device) =>
+      host(device) && !device.enabled && interfaces(device).some((item) => item.ip === target),
   );
   const sourceSegment = source ? segment(devs, links, source.id, source.vlan) : [];
   const router = source
@@ -159,8 +159,10 @@ export function diagnosePingFailure(
         ...base,
         stageAr: "إعداد IPv4 للمصدر",
         stageEn: "Source IPv4 configuration",
-        fixAr: "اكتب عنوان IPv4 صالحاً وقناع شبكة صحيحاً، وتأكد أن عنوان الجهاز ليس عنوان الشبكة أو البث.",
-        fixEn: "Enter a valid IPv4 address and subnet mask. Do not use the network or broadcast address.",
+        fixAr:
+          "اكتب عنوان IPv4 صالحاً وقناع شبكة صحيحاً، وتأكد أن عنوان الجهاز ليس عنوان الشبكة أو البث.",
+        fixEn:
+          "Enter a valid IPv4 address and subnet mask. Do not use the network or broadcast address.",
         deviceId: source?.id,
       };
     case "duplicate_ip":
@@ -168,8 +170,10 @@ export function diagnosePingFailure(
         ...base,
         stageAr: "فحص تعارض العناوين",
         stageEn: "Duplicate address check",
-        fixAr: "ابحث عن الجهاز الآخر الذي يستخدم عنوان المصدر نفسه، ثم خصص لكل جهاز عنوان IP فريداً داخل VLAN.",
-        fixEn: "Find the other device using the source IP and assign each device a unique address in the VLAN.",
+        fixAr:
+          "ابحث عن الجهاز الآخر الذي يستخدم عنوان المصدر نفسه، ثم خصص لكل جهاز عنوان IP فريداً داخل VLAN.",
+        fixEn:
+          "Find the other device using the source IP and assign each device a unique address in the VLAN.",
         deviceId: source?.id,
       };
     case "host_missing":
@@ -186,8 +190,10 @@ export function diagnosePingFailure(
         ...base,
         stageAr: "الوصول داخل الشبكة المحلية",
         stageEn: "Local network reachability",
-        fixAr: "افحص الكابلات بين المصدر والوجهة، وتأكد أن الأجهزة والسويتشات ضمن VLAN نفسها وأن جميع الوصلات فعالة.",
-        fixEn: "Check cables between source and destination. Ensure hosts and switches use the same VLAN and links are enabled.",
+        fixAr:
+          "افحص الكابلات بين المصدر والوجهة، وتأكد أن الأجهزة والسويتشات ضمن VLAN نفسها وأن جميع الوصلات فعالة.",
+        fixEn:
+          "Check cables between source and destination. Ensure hosts and switches use the same VLAN and links are enabled.",
         deviceId: destination?.id,
       };
     case "return_mask":
@@ -196,7 +202,8 @@ export function diagnosePingFailure(
         stageAr: "مسار العودة",
         stageEn: "Return-path subnet check",
         fixAr: "صحح قناع الشبكة في جهاز الوجهة حتى يتعرف على عنوان المصدر ضمن الشبكة الصحيحة.",
-        fixEn: "Correct the destination subnet mask so it recognizes the source address on the proper subnet.",
+        fixEn:
+          "Correct the destination subnet mask so it recognizes the source address on the proper subnet.",
         deviceId: destination?.id,
       };
     case "gateway":
@@ -204,8 +211,10 @@ export function diagnosePingFailure(
         ...base,
         stageAr: "الوصول إلى البوابة الافتراضية",
         stageEn: "Default gateway reachability",
-        fixAr: "اضبط بوابة المصدر على عنوان واجهة الراوتر المتصلة بنفس الشبكة وVLAN، ثم تحقق من الكابل.",
-        fixEn: "Set the source gateway to the router interface on the same subnet and VLAN, then check the cable.",
+        fixAr:
+          "اضبط بوابة المصدر على عنوان واجهة الراوتر المتصلة بنفس الشبكة وVLAN، ثم تحقق من الكابل.",
+        fixEn:
+          "Set the source gateway to the router interface on the same subnet and VLAN, then check the cable.",
         deviceId: source?.id,
       };
     case "no_route":
@@ -213,8 +222,10 @@ export function diagnosePingFailure(
         ...base,
         stageAr: "قرار التوجيه في الراوتر",
         stageEn: "Router routing decision",
-        fixAr: "أضف أو صحح واجهة الراوتر المتصلة بشبكة الوجهة، وتحقق من عنوانها وقناعها وVLAN والكابل.",
-        fixEn: "Add or correct the router interface connected to the destination network; verify its IP, mask, VLAN and cable.",
+        fixAr:
+          "أضف أو صحح واجهة الراوتر المتصلة بشبكة الوجهة، وتحقق من عنوانها وقناعها وVLAN والكابل.",
+        fixEn:
+          "Add or correct the router interface connected to the destination network; verify its IP, mask, VLAN and cable.",
         deviceId: router?.id,
       };
     case "return_gateway":
@@ -222,8 +233,10 @@ export function diagnosePingFailure(
         ...base,
         stageAr: "بوابة جهاز الوجهة",
         stageEn: "Destination default gateway",
-        fixAr: "اضبط البوابة الافتراضية في جهاز الوجهة على عنوان واجهة الراوتر الموجودة في شبكة الوجهة.",
-        fixEn: "Set the destination host's default gateway to the router interface on its local subnet.",
+        fixAr:
+          "اضبط البوابة الافتراضية في جهاز الوجهة على عنوان واجهة الراوتر الموجودة في شبكة الوجهة.",
+        fixEn:
+          "Set the destination host's default gateway to the router interface on its local subnet.",
         deviceId: destination?.id,
       };
     default:
@@ -231,7 +244,8 @@ export function diagnosePingFailure(
         ...base,
         stageAr: "تشخيص الاتصال",
         stageEn: "Connectivity diagnosis",
-        fixAr: "راجع عناوين IP والأقنعة والبوابات الافتراضية وحالة الأجهزة والكابلات، ثم أعد الاختبار.",
+        fixAr:
+          "راجع عناوين IP والأقنعة والبوابات الافتراضية وحالة الأجهزة والكابلات، ثم أعد الاختبار.",
         fixEn: "Review IP addresses, masks, gateways, device status and cables, then retry.",
         deviceId: source?.id,
       };

@@ -1,8 +1,14 @@
 import { describe, expect, it } from "vitest";
-import { createTopology, diagnose, diagnosePingFailure, findCablePath, segment, simulatePing } from "./lab-engine";
+import {
+  createTopology,
+  diagnose,
+  diagnosePingFailure,
+  findCablePath,
+  segment,
+  simulatePing,
+} from "./lab-engine";
 
 describe("network lab simulator", () => {
-
   it("provides actionable guidance for a disabled cable between same-subnet hosts", () => {
     const { devs, links } = createTopology("lan");
     links[0]!.enabled = false;

@@ -643,9 +643,9 @@ function Lab() {
                         ? "fill-amber-400/30 stroke-amber-500"
                         : pingDiagnosis?.deviceId === d.id
                           ? "fill-destructive/20 stroke-destructive"
-                        : sel === d.id
-                          ? "fill-primary/25 stroke-primary"
-                          : "fill-card stroke-border"
+                          : sel === d.id
+                            ? "fill-primary/25 stroke-primary"
+                            : "fill-card stroke-border"
                     }
                     strokeWidth={activeTraceDevice ? 4 : 2}
                   />
@@ -869,7 +869,10 @@ function Lab() {
             </button>
 
             {pingDiagnosis && (
-              <div role="alert" className="mt-3 rounded-lg border border-destructive/40 bg-destructive/5 p-3">
+              <div
+                role="alert"
+                className="mt-3 rounded-lg border border-destructive/40 bg-destructive/5 p-3"
+              >
                 <div className="flex items-center gap-2 text-sm font-semibold text-destructive">
                   <span aria-hidden="true">!</span>
                   {t("توقف الاتصال عند هذه المرحلة", "Ping stopped at this stage")}
