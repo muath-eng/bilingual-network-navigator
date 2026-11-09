@@ -113,6 +113,7 @@ export type PingFailureGuide = {
 export function diagnosePingFailure(
   result: PingResult,
   devs: Device[],
+  links: Cable[],
   sourceId: string | null,
   target: string,
 ): PingFailureGuide | null {
@@ -124,7 +125,7 @@ export function diagnosePingFailure(
   const disabledDestination = devs.find(
     (device) => host(device) && !device.enabled && interfaces(device).some((item) => item.ip === target),
   );
-  const sourceSegment = source ? segment(devs, [], source.id, source.vlan) : [];
+  const sourceSegment = source ? segment(devs, links, source.id, source.vlan) : [];
   const router = source
     ? devs.find(
         (device) =>
