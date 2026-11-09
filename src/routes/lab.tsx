@@ -420,6 +420,13 @@ function Lab() {
   };
 
   const byId = (id: string) => devs.find((d) => d.id === id)!;
+  const activeTraceStep = trace[traceIndex];
+  const packetFrom = activeTraceStep?.fromDeviceId
+    ? devs.find((device) => device.id === activeTraceStep.fromDeviceId)
+    : undefined;
+  const packetTo = activeTraceStep?.toDeviceId
+    ? devs.find((device) => device.id === activeTraceStep.toDeviceId)
+    : undefined;
 
   return (
     <main className="mx-auto max-w-6xl px-4 py-8">
@@ -566,9 +573,12 @@ function Lab() {
                   className={
                     selectedLink === i
                       ? "stroke-primary"
-                      : l.enabled
-                        ? "stroke-primary/70"
-                        : "stroke-destructive"
+                      : activeTraceStep?.fromDeviceId === l.a && activeTraceStep?.toDeviceId === l.b ||
+                          activeTraceStep?.fromDeviceId === l.b && activeTraceStep?.toDeviceId === l.a
+                        ? "stroke-amber-500"
+                        : l.enabled
+                          ? "stroke-primary/70"
+                          : "stroke-destructive"
                   }
                   strokeWidth={selectedLink === i ? 4 : 2.5}
                   strokeDasharray={l.enabled ? undefined : "7 5"}
@@ -585,6 +595,15 @@ function Lab() {
                 />
               );
             })}
+            {packetFrom && packetTo && (
+              <circle r="7" className="fill-amber-500 stroke-background" strokeWidth="2">
+                <animateMotion
+                  dur="1.1s"
+                  repeatCount="indefinite"
+                  path={`M ${packetFrom.x} ${packetFrom.y} L ${packetTo.x} ${packetTo.y}`}
+                />
+              </circle>
+            )}
             {devs.map((d) => {
               const Icon = icons[d.kind];
               const activeTraceDevice = trace[traceIndex]?.deviceId === d.id;
@@ -837,6 +856,11 @@ function Lab() {
                   </span>
                 </div>
                 <p className="mt-2 font-mono text-sm text-primary">{trace[traceIndex]?.title}</p>
+                {packetFrom && packetTo && (
+                  <p className="mt-1 text-xs font-medium text-amber-600" dir="ltr">
+                    {packetFrom.name} → {packetTo.name}
+                  </p>
+                )}
                 <p className="mt-1 text-xs leading-5 text-muted-foreground">
                   {trace[traceIndex]?.detail}
                 </p>
