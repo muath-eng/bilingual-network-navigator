@@ -14,6 +14,8 @@ import {
   diagnose,
   labTemplates,
   simulatePing,
+  findCablePath,
+  segment,
   type Cable,
   type Device,
 } from "@/lib/lab-engine";
@@ -42,6 +44,13 @@ type Kind = Device["kind"];
 type Dev = Device;
 type LinkT = Cable;
 const initialTopology = { devs: [] as Device[], links: [] as Cable[], target: "" };
+type PacketTraceStep = {
+  deviceId: string;
+  title: string;
+  detail: string;
+  fromDeviceId?: string;
+  toDeviceId?: string;
+};
 const icons: Record<Device["kind"], typeof Monitor> = {
   pc: Monitor,
   switch: Server,
@@ -59,7 +68,7 @@ function Lab() {
   const [log, setLog] = useState<string[]>([]);
   const [target, setTarget] = useState(initialTopology.target);
   const [template, setTemplate] = useState("custom");
-  const [trace, setTrace] = useState<{ deviceId: string; title: string; detail: string }[]>([]);
+  const [trace, setTrace] = useState<PacketTraceStep[]>([]);
   const [traceIndex, setTraceIndex] = useState(0);
   const drag = useRef<{ id: string; dx: number; dy: number } | null>(null);
   const svgRef = useRef<SVGSVGElement>(null);
@@ -246,77 +255,141 @@ function Lab() {
 
   const ping = () => {
     window.__lovableEvents?.track?.("project.lab_used", { action: "ping" });
+    const source = selected;
     const destination = devs.find(
       (d) => (d.kind === "pc" || d.kind === "server") && d.ip === target,
     );
     const result = simulatePing(devs, links, sel, target);
-    const out = ["> ping " + target + " (" + (selected?.name ?? "—") + ")"];
-    if (result.ok && selected && destination) {
-      const queue = [selected.id],
-        previous = new Map<string, string | null>([[selected.id, null]]);
-      while (queue.length) {
-        const current = queue.shift()!;
-        if (current === destination.id) break;
-        for (const cable of links.filter(
-          (l) => l.enabled && (l.a === current || l.b === current),
-        )) {
-          const next = cable.a === current ? cable.b : cable.a;
-          const device = devs.find((d) => d.id === next);
-          if (device?.enabled && !previous.has(next)) {
-            previous.set(next, current);
-            queue.push(next);
-          }
+    const out = ["> ping " + target + " (" + (source?.name ?? "—") + ")"];
+    if (result.ok && source && destination) {
+      let pathIds: string[] = [];
+      if (result.code === "direct" || result.code === "local") {
+        pathIds = findCablePath(
+          devs,
+          links,
+          source.id,
+          destination.id,
+          segment(devs, links, source.id, source.vlan),
+        );
+      } else if (result.code === "routed") {
+        const gateway = devs.find(
+          (device) => device.kind === "router" && device.name === result.path[1],
+        );
+        if (gateway) {
+          const sourcePath = findCablePath(
+            devs,
+            links,
+            source.id,
+            gateway.id,
+            segment(devs, links, source.id, source.vlan),
+          );
+          const destinationInterface = [
+            { vlan: destination.vlan, ip: destination.ip },
+            ...(destination.ip2 ? [{ vlan: destination.vlan2 ?? 1, ip: destination.ip2 }] : []),
+          ].find((item) => item.ip === target);
+          const destinationPath = destinationInterface
+            ? findCablePath(
+                devs,
+                links,
+                gateway.id,
+                destination.id,
+                segment(devs, links, gateway.id, destinationInterface.vlan),
+              )
+            : [];
+          if (sourcePath.length && destinationPath.length)
+            pathIds = [...sourcePath, ...destinationPath.slice(1)];
         }
       }
-      const ids: string[] = [];
-      if (previous.has(destination.id)) {
-        let cursor: string | null = destination.id;
-        while (cursor) {
-          ids.unshift(cursor);
-          cursor = previous.get(cursor) ?? null;
-        }
-      }
-      const steps: { deviceId: string; title: string; detail: string }[] = [
-        {
-          deviceId: selected.id,
-          title: "ARP Request",
-          detail: t(
-            "يبحث الجهاز عن عنوان MAC للوجهة أو البوابة.",
-            "The host resolves the destination or gateway MAC address.",
-          ),
-        },
-      ];
-      ids.forEach((id) => {
-        const device = devs.find((d) => d.id === id)!;
-        steps.push({
-          deviceId: id,
-          title: device.kind === "router" ? "IP routing" : "ICMP Echo Request",
-          detail:
-            device.kind === "router"
-              ? t(
-                  "يفحص الراوتر جدول التوجيه ويمرر الحزمة للواجهة المناسبة.",
-                  "The router checks its routing table and forwards the packet.",
-                )
-              : t("تمر الحزمة عبر هذا الجهاز.", "The packet passes through this device."),
+      if (pathIds.length) {
+        const steps: PacketTraceStep[] = [
+          {
+            deviceId: source.id,
+            title: "ARP Request",
+            detail: t(
+              "يرسل الجهاز طلب ARP لمعرفة MAC للوجهة أو للبوابة الافتراضية قبل إرسال إطار Ethernet.",
+              "The host broadcasts ARP to resolve the destination or default-gateway MAC before sending the Ethernet frame.",
+            ),
+          },
+        ];
+        pathIds.slice(1).forEach((id, index) => {
+          const device = devs.find((item) => item.id === id)!;
+          const previousId = pathIds[index]!;
+          steps.push({
+            deviceId: id,
+            fromDeviceId: previousId,
+            toDeviceId: id,
+            title:
+              device.kind === "router"
+                ? "IP Routing"
+                : device.kind === "switch"
+                  ? "Ethernet Frame Forwarding"
+                  : "ICMP Echo Request",
+            detail:
+              device.kind === "router"
+                ? t(
+                    "يفحص الراوتر عنوان IP وجدول التوجيه، ثم يختار الواجهة التالية ويعيد تغليف الحزمة بإطار جديد.",
+                    "The router checks the destination IP and routing table, selects the outgoing interface, and re-encapsulates the packet.",
+                  )
+                : device.kind === "switch"
+                  ? t(
+                      "يمرر السويتش إطار Ethernet عبر المنفذ المناسب وفق جدول MAC وVLAN.",
+                      "The switch forwards the Ethernet frame through the appropriate port using its MAC table and VLAN.",
+                    )
+                  : t(
+                      "وصل طلب ICMP Echo إلى جهاز الوجهة.",
+                      "The ICMP Echo Request has reached the destination host.",
+                    ),
+          });
         });
-      });
-      [...ids].reverse().forEach((id) =>
-        steps.push({
-          deviceId: id,
-          title: "ICMP Echo Reply",
-          detail: t(
-            "يعود رد ICMP باتجاه جهاز المصدر.",
-            "The ICMP reply travels back toward the source.",
-          ),
-        }),
-      );
-      setTrace(steps);
-      setTraceIndex(0);
-      out.push(
-        "Reply from " + target + ": bytes=32 time<1ms",
-        "✓ " + t(result.ar, result.en),
-        "Path: " + ids.map((id) => devs.find((d) => d.id === id)?.name).join(" → "),
-      );
+        [...pathIds.slice(0, -1)].reverse().forEach((id, index) => {
+          const fromId = pathIds[pathIds.length - 1 - index]!;
+          const device = devs.find((item) => item.id === id)!;
+          steps.push({
+            deviceId: id,
+            fromDeviceId: fromId,
+            toDeviceId: id,
+            title: id === source.id ? "ICMP Echo Reply — Source" : "ICMP Echo Reply",
+            detail:
+              device.kind === "router"
+                ? t(
+                    "يمرر الراوتر رد ICMP عبر المسار العكسي إلى شبكة المصدر.",
+                    "The router forwards the ICMP reply back toward the source network.",
+                  )
+                : device.kind === "switch"
+                  ? t(
+                      "يمرر السويتش إطار الرد باتجاه جهاز المصدر.",
+                      "The switch forwards the reply frame toward the source host.",
+                    )
+                  : t(
+                      "استقبل جهاز المصدر رد ICMP؛ اكتمل اختبار الاتصال.",
+                      "The source host received the ICMP reply; the connectivity test is complete.",
+                    ),
+          });
+        });
+        setTrace(steps);
+        setTraceIndex(0);
+        out.push(
+          "Reply from " + target + ": bytes=32 time<1ms",
+          "✓ " + t(result.ar, result.en),
+          "Cable path: " + pathIds.map((id) => devs.find((d) => d.id === id)?.name).join(" → "),
+          "Return path: " +
+            [...pathIds]
+              .reverse()
+              .map((id) => devs.find((d) => d.id === id)?.name)
+              .join(" → "),
+        );
+      } else {
+        setTrace([]);
+        setTraceIndex(0);
+        out.push(
+          "Request timed out.",
+          "✗ " +
+            t(
+              "تعذر بناء مسار فعلي عبر الكابلات رغم نتيجة المحاكاة.",
+              "Could not build a physical cable path for the simulated result.",
+            ),
+        );
+      }
     } else {
       setTrace([]);
       setTraceIndex(0);
@@ -357,6 +430,13 @@ function Lab() {
   };
 
   const byId = (id: string) => devs.find((d) => d.id === id)!;
+  const activeTraceStep = trace[traceIndex];
+  const packetFrom = activeTraceStep?.fromDeviceId
+    ? devs.find((device) => device.id === activeTraceStep.fromDeviceId)
+    : undefined;
+  const packetTo = activeTraceStep?.toDeviceId
+    ? devs.find((device) => device.id === activeTraceStep.toDeviceId)
+    : undefined;
 
   return (
     <main className="mx-auto max-w-6xl px-4 py-8">
@@ -503,9 +583,14 @@ function Lab() {
                   className={
                     selectedLink === i
                       ? "stroke-primary"
-                      : l.enabled
-                        ? "stroke-primary/70"
-                        : "stroke-destructive"
+                      : (activeTraceStep?.fromDeviceId === l.a &&
+                            activeTraceStep?.toDeviceId === l.b) ||
+                          (activeTraceStep?.fromDeviceId === l.b &&
+                            activeTraceStep?.toDeviceId === l.a)
+                        ? "stroke-amber-500"
+                        : l.enabled
+                          ? "stroke-primary/70"
+                          : "stroke-destructive"
                   }
                   strokeWidth={selectedLink === i ? 4 : 2.5}
                   strokeDasharray={l.enabled ? undefined : "7 5"}
@@ -522,6 +607,15 @@ function Lab() {
                 />
               );
             })}
+            {packetFrom && packetTo && (
+              <circle r="7" className="fill-amber-500 stroke-background" strokeWidth="2">
+                <animateMotion
+                  dur="1.1s"
+                  repeatCount="indefinite"
+                  path={`M ${packetFrom.x} ${packetFrom.y} L ${packetTo.x} ${packetTo.y}`}
+                />
+              </circle>
+            )}
             {devs.map((d) => {
               const Icon = icons[d.kind];
               const activeTraceDevice = trace[traceIndex]?.deviceId === d.id;
@@ -774,8 +868,19 @@ function Lab() {
                   </span>
                 </div>
                 <p className="mt-2 font-mono text-sm text-primary">{trace[traceIndex]?.title}</p>
+                {packetFrom && packetTo && (
+                  <p className="mt-1 text-xs font-medium text-amber-600" dir="ltr">
+                    {packetFrom.name} → {packetTo.name}
+                  </p>
+                )}
                 <p className="mt-1 text-xs leading-5 text-muted-foreground">
                   {trace[traceIndex]?.detail}
+                </p>
+                <p className="mt-2 text-[11px] leading-5 text-muted-foreground">
+                  {t(
+                    "النقطة المتحركة تمثيل تعليمي لحزمة افتراضية، وليست حركة بيانات حقيقية على الشبكة.",
+                    "The moving dot is an educational representation of a simulated packet, not live network traffic.",
+                  )}
                 </p>
                 <p className="mt-1 text-xs" dir="ltr">
                   {t("الجهاز الحالي:", "Current device:")}{" "}
