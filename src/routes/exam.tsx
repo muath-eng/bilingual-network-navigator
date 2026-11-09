@@ -8,20 +8,19 @@ export const Route = createFileRoute("/exam")({
   staticData: { sitemap: true },
   head: () => ({
     meta: [
-      { title: "Practice Exam & Certificate — Network Master" },
-      { property: "og:title", content: "Practice Exam & Certificate — Network Master" },
-      {
-        property: "og:description",
-        content:
-          "Take a bilingual networking practice exam and earn a course completion certificate.",
-      },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary" },
+      { title: "اختبار الشبكات وCCNA مع شهادة إتمام — Network Master" },
       {
         name: "description",
         content:
-          "Take a bilingual networking practice exam and earn a course completion certificate.",
+          "اختبر معلوماتك في أساسيات الشبكات ومفاهيم CCNA من خلال اختبار تفاعلي بالعربية والإنجليزية، وتابع نتيجتك واحصل على شهادة إتمام عند استيفاء المتطلبات.",
       },
+      { property: "og:title", content: "اختبار الشبكات وCCNA — Network Master" },
+      {
+        property: "og:description",
+        content: "اختبار تدريبي تفاعلي لقياس فهمك لمفاهيم الشبكات وCCNA.",
+      },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: ExamPage,
