@@ -272,7 +272,9 @@ function Lab() {
           segment(devs, links, source.id, source.vlan),
         );
       } else if (result.code === "routed") {
-        const gateway = devs.find((device) => device.kind === "router" && device.name === result.path[1]);
+        const gateway = devs.find(
+          (device) => device.kind === "router" && device.name === result.path[1],
+        );
         if (gateway) {
           const sourcePath = findCablePath(
             devs,
@@ -370,14 +372,22 @@ function Lab() {
           "Reply from " + target + ": bytes=32 time<1ms",
           "✓ " + t(result.ar, result.en),
           "Cable path: " + pathIds.map((id) => devs.find((d) => d.id === id)?.name).join(" → "),
-          "Return path: " + [...pathIds].reverse().map((id) => devs.find((d) => d.id === id)?.name).join(" → "),
+          "Return path: " +
+            [...pathIds]
+              .reverse()
+              .map((id) => devs.find((d) => d.id === id)?.name)
+              .join(" → "),
         );
       } else {
         setTrace([]);
         setTraceIndex(0);
         out.push(
           "Request timed out.",
-          "✗ " + t("تعذر بناء مسار فعلي عبر الكابلات رغم نتيجة المحاكاة.", "Could not build a physical cable path for the simulated result."),
+          "✗ " +
+            t(
+              "تعذر بناء مسار فعلي عبر الكابلات رغم نتيجة المحاكاة.",
+              "Could not build a physical cable path for the simulated result.",
+            ),
         );
       }
     } else {
@@ -573,8 +583,10 @@ function Lab() {
                   className={
                     selectedLink === i
                       ? "stroke-primary"
-                      : activeTraceStep?.fromDeviceId === l.a && activeTraceStep?.toDeviceId === l.b ||
-                          activeTraceStep?.fromDeviceId === l.b && activeTraceStep?.toDeviceId === l.a
+                      : (activeTraceStep?.fromDeviceId === l.a &&
+                            activeTraceStep?.toDeviceId === l.b) ||
+                          (activeTraceStep?.fromDeviceId === l.b &&
+                            activeTraceStep?.toDeviceId === l.a)
                         ? "stroke-amber-500"
                         : l.enabled
                           ? "stroke-primary/70"
