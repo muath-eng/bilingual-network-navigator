@@ -398,7 +398,7 @@ function Lab() {
     } else {
       setTrace([]);
       setTraceIndex(0);
-      setPingDiagnosis(diagnosePingFailure(result, devs, sel, target));
+      setPingDiagnosis(diagnosePingFailure(result, devs, links, sel, target));
       out.push("Request timed out.", "✗ " + t(result.ar, result.en) + " [" + result.code + "]");
     }
     setLog(out);
