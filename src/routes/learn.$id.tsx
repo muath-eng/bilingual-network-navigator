@@ -10,16 +10,28 @@ export const Route = createFileRoute("/learn/$id")({
     if (!lesson) throw notFound();
     return { lesson };
   },
-  head: ({ loaderData }) => ({
-    meta: [
-      { title: loaderData ? `${loaderData.lesson.titleAr} — Network Master` : "Network Master" },
-      { name: "description", content: loaderData?.lesson.bodyAr[0] ?? "" },
-      { property: "og:title", content: loaderData?.lesson.titleEn ?? "Lesson" },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary" },
-      { property: "og:description", content: loaderData?.lesson.bodyEn[0] ?? "" },
-    ],
-  }),
+  head: ({ loaderData }) => {
+    const lesson = loaderData?.lesson;
+    const description = lesson
+      ? `${lesson.titleAr}: ${lesson.bodyAr.join(" ")}`.slice(0, 160)
+      : "درس تفاعلي لتعلم الشبكات بالعربية والإنجليزية على Network Master.";
+    return {
+      meta: [
+        {
+          title: lesson
+            ? `${lesson.titleAr} — شرح مبسط واختبار | Network Master`
+            : "دروس الشبكات — Network Master",
+        },
+        { name: "description", content: description },
+        { property: "og:title", content: lesson?.titleAr ?? "دروس الشبكات — Network Master" },
+        { property: "og:type", content: "article" },
+        { property: "og:description", content: description },
+        { name: "twitter:card", content: "summary_large_image" },
+        { name: "twitter:title", content: lesson?.titleAr ?? "دروس الشبكات — Network Master" },
+        { name: "twitter:description", content: description },
+      ],
+    };
+  },
   component: LessonPage,
 });
 
