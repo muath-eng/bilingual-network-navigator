@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as ExamRouteImport } from './routes/exam'
 import { Route as LabRouteImport } from './routes/lab'
 import { Route as MikrotikRouteImport } from './routes/mikrotik'
@@ -19,7 +20,6 @@ import { Route as PracticeRouteImport } from './routes/practice'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as SubnetRouteImport } from './routes/subnet'
 import { Route as TroubleshootRouteImport } from './routes/troubleshoot'
-import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as LearnIndexRouteImport } from './routes/learn.index'
 import { Route as LearnIdRouteImport } from './routes/learn.$id'
 
@@ -28,14 +28,19 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AboutRoute = AboutRouteImport.update({
+  id: '/about',
+  path: '/about',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AboutRoute = AboutRouteImport.update({
-  id: '/about',
-  path: '/about',
+const DashboardRoute = DashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ExamRoute = ExamRouteImport.update({
@@ -73,11 +78,6 @@ const TroubleshootRoute = TroubleshootRouteImport.update({
   path: '/troubleshoot',
   getParentRoute: () => rootRouteImport,
 } as any)
-const DashboardRoute = DashboardRouteImport.update({
-  id: '/dashboard',
-  path: '/dashboard',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const LearnIndexRoute = LearnIndexRouteImport.update({
   id: '/learn/',
   path: '/learn/',
@@ -93,6 +93,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/auth': typeof AuthRoute
+  '/dashboard': typeof DashboardRoute
   '/exam': typeof ExamRoute
   '/lab': typeof LabRoute
   '/mikrotik': typeof MikrotikRoute
@@ -102,12 +103,12 @@ export interface FileRoutesByFullPath {
   '/troubleshoot': typeof TroubleshootRoute
   '/learn/$id': typeof LearnIdRoute
   '/learn/': typeof LearnIndexRoute
-  '/dashboard': typeof DashboardRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/auth': typeof AuthRoute
+  '/dashboard': typeof DashboardRoute
   '/exam': typeof ExamRoute
   '/lab': typeof LabRoute
   '/mikrotik': typeof MikrotikRoute
@@ -117,13 +118,13 @@ export interface FileRoutesByTo {
   '/troubleshoot': typeof TroubleshootRoute
   '/learn/$id': typeof LearnIdRoute
   '/learn': typeof LearnIndexRoute
-  '/dashboard': typeof DashboardRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/auth': typeof AuthRoute
+  '/dashboard': typeof DashboardRoute
   '/exam': typeof ExamRoute
   '/lab': typeof LabRoute
   '/mikrotik': typeof MikrotikRoute
@@ -133,15 +134,14 @@ export interface FileRoutesById {
   '/troubleshoot': typeof TroubleshootRoute
   '/learn/$id': typeof LearnIdRoute
   '/learn/': typeof LearnIndexRoute
-  '/dashboard': typeof DashboardRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    | '/dashboard'
     | '/'
     | '/about'
     | '/auth'
+    | '/dashboard'
     | '/exam'
     | '/lab'
     | '/mikrotik'
@@ -153,9 +153,10 @@ export interface FileRouteTypes {
     | '/learn/'
   fileRoutesByTo: FileRoutesByTo
   to:
-    | '/dashboard'
     | '/'
     | '/about'
+    | '/auth'
+    | '/dashboard'
     | '/exam'
     | '/lab'
     | '/mikrotik'
@@ -167,10 +168,10 @@ export interface FileRouteTypes {
     | '/learn'
   id:
     | '__root__'
-    | '/dashboard'
     | '/'
     | '/about'
     | '/auth'
+    | '/dashboard'
     | '/exam'
     | '/lab'
     | '/mikrotik'
@@ -186,6 +187,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
   AuthRoute: typeof AuthRoute
+  DashboardRoute: typeof DashboardRoute
   ExamRoute: typeof ExamRoute
   LabRoute: typeof LabRoute
   MikrotikRoute: typeof MikrotikRoute
@@ -193,7 +195,6 @@ export interface RootRouteChildren {
   ProfileRoute: typeof ProfileRoute
   SubnetRoute: typeof SubnetRoute
   TroubleshootRoute: typeof TroubleshootRoute
-  DashboardRoute: typeof DashboardRoute
   LearnIdRoute: typeof LearnIdRoute
   LearnIndexRoute: typeof LearnIndexRoute
 }
@@ -207,6 +208,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/about': {
+      id: '/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AboutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/auth': {
       id: '/auth'
       path: '/auth'
@@ -214,11 +222,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/about': {
-      id: '/about'
-      path: '/about'
-      fullPath: '/about'
-      preLoaderRoute: typeof AboutRouteImport
+    '/dashboard': {
+      id: '/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof DashboardRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/exam': {
@@ -263,13 +271,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SubnetRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/dashboard': {
-      id: '/dashboard'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof DashboardRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/troubleshoot': {
       id: '/troubleshoot'
       path: '/troubleshoot'
@@ -298,6 +299,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
   AuthRoute: AuthRoute,
+  DashboardRoute: DashboardRoute,
   ExamRoute: ExamRoute,
   LabRoute: LabRoute,
   MikrotikRoute: MikrotikRoute,
@@ -305,7 +307,6 @@ const rootRouteChildren: RootRouteChildren = {
   ProfileRoute: ProfileRoute,
   SubnetRoute: SubnetRoute,
   TroubleshootRoute: TroubleshootRoute,
-  DashboardRoute: DashboardRoute,
   LearnIdRoute: LearnIdRoute,
   LearnIndexRoute: LearnIndexRoute,
 }
