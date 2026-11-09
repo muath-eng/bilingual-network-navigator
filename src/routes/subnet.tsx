@@ -4,6 +4,7 @@ import { subnetInfo } from "@/lib/network";
 import { useLang } from "@/lib/i18n";
 
 export const Route = createFileRoute("/subnet")({
+  staticData: { sitemap: true },
   head: () => ({
     meta: [
       { title: "حاسبة الشبكات الفرعية — Network Master" },

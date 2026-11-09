@@ -14,6 +14,7 @@ import { useLang, useProgress } from "@/lib/i18n";
 import { lessons } from "@/lib/content";
 
 export const Route = createFileRoute("/")({
+  staticData: { sitemap: true },
   head: () => ({
     meta: [
       { title: "Network Master | تعلّم الشبكات عملياً" },

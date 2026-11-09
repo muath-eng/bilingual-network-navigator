@@ -29,6 +29,7 @@ const goalLabels: Record<string, { ar: string; en: string }> = {
 };
 
 export const Route = createFileRoute("/dashboard")({
+  staticData: { sitemap: false },
   head: () => ({
     meta: [
       { title: "لوحة تحكم الطالب — Network Master" },

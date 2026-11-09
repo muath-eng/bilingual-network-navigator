@@ -4,6 +4,7 @@ import { ccnaDomains, lessons } from "@/lib/content";
 import { useLang, useProgress } from "@/lib/i18n";
 
 export const Route = createFileRoute("/learn/")({
+  staticData: { sitemap: true },
   head: () => ({
     meta: [
       { title: "الدروس — Network Master" },

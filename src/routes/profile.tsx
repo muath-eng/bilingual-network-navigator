@@ -25,6 +25,7 @@ const PROFILE_KEY = "nm-profile";
 const defaults: LearnerProfile = { name: "", goal: "ccna", weeklyTarget: 5 };
 
 export const Route = createFileRoute("/profile")({
+  staticData: { sitemap: false },
   head: () => ({
     meta: [
       { title: "ملفي التعليمي — Network Master" },

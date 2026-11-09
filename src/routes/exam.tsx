@@ -5,6 +5,7 @@ import { lessons } from "@/lib/content";
 import { useLang } from "@/lib/i18n";
 
 export const Route = createFileRoute("/exam")({
+  staticData: { sitemap: true },
   head: () => ({
     meta: [
       { title: "Practice Exam & Certificate — Network Master" },

@@ -3,6 +3,7 @@ import { Mail, Network, UserRound } from "lucide-react";
 import { useLang } from "@/lib/i18n";
 
 export const Route = createFileRoute("/about")({
+  staticData: { sitemap: true },
   head: () => ({
     meta: [
       { title: "حول Network Master" },

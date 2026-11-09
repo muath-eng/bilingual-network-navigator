@@ -4,6 +4,7 @@ import { ccnaDomains, lessons } from "@/lib/content";
 import { useLang, useProgress } from "@/lib/i18n";
 
 export const Route = createFileRoute("/learn/$id")({
+  staticData: { sitemap: true },
   loader: ({ params }) => {
     const lesson = lessons.find((l) => l.id === params.id);
     if (!lesson) throw notFound();

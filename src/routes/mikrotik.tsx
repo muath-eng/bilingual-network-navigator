@@ -4,6 +4,7 @@ import { CheckCircle2, Router, Shield, Wifi, Network, TerminalSquare } from "luc
 import { useLang } from "@/lib/i18n";
 
 export const Route = createFileRoute("/mikrotik")({
+  staticData: { sitemap: true },
   head: () => ({
     meta: [
       { title: "MikroTik Academy — Network Master" },

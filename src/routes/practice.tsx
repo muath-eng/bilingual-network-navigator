@@ -12,6 +12,7 @@ import {
 import { useLang } from "@/lib/i18n";
 
 export const Route = createFileRoute("/practice")({
+  staticData: { sitemap: true },
   head: () => ({
     meta: [
       { title: "CLI Practice — Network Master" },
