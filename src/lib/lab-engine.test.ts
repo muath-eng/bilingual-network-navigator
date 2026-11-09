@@ -33,7 +33,7 @@ describe("network lab simulator", () => {
     const { devs, links } = createTopology("routed");
     devs.find((device) => device.id === "d4")!.ip2 = "10.0.1.1";
     const result = simulatePing(devs, links, "d1", "10.0.0.20");
-    const guide = diagnosePingFailure(result, devs, "d1", "10.0.0.20");
+    const guide = diagnosePingFailure(result, devs, links, "d1", "10.0.0.20");
     expect(result.code).toBe("no_route");
     expect(guide?.stageEn).toBe("Router routing decision");
     expect(guide?.deviceId).toBe("d4");
