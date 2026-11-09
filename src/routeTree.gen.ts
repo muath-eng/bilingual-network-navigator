@@ -18,6 +18,7 @@ import { Route as LabRouteImport } from './routes/lab'
 import { Route as MikrotikRouteImport } from './routes/mikrotik'
 import { Route as PracticeRouteImport } from './routes/practice'
 import { Route as ProfileRouteImport } from './routes/profile'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as SubnetRouteImport } from './routes/subnet'
 import { Route as TroubleshootRouteImport } from './routes/troubleshoot'
 import { Route as LearnIndexRouteImport } from './routes/learn.index'
@@ -68,6 +69,11 @@ const ProfileRoute = ProfileRouteImport.update({
   path: '/profile',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SubnetRoute = SubnetRouteImport.update({
   id: '/subnet',
   path: '/subnet',
@@ -99,6 +105,7 @@ export interface FileRoutesByFullPath {
   '/mikrotik': typeof MikrotikRoute
   '/practice': typeof PracticeRoute
   '/profile': typeof ProfileRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/subnet': typeof SubnetRoute
   '/troubleshoot': typeof TroubleshootRoute
   '/learn/$id': typeof LearnIdRoute
@@ -114,6 +121,7 @@ export interface FileRoutesByTo {
   '/mikrotik': typeof MikrotikRoute
   '/practice': typeof PracticeRoute
   '/profile': typeof ProfileRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/subnet': typeof SubnetRoute
   '/troubleshoot': typeof TroubleshootRoute
   '/learn/$id': typeof LearnIdRoute
@@ -130,6 +138,7 @@ export interface FileRoutesById {
   '/mikrotik': typeof MikrotikRoute
   '/practice': typeof PracticeRoute
   '/profile': typeof ProfileRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/subnet': typeof SubnetRoute
   '/troubleshoot': typeof TroubleshootRoute
   '/learn/$id': typeof LearnIdRoute
@@ -147,6 +156,7 @@ export interface FileRouteTypes {
     | '/mikrotik'
     | '/practice'
     | '/profile'
+    | '/sitemap.xml'
     | '/subnet'
     | '/troubleshoot'
     | '/learn/$id'
@@ -162,6 +172,7 @@ export interface FileRouteTypes {
     | '/mikrotik'
     | '/practice'
     | '/profile'
+    | '/sitemap.xml'
     | '/subnet'
     | '/troubleshoot'
     | '/learn/$id'
@@ -177,6 +188,7 @@ export interface FileRouteTypes {
     | '/mikrotik'
     | '/practice'
     | '/profile'
+    | '/sitemap.xml'
     | '/subnet'
     | '/troubleshoot'
     | '/learn/$id'
@@ -193,6 +205,7 @@ export interface RootRouteChildren {
   MikrotikRoute: typeof MikrotikRoute
   PracticeRoute: typeof PracticeRoute
   ProfileRoute: typeof ProfileRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   SubnetRoute: typeof SubnetRoute
   TroubleshootRoute: typeof TroubleshootRoute
   LearnIdRoute: typeof LearnIdRoute
@@ -264,6 +277,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProfileRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/subnet': {
       id: '/subnet'
       path: '/subnet'
@@ -305,6 +325,7 @@ const rootRouteChildren: RootRouteChildren = {
   MikrotikRoute: MikrotikRoute,
   PracticeRoute: PracticeRoute,
   ProfileRoute: ProfileRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
   SubnetRoute: SubnetRoute,
   TroubleshootRoute: TroubleshootRoute,
   LearnIdRoute: LearnIdRoute,
