@@ -63,6 +63,42 @@ export function segment(devs: Device[], links: Cable[], start: string, vlan: num
   }
   return [...seen];
 }
+export function findCablePath(
+  devs: Device[],
+  links: Cable[],
+  start: string,
+  end: string,
+  allowedIds?: string[],
+): string[] {
+  const allowed = allowedIds ? new Set(allowedIds) : null;
+  const source = devs.find((device) => device.id === start && device.enabled);
+  const destination = devs.find((device) => device.id === end && device.enabled);
+  if (!source || !destination || (allowed && (!allowed.has(start) || !allowed.has(end)))) return [];
+  const queue = [start];
+  const previous = new Map<string, string | null>([[start, null]]);
+  while (queue.length) {
+    const current = queue.shift()!;
+    if (current === end) break;
+    for (const cable of links.filter(
+      (item) => item.enabled && (item.a === current || item.b === current),
+    )) {
+      const next = cable.a === current ? cable.b : cable.a;
+      const device = devs.find((item) => item.id === next);
+      if (!device?.enabled || previous.has(next) || (allowed && !allowed.has(next))) continue;
+      previous.set(next, current);
+      queue.push(next);
+    }
+  }
+  if (!previous.has(end)) return [];
+  const path: string[] = [];
+  let cursor: string | null = end;
+  while (cursor) {
+    path.unshift(cursor);
+    cursor = previous.get(cursor) ?? null;
+  }
+  return path;
+}
+
 export function diagnose(devs: Device[], links: Cable[]): Finding[] {
   const out: Finding[] = [];
   for (const d of devs) {
