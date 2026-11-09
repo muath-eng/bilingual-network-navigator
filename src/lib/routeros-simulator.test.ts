@@ -58,6 +58,21 @@ describe("RouterOS command simulator", () => {
     expect(runRouterOsCommand(added.state, "/ip route print").output[1]).toContain("0.0.0.0/0");
   });
 
+  it("rejects the router address, network address, and broadcast address as gateways", () => {
+    const address = runRouterOsCommand(
+      createRouterOsState(),
+      "/ip address add address=192.168.10.1/24 interface=ether1",
+    );
+    for (const gateway of ["192.168.10.1", "192.168.10.0", "192.168.10.255"]) {
+      const result = runRouterOsCommand(
+        address.state,
+        "/ip route add dst-address=0.0.0.0/0 gateway=" + gateway,
+      );
+      expect(result.output.join(" ")).toContain("is unreachable");
+      expect(result.state.routes).toHaveLength(0);
+    }
+  });
+
   it("simulates ping only when a connected network or reachable default gateway exists", () => {
     const address = runRouterOsCommand(
       createRouterOsState(),
