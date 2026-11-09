@@ -37,16 +37,32 @@ describe("RouterOS command simulator", () => {
     ).toContain("already assigned");
   });
 
-  it("adds and prints a default route", () => {
-    const added = runRouterOsCommand(
+  it("rejects an unreachable gateway and adds a reachable default route", () => {
+    const address = runRouterOsCommand(
       createRouterOsState(),
+      "/ip address add address=192.168.10.1/24 interface=ether1",
+    );
+    const rejected = runRouterOsCommand(
+      address.state,
+      "/ip route add dst-address=0.0.0.0/0 gateway=192.168.20.254",
+    );
+    expect(rejected.output.join(" ")).toContain("gateway 192.168.20.254 is unreachable");
+    expect(rejected.state.routes).toHaveLength(0);
+
+    const added = runRouterOsCommand(
+      address.state,
       "/ip route add dst-address=0.0.0.0/0 gateway=192.168.10.254",
     );
-    expect(added.state.routes).toEqual([{ destination: "0.0.0.0/0", gateway: "192.168.10.254" }]);
-    expect(runRouterOsCommand(added.state, "/ip route print").output[1]).toContain("0.0.0.0/0");
+    expect(added.state.routes).toEqual([
+      { destination: "0.0.0.0/0", gateway: "192.168.10.254" },
+    ]);
+    expect(added.output.join(" ")).toContain("gateway reachable");
+    expect(runRouterOsCommand(added.state, "/ip route print").output[1]).toContain(
+      "0.0.0.0/0",
+    );
   });
 
-  it("simulates ping based on connected networks or a default route", () => {
+  it("simulates ping only when a connected network or reachable default gateway exists", () => {
     const address = runRouterOsCommand(
       createRouterOsState(),
       "/ip address add address=192.168.10.1/24 interface=ether1",
@@ -56,6 +72,14 @@ describe("RouterOS command simulator", () => {
     );
     expect(runRouterOsCommand(address.state, "/ping 10.0.0.1").output.join(" ")).toContain(
       "0 received",
+    );
+
+    const route = runRouterOsCommand(
+      address.state,
+      "/ip route add dst-address=0.0.0.0/0 gateway=192.168.10.254",
+    );
+    expect(runRouterOsCommand(route.state, "/ping 10.0.0.1").output.join(" ")).toContain(
+      "1 received",
     );
   });
 });
