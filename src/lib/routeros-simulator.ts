@@ -48,6 +48,22 @@ const parseArgs = (command: string) =>
     ]),
   );
 
+const ipToNumber = (ip: string) =>
+  ip.split(".").reduce((value, part) => value * 256 + Number(part), 0);
+
+const isUsableGateway = (state: RouterOsState, gateway: string) =>
+  state.addresses.some((item) => {
+    const parsed = parseAddress(item.address);
+    if (!parsed) return false;
+    const mask = parsed.prefix === 32 ? 0xffffffff : (0xffffffff << (32 - parsed.prefix)) >>> 0;
+    const own = ipToNumber(parsed.ip) >>> 0;
+    const target = ipToNumber(gateway) >>> 0;
+    const network = (own & mask) >>> 0;
+    const broadcast = (network | (~mask >>> 0)) >>> 0;
+    if (parsed.prefix <= 30 && (target === network || target === broadcast)) return false;
+    return target !== own && (target & mask) >>> 0 === network;
+  });
+
 export function runRouterOsCommand(current: RouterOsState, rawCommand: string): RouterOsResult {
   const command = rawCommand.trim().replace(/\s+/g, " ");
   const lower = command.toLowerCase();
@@ -166,12 +182,27 @@ export function runRouterOsCommand(current: RouterOsState, rawCommand: string): 
       ]);
     if (state.routes.some((item) => item.destination === destination))
       return result(["failure: route " + destination + " already exists"]);
+    if (!isUsableGateway(state, gateway))
+      return result(
+        ["failure: gateway " + gateway + " is unreachable from the router's configured interfaces"],
+        [
+          {
+            title: "تعذر الوصول إلى البوابة",
+            detail:
+              "يجب أن تقع البوابة ضمن شبكة متصلة مباشرة بإحدى واجهات الراوتر، وألا تكون عنوان الشبكة أو البث أو عنوان الراوتر نفسه.",
+          },
+        ],
+      );
     state.routes.push({ destination, gateway });
     return result(
-      ["route " + destination + " via " + gateway + " added"],
+      ["route " + destination + " via " + gateway + " added (gateway reachable)"],
       [
         { title: "فحص المسار", detail: "تحقق المحاكي من الوجهة والبوابة بصيغة IPv4." },
-        { title: "إضافة المسار", detail: "أضيف المسار الافتراضي إلى جدول التوجيه التدريبي." },
+        {
+          title: "فحص قابلية الوصول",
+          detail: "تأكد المحاكي أن عنوان البوابة يقع ضمن إحدى الشبكات المتصلة مباشرة بالراوتر.",
+        },
+        { title: "إضافة المسار", detail: "أضيف المسار الافتراضي بعد نجاح فحص البوابة." },
       ],
     );
   }
@@ -181,13 +212,15 @@ export function runRouterOsCommand(current: RouterOsState, rawCommand: string): 
     if (!validIPv4(destination)) return result(["invalid address"]);
     const toNumber = (ip: string) =>
       ip.split(".").reduce((n, part) => (n * 256 + Number(part)) >>> 0, 0);
+    const onConnectedNetwork = state.addresses.some((item) => {
+      const parsed = parseAddress(item.address);
+      if (!parsed) return false;
+      const mask = parsed.prefix === 32 ? 0xffffffff : (0xffffffff << (32 - parsed.prefix)) >>> 0;
+      return (toNumber(parsed.ip) & mask) === (toNumber(destination) & mask);
+    });
+    const defaultRoute = state.routes.find((route) => route.destination === "0.0.0.0/0");
     const reachable =
-      state.addresses.some((item) => {
-        const parsed = parseAddress(item.address);
-        if (!parsed) return false;
-        const mask = parsed.prefix === 32 ? 0xffffffff : (0xffffffff << (32 - parsed.prefix)) >>> 0;
-        return (toNumber(parsed.ip) & mask) === (toNumber(destination) & mask);
-      }) || state.routes.some((route) => route.destination === "0.0.0.0/0");
+      onConnectedNetwork || (!!defaultRoute && isUsableGateway(state, defaultRoute.gateway));
     return result(
       [
         "PING " + destination,
@@ -199,8 +232,12 @@ export function runRouterOsCommand(current: RouterOsState, rawCommand: string): 
         {
           title: "نتيجة ICMP",
           detail: reachable
-            ? "أظهر النموذج استجابة افتراضية؛ هذه ليست حزمة حقيقية."
-            : "لا يوجد مسار تدريبي مناسب، لذلك انتهى الاختبار بمهلة.",
+            ? onConnectedNetwork
+              ? "الوجهة ضمن شبكة متصلة مباشرة؛ الاستجابة افتراضية وليست حزمة حقيقية."
+              : "المسار الافتراضي وبوابته صالحان؛ يفترض النموذج استجابة افتراضية للوجهة الخارجية."
+            : defaultRoute
+              ? "المسار الافتراضي موجود لكن بوابته غير قابلة للوصول من واجهات الراوتر."
+              : "لا يوجد مسار تدريبي مناسب، لذلك انتهى الاختبار بمهلة.",
         },
       ],
     );
