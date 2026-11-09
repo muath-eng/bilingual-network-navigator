@@ -176,7 +176,7 @@ export function runRouterOsCommand(current: RouterOsState, rawCommand: string): 
     const args = parseArgs(command);
     const destination = args["dst-address"];
     const gateway = args.gateway;
-    if (!destination || !gateway || !validIPv4(gateway) || !/^0\\.0\\.0\\.0\\/0$/.test(destination))
+    if (!destination || !gateway || !validIPv4(gateway) || !/^0\.0\.0\.0\/0$/.test(destination))
       return result([
         "supported example: /ip route add dst-address=0.0.0.0/0 gateway=192.168.10.254",
       ]);
