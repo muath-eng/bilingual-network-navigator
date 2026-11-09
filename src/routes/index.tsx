@@ -16,12 +16,12 @@ import { lessons } from "@/lib/content";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Network Master — تعلّم الشبكات من الصفر حتى الاحتراف" },
-      { name: "description", content: "منصة عربية وإنجليزية لتعلم الشبكات ومحاكاتها: دروس، مختبر تفاعلي، وإصلاح أعطال." },
-      { property: "og:title", content: "Network Master" },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary" },
-      { property: "og:description", content: "Learn networking from zero to pro with lessons, a live lab and troubleshooting drills." },
+      { title: "Network Master | تعلّم الشبكات عملياً" },
+      {
+        name: "description",
+        content:
+          "منصة تفاعلية بالعربية والإنجليزية لتعلم الشبكات، ومحاكاة الأجهزة، والتدرب على أوامر Cisco وMikroTik.",
+      },
     ],
   }),
   component: Index,
