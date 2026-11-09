@@ -1,7 +1,44 @@
 import { describe, expect, it } from "vitest";
-import { createTopology, diagnose, findCablePath, segment, simulatePing } from "./lab-engine";
+import {
+  createTopology,
+  diagnose,
+  diagnosePingFailure,
+  findCablePath,
+  segment,
+  simulatePing,
+} from "./lab-engine";
 
 describe("network lab simulator", () => {
+  it("provides actionable guidance for a disabled cable between same-subnet hosts", () => {
+    const { devs, links } = createTopology("lan");
+    links[0]!.enabled = false;
+    const result = simulatePing(devs, links, "d1", "192.168.1.11");
+    const guide = diagnosePingFailure(result, devs, links, "d1", "192.168.1.11");
+    expect(result.code).toBe("segment");
+    expect(guide?.stageEn).toBe("Local network reachability");
+    expect(guide?.fixEn).toContain("same VLAN");
+    expect(guide?.deviceId).toBe("d2");
+  });
+
+  it("points gateway failures to the source host with a corrective action", () => {
+    const { devs, links } = createTopology("gateway");
+    const result = simulatePing(devs, links, "d1", "10.0.0.20");
+    const guide = diagnosePingFailure(result, devs, links, "d1", "10.0.0.20");
+    expect(result.code).toBe("gateway");
+    expect(guide?.deviceId).toBe("d1");
+    expect(guide?.fixEn).toContain("router interface");
+  });
+
+  it("points missing routes to the router decision stage", () => {
+    const { devs, links } = createTopology("routed");
+    devs.find((device) => device.id === "d4")!.ip2 = "10.0.1.1";
+    const result = simulatePing(devs, links, "d1", "10.0.0.20");
+    const guide = diagnosePingFailure(result, devs, links, "d1", "10.0.0.20");
+    expect(result.code).toBe("no_route");
+    expect(guide?.stageEn).toBe("Router routing decision");
+    expect(guide?.deviceId).toBe("d4");
+  });
+
   it("pings hosts directly on the same LAN", () => {
     const { devs, links } = createTopology("lan");
     expect(simulatePing(devs, links, "d1", "192.168.1.11").ok).toBe(true);
