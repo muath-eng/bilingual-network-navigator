@@ -126,14 +126,9 @@ export function diagnosePingFailure(
       host(device) && !device.enabled && interfaces(device).some((item) => item.ip === target),
   );
   const sourceSegment = source ? segment(devs, links, source.id, source.vlan) : [];
-  const router = source
-    ? devs.find(
-        (device) =>
-          device.kind === "router" &&
-          sourceSegment.includes(device.id) &&
-          interfaces(device).some((item) => item.ip === source.gw && item.vlan === source.vlan),
-      )
-    : undefined;
+  const router = devs.find(
+    (device) => device.kind === "router" && sourceSegment.includes(device.id),
+  );
   const base = { reasonAr: result.ar, reasonEn: result.en };
 
   switch (result.code) {
