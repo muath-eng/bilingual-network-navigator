@@ -7,7 +7,7 @@ describe("network lab simulator", () => {
     const { devs, links } = createTopology("lan");
     links[0]!.enabled = false;
     const result = simulatePing(devs, links, "d1", "192.168.1.11");
-    const guide = diagnosePingFailure(result, devs, "d1", "192.168.1.11");
+    const guide = diagnosePingFailure(result, devs, links, "d1", "192.168.1.11");
     expect(result.code).toBe("segment");
     expect(guide?.stageEn).toBe("Local network reachability");
     expect(guide?.fixEn).toContain("same VLAN");
@@ -17,7 +17,7 @@ describe("network lab simulator", () => {
   it("points gateway failures to the source host with a corrective action", () => {
     const { devs, links } = createTopology("gateway");
     const result = simulatePing(devs, links, "d1", "10.0.0.20");
-    const guide = diagnosePingFailure(result, devs, "d1", "10.0.0.20");
+    const guide = diagnosePingFailure(result, devs, links, "d1", "10.0.0.20");
     expect(result.code).toBe("gateway");
     expect(guide?.deviceId).toBe("d1");
     expect(guide?.fixEn).toContain("router interface");
