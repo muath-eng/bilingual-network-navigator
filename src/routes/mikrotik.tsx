@@ -6,8 +6,10 @@ import { useLang } from "@/lib/i18n";
 export const Route = createFileRoute("/mikrotik")({
   staticData: { sitemap: true },
   head: () => ({
+    links: [{ rel: "canonical", href: "https://alsalhi-network-master.lovable.app/mikrotik" }],
     meta: [
-      { title: "شرح MikroTik وRouterOS بالعربية — أكاديمية Network Master" },
+      { title: "تعلم MikroTik وشرح RouterOS بالعربي: IP وDHCP وNAT | Network Master" },
+      { property: "og:url", content: "https://alsalhi-network-master.lovable.app/mikrotik" },
       {
         name: "description",
         content:
