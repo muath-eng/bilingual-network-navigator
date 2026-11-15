@@ -31,7 +31,8 @@ export const Route = createFileRoute("/lab")({
       { property: "og:url", content: "https://alsalhi-network-master.lovable.app/lab" },
       {
         name: "description",
-        content: "تدرّب على بناء شبكة افتراضية باستخدام PC وSwitch وRouter، وربط الأجهزة بالكابلات، وضبط عناوين IP وتتبع مسار Ping خطوة بخطوة في مختبر شبكات تفاعلي.",
+        content:
+          "تدرّب على بناء شبكة افتراضية باستخدام PC وSwitch وRouter، وربط الأجهزة بالكابلات، وضبط عناوين IP وتتبع مسار Ping خطوة بخطوة في مختبر شبكات تفاعلي.",
       },
       { property: "og:title", content: "Network Lab — Network Master" },
       { property: "og:type", content: "website" },
