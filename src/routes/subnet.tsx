@@ -6,9 +6,11 @@ import { useLang } from "@/lib/i18n";
 export const Route = createFileRoute("/subnet")({
   staticData: { sitemap: true },
   head: () => ({
+    links: [{ rel: "canonical", href: "https://alsalhi-network-master.lovable.app/subnet" }],
     meta: [
-      { title: "حاسبة الشبكات الفرعية — Network Master" },
-      { name: "description", content: "احسب عنوان الشبكة والبث وعدد الأجهزة لأي عنوان IP." },
+      { title: "حاسبة Subnet أونلاين بالعربي: IP وSubnet Mask | Network Master" },
+      { property: "og:url", content: "https://alsalhi-network-master.lovable.app/subnet" },
+      { name: "description", content: "استخدم حاسبة Subnet المجانية لفهم تقسيم الشبكات: احسب Network Address وBroadcast وSubnet Mask ونطاق عناوين الأجهزة وعدد Hosts لأي عنوان IPv4." },
       { property: "og:title", content: "Subnet Calculator — Network Master" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
