@@ -7,10 +7,16 @@ export const Route = createFileRoute("/troubleshoot")({
   staticData: { sitemap: true },
   head: () => ({
     links: [
-      { rel: "canonical", href: "https://alsalhi-network-master.lovable.app/troubleshoot" },
+      {
+        rel: "canonical",
+        href: "https://alsalhi-network-master.lovable.app/troubleshoot",
+      },
     ],
     meta: [
-      { title: "حل مشاكل الشبكات عملياً: Ping وDNS وDHCP وVLAN | Network Master" },
+      {
+        title:
+          "حل مشاكل الشبكات عملياً: Ping وDNS وDHCP وVLAN | Network Master",
+      },
       {
         property: "og:url",
         content: "https://alsalhi-network-master.lovable.app/troubleshoot",
@@ -20,7 +26,10 @@ export const Route = createFileRoute("/troubleshoot")({
         content:
           "تدرّب على تشخيص وحل أعطال الشبكات خطوة بخطوة: مشاكل IP والبوابة وDNS وDHCP وVLAN والاتصال، مع سيناريوهات عملية وأوامر Cisco للتشخيص.",
       },
-      { property: "og:title", content: "Troubleshooting — Network Master" },
+      {
+        property: "og:title",
+        content: "Troubleshooting — Network Master",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       {
