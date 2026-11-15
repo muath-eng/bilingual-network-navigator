@@ -15,8 +15,13 @@ export const Route = createFileRoute("/learn/$id")({
     const description = lesson
       ? `${lesson.titleAr}: ${lesson.bodyAr.join(" ")}`.slice(0, 160)
       : "درس تفاعلي لتعلم الشبكات بالعربية والإنجليزية على Network Master.";
+    const canonical = lesson
+      ? `https://alsalhi-network-master.lovable.app/learn/${lesson.id}`
+      : "https://alsalhi-network-master.lovable.app/learn";
     return {
+      links: [{ rel: "canonical", href: canonical }],
       meta: [
+        { property: "og:url", content: canonical },
         {
           title: lesson
             ? `${lesson.titleAr} — شرح مبسط واختبار | Network Master`
