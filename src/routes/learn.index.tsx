@@ -6,8 +6,10 @@ import { useLang, useProgress } from "@/lib/i18n";
 export const Route = createFileRoute("/learn/")({
   staticData: { sitemap: true },
   head: () => ({
+    links: [{ rel: "canonical", href: "https://alsalhi-network-master.lovable.app/learn" }],
     meta: [
-      { title: "تعلم الشبكات وCCNA من الصفر — دروس عربية | Network Master" },
+      { title: "تعلم الشبكات وCCNA بالعربي من الصفر — دروس تفاعلية | Network Master" },
+      { property: "og:url", content: "https://alsalhi-network-master.lovable.app/learn" },
       {
         name: "description",
         content:

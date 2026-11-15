@@ -16,8 +16,10 @@ import { lessons } from "@/lib/content";
 export const Route = createFileRoute("/")({
   staticData: { sitemap: true },
   head: () => ({
+    links: [{ rel: "canonical", href: "https://alsalhi-network-master.lovable.app/" }],
     meta: [
-      { title: "Network Master | تعلّم الشبكات عملياً" },
+      { title: "تعلم الشبكات من الصفر بالعربية | Network Master" },
+      { property: "og:url", content: "https://alsalhi-network-master.lovable.app/" },
       {
         name: "description",
         content:

@@ -14,8 +14,10 @@ import { useLang } from "@/lib/i18n";
 export const Route = createFileRoute("/practice")({
   staticData: { sitemap: true },
   head: () => ({
+    links: [{ rel: "canonical", href: "https://alsalhi-network-master.lovable.app/practice" }],
     meta: [
-      { title: "تدريب أوامر Cisco IOS بالعربية — Network Master" },
+      { title: "شرح أوامر Cisco IOS والتدرب عليها بالعربي | Network Master" },
+      { property: "og:url", content: "https://alsalhi-network-master.lovable.app/practice" },
       {
         name: "description",
         content:

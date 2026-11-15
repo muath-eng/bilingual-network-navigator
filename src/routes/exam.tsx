@@ -7,8 +7,10 @@ import { useLang } from "@/lib/i18n";
 export const Route = createFileRoute("/exam")({
   staticData: { sitemap: true },
   head: () => ({
+    links: [{ rel: "canonical", href: "https://alsalhi-network-master.lovable.app/exam" }],
     meta: [
-      { title: "اختبار الشبكات وCCNA مع شهادة إتمام — Network Master" },
+      { title: "اختبار CCNA والشبكات بالعربي: اختبر معلوماتك | Network Master" },
+      { property: "og:url", content: "https://alsalhi-network-master.lovable.app/exam" },
       {
         name: "description",
         content:

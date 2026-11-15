@@ -25,11 +25,14 @@ import {
 export const Route = createFileRoute("/lab")({
   staticData: { sitemap: true },
   head: () => ({
+    links: [{ rel: "canonical", href: "https://alsalhi-network-master.lovable.app/lab" }],
     meta: [
-      { title: "مختبر المحاكاة — Network Master" },
+      { title: "محاكي الشبكات أونلاين: بناء شبكة واختبار Ping | Network Master" },
+      { property: "og:url", content: "https://alsalhi-network-master.lovable.app/lab" },
       {
         name: "description",
-        content: "ابنِ شبكتك بالأجهزة والكابلات واضبط العناوين واختبر الاتصال بـ ping.",
+        content:
+          "تدرّب على بناء شبكة افتراضية باستخدام PC وSwitch وRouter، وربط الأجهزة بالكابلات، وضبط عناوين IP وتتبع مسار Ping خطوة بخطوة في مختبر شبكات تفاعلي.",
       },
       { property: "og:title", content: "Network Lab — Network Master" },
       { property: "og:type", content: "website" },
