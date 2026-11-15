@@ -11,7 +11,10 @@ export const Route = createFileRoute("/troubleshoot")({
     ],
     meta: [
       { title: "حل مشاكل الشبكات عملياً: Ping وDNS وDHCP وVLAN | Network Master" },
-      { property: "og:url", content: "https://alsalhi-network-master.lovable.app/troubleshoot" },
+      {
+        property: "og:url",
+        content: "https://alsalhi-network-master.lovable.app/troubleshoot",
+      },
       {
         name: "description",
         content:
