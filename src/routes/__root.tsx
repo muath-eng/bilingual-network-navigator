@@ -163,12 +163,12 @@ function RootComponent() {
         <Outlet />
         <footer className="mt-12 border-t border-border bg-card/50">
           <div className="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-7 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
-            <p>© {new Date().getFullYear()} Network Master. {t("جميع الحقوق محفوظة.", "All rights reserved.")}</p>
-            <nav aria-label={t("روابط قانونية", "Legal links")} className="flex flex-wrap gap-x-5 gap-y-2">
-              <Link to="/about" className="hover:text-primary">{t("حول المنصة", "About")}</Link>
-              <Link to="/privacy" className="hover:text-primary">{t("سياسة الخصوصية", "Privacy Policy")}</Link>
-              <Link to="/terms" className="hover:text-primary">{t("شروط الاستخدام", "Terms of Use")}</Link>
-              <a href="mailto:muathalsalhi775089399@gmail.com" className="hover:text-primary">{t("تواصل معنا", "Contact")}</a>
+            <p>© {new Date().getFullYear()} Network Master. جميع الحقوق محفوظة · All rights reserved</p>
+            <nav aria-label="روابط قانونية / Legal links" className="flex flex-wrap gap-x-5 gap-y-2">
+              <Link to="/about" className="hover:text-primary">حول المنصة / About</Link>
+              <Link to="/privacy" className="hover:text-primary">سياسة الخصوصية / Privacy</Link>
+              <Link to="/terms" className="hover:text-primary">شروط الاستخدام / Terms</Link>
+              <a href="mailto:muathalsalhi775089399@gmail.com" className="hover:text-primary">تواصل معنا / Contact</a>
             </nav>
           </div>
         </footer>
