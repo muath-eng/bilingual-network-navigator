@@ -50,14 +50,20 @@ function Troubleshoot() {
         {t("تدريب إصلاح الأعطال", "Troubleshooting drills")}
       </h1>
       <p className="mt-2 text-muted-foreground">
-        {t("اقرأ المعطيات واختر السبب الأرجح.", "Read the details and pick the most likely cause.")}
+        {t(
+          "اقرأ المعطيات واختر السبب الأرجح.",
+          "Read the details and pick the most likely cause.",
+        )}
       </p>
       <div className="mt-8 space-y-5">
         {scenarios.map((s) => {
           const p = picked[s.id];
           const opts = lang === "ar" ? s.optionsAr : s.optionsEn;
           return (
-            <div key={s.id} className="rounded-xl border border-border bg-card p-6">
+            <div
+              key={s.id}
+              className="rounded-xl border border-border bg-card p-6"
+            >
               <h2 className="font-semibold">{t(s.titleAr, s.titleEn)}</h2>
               <pre
                 dir="ltr"
@@ -70,7 +76,15 @@ function Troubleshoot() {
                   <button
                     key={i}
                     onClick={() => setPicked({ ...picked, [s.id]: i })}
-                    className={`rounded-lg border px-4 py-2 text-sm ${p === undefined ? "border-border hover:border-primary" : i === s.answer ? "border-primary bg-primary/15" : p === i ? "border-destructive bg-destructive/15" : "border-border opacity-60"}`}
+                    className={`rounded-lg border px-4 py-2 text-sm ${
+                      p === undefined
+                        ? "border-border hover:border-primary"
+                        : i === s.answer
+                          ? "border-primary bg-primary/15"
+                          : p === i
+                            ? "border-destructive bg-destructive/15"
+                            : "border-border opacity-60"
+                    }` }
                   >
                     {o}
                   </button>
@@ -80,7 +94,9 @@ function Troubleshoot() {
                 <p
                   className={`mt-3 text-sm ${p === s.answer ? "text-primary" : "text-destructive"}`}
                 >
-                  {p === s.answer ? t("صحيح! ", "Correct! ") : t("ليس تماماً. ", "Not quite. ")}
+                  {p === s.answer
+                    ? t("صحيح! ", "Correct! ")
+                    : t("ليس تماماً. ", "Not quite. ")}
                   {t(s.explainAr, s.explainEn)}
                 </p>
               )}
@@ -90,7 +106,10 @@ function Troubleshoot() {
       </div>
       <section className="mt-8 rounded-xl border border-border bg-card p-6">
         <h2 className="font-display text-xl font-bold">
-          {t("منهجية تشخيص الأعطال خطوة بخطوة", "A step-by-step troubleshooting method")}
+          {t(
+            "منهجية تشخيص الأعطال خطوة بخطوة",
+            "A step-by-step troubleshooting method",
+          )}
         </h2>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
           {t(
@@ -125,7 +144,10 @@ function Troubleshoot() {
               "Record the cause, change and result, then verify service recovery.",
             ],
           ].map((step, i) => (
-            <li key={i} className="flex gap-3 rounded-lg bg-secondary/50 p-3 text-sm leading-6">
+            <li
+              key={i}
+              className="flex gap-3 rounded-lg bg-secondary/50 p-3 text-sm leading-6"
+            >
               <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary/10 font-mono text-primary">
                 {i + 1}
               </span>
@@ -148,7 +170,11 @@ function Troubleshoot() {
               "ipconfig /all",
               "nslookup example.com",
             ].map((cmd) => (
-              <code key={cmd} dir="ltr" className="rounded bg-secondary px-3 py-2 text-xs">
+              <code
+                  key={cmd}
+                  dir="ltr"
+                  className="rounded bg-secondary px-3 py-2 text-xs"
+                >
                 {cmd}
               </code>
             ))}
