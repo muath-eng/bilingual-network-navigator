@@ -22,9 +22,9 @@ export const Route = createFileRoute("/learn/$id")({
       ? networkDescription
       : isIpAddressing
         ? "شرح عناوين IPv4 وSubnet Mask وCIDR وتقسيم الشبكات Subnetting مع أمثلة محلولة وحساب عدد الأجهزة ونطاق العناوين، وتدريب عملي مجاني."
-      : lesson
-        ? `${lesson.titleAr}: ${lessonSummary}`.slice(0, 155).replace(/[،,؛;:.!?؟\\s]+$/, "")
-        : "درس تفاعلي لتعلم الشبكات بالعربية والإنجليزية على Network Master.";
+        : lesson
+          ? `${lesson.titleAr}: ${lessonSummary}`.slice(0, 155).replace(/[،,؛;:.!?؟\\s]+$/, "")
+          : "درس تفاعلي لتعلم الشبكات بالعربية والإنجليزية على Network Master.";
     const canonical = lesson
       ? `https://alsalhi-network-master.lovable.app/learn/${lesson.id}`
       : "https://alsalhi-network-master.lovable.app/learn";
@@ -32,9 +32,9 @@ export const Route = createFileRoute("/learn/$id")({
       ? "ما هي شبكة الحاسوب؟ تعريفها وأنواعها ومكوناتها | Network Master"
       : isIpAddressing
         ? "شرح IP Address وSubnet Mask وتقسيم الشبكات Subnetting | Network Master"
-      : lesson
-        ? `${lesson.titleAr} — شرح مبسط واختبار | Network Master`
-        : "دروس الشبكات — Network Master";
+        : lesson
+          ? `${lesson.titleAr} — شرح مبسط واختبار | Network Master`
+          : "دروس الشبكات — Network Master";
     return {
       links: [{ rel: "canonical", href: canonical }],
       meta: [
@@ -273,7 +273,6 @@ function LessonPage() {
   );
 }
 
-
 function IpAddressingSupplement() {
   const { t } = useLang();
 
@@ -321,7 +320,9 @@ function IpAddressingSupplement() {
               ].map(([prefix, mask, hosts]) => (
                 <tr key={prefix} className="border-t border-border">
                   <td className="p-3 font-mono">{prefix}</td>
-                  <td className="p-3 font-mono" dir="ltr">{mask}</td>
+                  <td className="p-3 font-mono" dir="ltr">
+                    {mask}
+                  </td>
                   <td className="p-3">{hosts}</td>
                 </tr>
               ))}
@@ -348,8 +349,12 @@ function IpAddressingSupplement() {
         </p>
         <div className="rounded-xl border border-primary/30 bg-primary/5 p-4">
           <p className="font-semibold">{t("مثال: شبكة /26", "Example: a /26 network")}</p>
-          <p className="mt-2 font-mono text-sm" dir="ltr">32 - 26 = 6 host bits</p>
-          <p className="font-mono text-sm" dir="ltr">2⁶ - 2 = 62 usable hosts</p>
+          <p className="mt-2 font-mono text-sm" dir="ltr">
+            32 - 26 = 6 host bits
+          </p>
+          <p className="font-mono text-sm" dir="ltr">
+            2⁶ - 2 = 62 usable hosts
+          </p>
           <p className="mt-2 text-sm">
             {t(
               "إذن الشبكة /26 تحتوي 64 عنواناً إجمالياً، منها 62 عنواناً تقليدياً للأجهزة.",
@@ -382,7 +387,9 @@ function IpAddressingSupplement() {
               ].map(([label, value]) => (
                 <tr key={label} className="border-b border-border last:border-0">
                   <th className="p-3 text-start font-medium">{label}</th>
-                  <td className="p-3 font-mono" dir="ltr">{value}</td>
+                  <td className="p-3 font-mono" dir="ltr">
+                    {value}
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -395,10 +402,30 @@ function IpAddressingSupplement() {
           {t("متى نحتاج إلى تقسيم الشبكة؟", "Why subnet a network?")}
         </h2>
         <ul className="mt-3 list-disc space-y-2 ps-6">
-          <li>{t("توزيع العناوين بما يناسب عدد الأجهزة في كل قسم.", "Allocate address space according to each department's host count.")}</li>
-          <li>{t("تقليل نطاقات البث وتنظيم الشبكات الكبيرة.", "Reduce broadcast domains and organize larger networks.")}</li>
-          <li>{t("فصل الأقسام وتطبيق سياسات التوجيه والتحكم بالوصول.", "Separate departments and apply routing and access-control policies.")}</li>
-          <li>{t("تسهيل التوثيق واستكشاف أعطال الاتصال.", "Make documentation and connectivity troubleshooting easier.")}</li>
+          <li>
+            {t(
+              "توزيع العناوين بما يناسب عدد الأجهزة في كل قسم.",
+              "Allocate address space according to each department's host count.",
+            )}
+          </li>
+          <li>
+            {t(
+              "تقليل نطاقات البث وتنظيم الشبكات الكبيرة.",
+              "Reduce broadcast domains and organize larger networks.",
+            )}
+          </li>
+          <li>
+            {t(
+              "فصل الأقسام وتطبيق سياسات التوجيه والتحكم بالوصول.",
+              "Separate departments and apply routing and access-control policies.",
+            )}
+          </li>
+          <li>
+            {t(
+              "تسهيل التوثيق واستكشاف أعطال الاتصال.",
+              "Make documentation and connectivity troubleshooting easier.",
+            )}
+          </li>
         </ul>
       </section>
 
@@ -407,10 +434,30 @@ function IpAddressingSupplement() {
           {t("أخطاء شائعة عند حساب Subnetting", "Common subnetting mistakes")}
         </h2>
         <ul className="mt-3 list-disc space-y-2 ps-6">
-          <li>{t("الخلط بين عدد العناوين الكلي وعدد عناوين الأجهزة القابلة للاستخدام.", "Confusing total addresses with usable host addresses.")}</li>
-          <li>{t("اختيار عنوان الشبكة أو البث لجهاز نهائي في الشبكات التقليدية.", "Assigning the network or broadcast address to an end device under the traditional model.")}</li>
-          <li>{t("استخدام قناع مختلف بين أجهزة يفترض أنها في الشبكة الفرعية نفسها.", "Using inconsistent subnet masks among devices expected to share a subnet.")}</li>
-          <li>{t("نسيان ضبط البوابة الافتراضية عند الحاجة إلى الوصول لشبكات أخرى.", "Forgetting the default gateway when communication with other networks is required.")}</li>
+          <li>
+            {t(
+              "الخلط بين عدد العناوين الكلي وعدد عناوين الأجهزة القابلة للاستخدام.",
+              "Confusing total addresses with usable host addresses.",
+            )}
+          </li>
+          <li>
+            {t(
+              "اختيار عنوان الشبكة أو البث لجهاز نهائي في الشبكات التقليدية.",
+              "Assigning the network or broadcast address to an end device under the traditional model.",
+            )}
+          </li>
+          <li>
+            {t(
+              "استخدام قناع مختلف بين أجهزة يفترض أنها في الشبكة الفرعية نفسها.",
+              "Using inconsistent subnet masks among devices expected to share a subnet.",
+            )}
+          </li>
+          <li>
+            {t(
+              "نسيان ضبط البوابة الافتراضية عند الحاجة إلى الوصول لشبكات أخرى.",
+              "Forgetting the default gateway when communication with other networks is required.",
+            )}
+          </li>
         </ul>
       </section>
 
