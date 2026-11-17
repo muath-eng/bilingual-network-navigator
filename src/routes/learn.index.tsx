@@ -261,7 +261,10 @@ function Learn() {
           </div>
           <div>
             <h3 className="font-semibold">
-              {t("هل المحتوى مناسب للتحضير لمفاهيم CCNA؟", "Does the content help prepare for CCNA topics?")}
+              {t(
+                "هل المحتوى مناسب للتحضير لمفاهيم CCNA؟",
+                "Does the content help prepare for CCNA topics?",
+              )}
             </h3>
             <p className="mt-1 text-sm leading-7 text-muted-foreground">
               {t(
@@ -272,7 +275,10 @@ function Learn() {
           </div>
           <div>
             <h3 className="font-semibold">
-              {t("هل أحتاج إلى أجهزة شبكات حقيقية للتدرب؟", "Do I need physical networking devices to practice?")}
+              {t(
+                "هل أحتاج إلى أجهزة شبكات حقيقية للتدرب؟",
+                "Do I need physical networking devices to practice?",
+              )}
             </h3>
             <p className="mt-1 text-sm leading-7 text-muted-foreground">
               {t(
