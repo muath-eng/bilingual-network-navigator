@@ -44,7 +44,9 @@ function Troubleshoot() {
   const { t, lang } = useLang();
   const [picked, setPicked] = useState<Record<string, number>>({});
   const answeredCount = Object.keys(picked).length;
-  const correctCount = scenarios.filter((scenario) => picked[scenario.id] === scenario.answer).length;
+  const correctCount = scenarios.filter(
+    (scenario) => picked[scenario.id] === scenario.answer,
+  ).length;
   const progress = scenarios.length ? (answeredCount / scenarios.length) * 100 : 0;
   return (
     <main className="mx-auto max-w-3xl px-4 py-10">
@@ -59,12 +61,17 @@ function Troubleshoot() {
           <div>
             <p className="text-sm font-semibold">{t("تقدم التدريب", "Training progress")}</p>
             <p className="mt-1 text-sm text-muted-foreground">
-              {answeredCount} / {scenarios.length} {t("حالة تمت الإجابة عنها", "scenarios answered")}
+              {answeredCount} / {scenarios.length}{" "}
+              {t("حالة تمت الإجابة عنها", "scenarios answered")}
             </p>
           </div>
           <div className="text-sm">
-            <span className="text-muted-foreground">{t("الإجابات الصحيحة", "Correct answers")}: </span>
-            <strong>{correctCount} / {answeredCount}</strong>
+            <span className="text-muted-foreground">
+              {t("الإجابات الصحيحة", "Correct answers")}:{" "}
+            </span>
+            <strong>
+              {correctCount} / {answeredCount}
+            </strong>
           </div>
           <button
             type="button"
@@ -83,11 +90,17 @@ function Troubleshoot() {
           aria-valuenow={answeredCount}
           className="mt-4 h-2 overflow-hidden rounded-full bg-secondary"
         >
-          <div className="h-full rounded-full bg-primary transition-all" style={{ width: `${progress}%` }} />
+          <div
+            className="h-full rounded-full bg-primary transition-all"
+            style={{ width: `${progress}%` }}
+          />
         </div>
         {answeredCount === scenarios.length && (
           <p className="mt-3 text-sm font-medium text-primary">
-            {t("أكملت جميع الحالات! راجع إجاباتك وحاول تحسين نتيجتك.", "All scenarios completed! Review your answers and try to improve your score.")}
+            {t(
+              "أكملت جميع الحالات! راجع إجاباتك وحاول تحسين نتيجتك.",
+              "All scenarios completed! Review your answers and try to improve your score.",
+            )}
           </p>
         )}
       </section>
