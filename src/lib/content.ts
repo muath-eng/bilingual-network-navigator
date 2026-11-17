@@ -530,3 +530,5 @@ export const scenarios: TroubleshootingScenario[] = [
       "100.72.15.8 is within 100.64.0.0/10 shared address space and commonly indicates ISP CGNAT. Port forwarding on the customer router alone is insufficient; ask the ISP whether a public address is available.",
   },
 ];
+
+
