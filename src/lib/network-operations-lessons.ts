@@ -151,4 +151,132 @@ export const networkOperationsLessons: Lesson[] = [
       { qAr: "ما الخطوة الأفضل قبل توزيع نقاط وصول كثيرة في مكتب؟", qEn: "What is a good step before deploying many office access points?", options: ["Site Survey", "تعطيل كلمة المرور", "اختيار أعلى قدرة إرسال لكل الأجهزة"], answer: 0 }
     ]
   }
+  ,
+  {
+    id: "static-routing-default-route",
+    level: "advanced",
+    titleAr: "التوجيه الثابت والمسار الافتراضي",
+    titleEn: "Static routing and the default route",
+    bodyAr: [
+      "التوجيه Routing هو اختيار الطريق الذي تسلكه حزمة IP للوصول إلى شبكة وجهة. يعتمد الراوتر على جدول التوجيه، ويختار عادةً أطول Prefix مطابق للوجهة (Longest Prefix Match)، ثم يستخدم Administrative Distance وMetric عند المفاضلة بين المسارات المناسبة.",
+      "المسار الثابت Static Route يضيفه المهندس يدوياً لتحديد شبكة وجهة وNext Hop أو واجهة خروج. يفيد في الشبكات الصغيرة والمسارات المحددة، لكنه يحتاج إلى تحديث يدوي عند تغير التصميم ما لم تستخدم آليات إضافية.",
+      "مثال Cisco IOS: ip route 192.168.20.0 255.255.255.0 10.0.0.2 يضيف مساراً إلى 192.168.20.0/24 عبر الجار 10.0.0.2. تحقق باستخدام show ip route وshow ip route 192.168.20.10.",
+      "المسار الافتراضي Default Route هو 0.0.0.0/0 في IPv4، ويستخدم عندما لا يوجد مسار أكثر تحديداً. على Cisco: ip route 0.0.0.0 0.0.0.0 10.0.0.1. لا تضع بوابة غير قابلة للوصول؛ يجب أن يستطيع الراوتر حل Next Hop عبر واجهة فعالة.",
+      "على MikroTik RouterOS يمكن إضافة مسار افتراضي باستخدام /ip route add dst-address=0.0.0.0/0 gateway=10.0.0.1، ثم مراجعة /ip route print detail وping 10.0.0.1. تختلف تفاصيل التحقق حسب إصدار RouterOS ونوع المسار.",
+      "المسار في اتجاه واحد لا يكفي دائماً؛ يجب أن يعرف الطرف البعيد طريق العودة إلى شبكة المصدر. افحص المسارين ذهاباً وإياباً، وعناوين الواجهات، وحالة الرابط، والبوابة، وقواعد Firewall.",
+      "تمرين: R1 متصل بشبكة LAN 192.168.10.0/24 وبـR2 عبر 10.0.0.1/30، وعنوان R2 على الوصلة 10.0.0.2. أضف على R1 مساراً إلى 192.168.20.0/24 عبر 10.0.0.2، وعلى R2 مسار عودة إلى 192.168.10.0/24 عبر 10.0.0.1. اختبر أولاً الجار ثم عنواناً في الشبكة البعيدة.",
+      "لا تستخدم مساراً ثابتاً لمجرد إخفاء مشكلة Layer 2 أو عنوان IP خاطئ. ابدأ بفحص الواجهات والاتصال بالـNext Hop، ثم جدول التوجيه، ثم ACL/Firewall، واختبر بعد كل تغيير."
+    ],
+    bodyEn: [
+      "Routing selects the path an IP packet uses to reach a destination network. Routers consult a routing table and generally use longest-prefix match, then administrative distance and metrics when choosing among eligible routes.",
+      "A static route is manually configured for a destination network and a next hop or exit interface. It is useful in small or predictable networks, but it requires manual maintenance when the topology changes unless additional mechanisms are used.",
+      "Cisco IOS example: ip route 192.168.20.0 255.255.255.0 10.0.0.2 adds a route to 192.168.20.0/24 through neighbor 10.0.0.2. Verify with show ip route and show ip route 192.168.20.10.",
+      "An IPv4 default route is 0.0.0.0/0 and is used when no more-specific route matches. On Cisco: ip route 0.0.0.0 0.0.0.0 10.0.0.1. The next hop must be reachable through an active interface.",
+      "On MikroTik RouterOS, add a default route with /ip route add dst-address=0.0.0.0/0 gateway=10.0.0.1, then inspect /ip route print detail and test with ping 10.0.0.1. Verification details vary by RouterOS version and route type.",
+      "A forward route alone may not be enough; the remote side also needs a return path to the source network. Check both directions, interface addresses, link state, gateways and firewall rules.",
+      "Exercise: R1 has LAN 192.168.10.0/24 and connects to R2 over 10.0.0.1/30; R2 uses 10.0.0.2 on that link. Add a route on R1 to 192.168.20.0/24 via 10.0.0.2, and a return route on R2 to 192.168.10.0/24 via 10.0.0.1. Test the neighbor before testing a remote host.",
+      "Do not add a static route to hide a Layer 2 fault or an incorrect IP address. Check interfaces and next-hop reachability first, then the routing table and firewall policy, testing after each change."
+    ],
+    quiz: [
+      { qAr: "ما المسار الذي يستخدم عند عدم وجود مسار أكثر تحديداً؟", qEn: "Which route is used when no more-specific route matches?", options: ["Default route", "Host route فقط", "Connected route دائماً"], answer: 0 },
+      { qAr: "ما عنوان المسار الافتراضي في IPv4؟", qEn: "What is the IPv4 default-route prefix?", options: ["255.255.255.255/32", "0.0.0.0/0", "127.0.0.1/8"], answer: 1 },
+      { qAr: "لماذا نحتاج مسار العودة؟", qEn: "Why is a return route needed?", options: ["لإكمال الاتصال ثنائي الاتجاه", "لتغيير MAC", "لتوزيع DNS"], answer: 0 }
+    ]
+  },
+  {
+    id: "nat-pat-fundamentals",
+    level: "advanced",
+    titleAr: "NAT وPAT: ترجمة عناوين الشبكة",
+    titleEn: "NAT and PAT: Network address translation",
+    bodyAr: [
+      "NAT يترجم عناوين IP بين نطاقين، ويستخدم كثيراً لربط عناوين الشبكات الخاصة بالإنترنت. NAT ليس بديلاً عن Firewall؛ الترجمة وتصفية الحركة وظيفتان مختلفتان ويجب ضبط سياسات الأمان بشكل مستقل.",
+      "Static NAT يربط عنواناً داخلياً بعنوان عام ثابت غالباً بنسبة 1:1. Dynamic NAT يختار عنواناً من Pool. أما PAT أو NAT Overload فيسمح لعدة أجهزة بمشاركة عنوان عام واحد باستخدام أرقام المنافذ لتمييز الجلسات.",
+      "في Cisco IOS مثال PAT: access-list 1 permit 192.168.10.0 0.0.0.255 ثم interface g0/0 مع ip nat inside، وواجهة WAN مع ip nat outside، ثم ip nat inside source list 1 interface g0/1 overload. أسماء الواجهات واتجاهها يجب أن تطابق تصميمك الفعلي.",
+      "على MikroTik RouterOS مثال masquerade: /ip firewall nat add chain=srcnat out-interface=ether1 action=masquerade. استخدم masquerade عادةً عندما يكون عنوان WAN متغيراً؛ إذا كان العنوان ثابتاً يمكن استخدام src-nat مع to-addresses وفق التصميم.",
+      "Port Forwarding هو Destination NAT يوجه اتصالات واردة إلى خدمة داخلية محددة. افتح فقط البروتوكول والمنفذ المطلوبين، وحدد عنوان الوجهة الداخلي، وقيّد مصادر الاتصال عند الإمكان، وتأكد من وجود مسار عودة وقواعد Firewall مناسبة.",
+      "للتشخيص، تحقق من عنوان WAN والبوابة والمسار الافتراضي، ثم قاعدة NAT وترتيبها، ثم عدادات القواعد وجدول الاتصالات. في Cisco استخدم show ip nat translations وshow ip nat statistics. في MikroTik راجع /ip firewall nat print و/ip firewall connection print.",
+      "إذا كان الراوتر خلف CGNAT لدى مزود الخدمة، فقد لا يكون لديه عنوان IPv4 عام قابل للوصول مباشرة؛ عندها قد لا يعمل Port Forwarding التقليدي حتى لو كانت القاعدة صحيحة. اسأل المزود عن عنوان عام أو استخدم حلاً مناسباً مثل VPN ذي نقطة خروج عامة.",
+      "تمرين: شبكة 192.168.10.0/24 تصل إلى الإنترنت عبر WAN. تأكد أولاً من نجاح ping من الراوتر إلى بوابة المزود، ثم أضف PAT للشبكة الداخلية، واختبر من جهاز عميل، ثم افحص جدول الترجمة. لا تنشر خدمة داخلية على الإنترنت في المختبر دون ضوابط."
+    ],
+    bodyEn: [
+      "NAT translates IP addresses between address realms and is commonly used to connect private networks to the Internet. NAT is not a firewall replacement: translation and traffic filtering are separate functions and security policy must be configured independently.",
+      "Static NAT maps an inside address to a fixed outside address, often one-to-one. Dynamic NAT selects an address from a pool. PAT, also called NAT overload, lets multiple hosts share one public address by distinguishing sessions with transport ports.",
+      "Cisco IOS PAT example: access-list 1 permit 192.168.10.0 0.0.0.255; configure ip nat inside on the LAN interface and ip nat outside on the WAN interface; then use ip nat inside source list 1 interface g0/1 overload. Interface names and roles must match the actual topology.",
+      "On MikroTik RouterOS, a masquerade example is /ip firewall nat add chain=srcnat out-interface=ether1 action=masquerade. Masquerade is commonly used with dynamic WAN addresses; for a fixed address, src-nat with to-addresses may be more appropriate.",
+      "Port forwarding is destination NAT that directs an inbound connection to a specific internal service. Expose only the required protocol and port, specify the internal destination, restrict source networks where possible, and verify return routing and firewall policy.",
+      "For troubleshooting, verify the WAN address, gateway and default route, then NAT rule matching and order, counters and the connection table. Cisco commands include show ip nat translations and show ip nat statistics. On MikroTik inspect /ip firewall nat print and /ip firewall connection print.",
+      "If the router is behind carrier-grade NAT, it may not have a publicly reachable IPv4 address. Traditional port forwarding may therefore fail even when the local rule is correct. Ask the ISP about a public address or use an appropriate solution such as a VPN with a public endpoint.",
+      "Exercise: a 192.168.10.0/24 LAN reaches the Internet through a WAN interface. First verify that the router can ping the ISP gateway, then configure PAT for the LAN, test from a client and inspect translations. Do not expose a lab service publicly without safeguards."
+    ],
+    quiz: [
+      { qAr: "ما الذي يميز PAT عن Static NAT؟", qEn: "What distinguishes PAT from static NAT?", options: ["مشاركة عنوان مع تمييز الجلسات بالمنافذ", "تغيير DNS فقط", "تشفير كل الحزم"], answer: 0 },
+      { qAr: "هل NAT يغني عن Firewall؟", qEn: "Does NAT replace a firewall?", options: ["نعم", "لا"], answer: 1 },
+      { qAr: "ما سبب شائع لفشل Port Forwarding رغم صحة القاعدة؟", qEn: "What can prevent port forwarding even when the rule is correct?", options: ["CGNAT لدى المزود", "وجود DNS فقط", "استخدام كابل قصير"], answer: 0 }
+    ]
+  },
+  {
+    id: "firewall-acl-fundamentals",
+    level: "advanced",
+    titleAr: "أساسيات Firewall وACL والتحكم بالوصول",
+    titleEn: "Firewall and ACL fundamentals",
+    bodyAr: [
+      "الجدار الناري Firewall يطبق سياسة تسمح أو تمنع حركة المرور وفق معايير مثل عنوان المصدر والوجهة والبروتوكول والمنفذ وحالة الاتصال. الهدف هو السماح بالحد الأدنى اللازم من الاتصالات وتقليل سطح الهجوم.",
+      "قائمة التحكم بالوصول ACL مجموعة قواعد مرتبة؛ في كثير من المنصات تتوقف المعالجة عند أول قاعدة مطابقة. قد توجد قاعدة منع ضمنية في نهاية ACL، لذلك غياب تصريح صريح قد يؤدي إلى إسقاط الحركة.",
+      "في Cisco IOS يمكن إنشاء Extended ACL مثل: ip access-list extended USERS-TO-SERVER ثم permit tcp 192.168.10.0 0.0.0.255 host 192.168.20.10 eq 443 ثم deny ip any any. طبّق ACL على الواجهة والاتجاه المناسبين بعد تحليل التدفق؛ المثال توضيحي وقد يمنع خدمات أخرى إذا نُفذ كما هو.",
+      "على MikroTik RouterOS راجع chain=input للحركة الموجهة إلى الراوتر نفسه، وchain=forward للحركة العابرة خلال الراوتر، وchain=output للحركة التي ينشئها الراوتر. افهم ترتيب القواعد وحالة connection tracking قبل إضافة قواعد إسقاط.",
+      "استخدم سياسة افتراضية واضحة، واسمح بخدمات الإدارة من شبكات موثوقة فقط، ولا تعرض Winbox أو SSH أو RDP للعالم دون حاجة وحماية. احتفظ بمسار إدارة بديل أو جلسة محلية عند تعديل Firewall عن بعد.",
+      "عند التشخيص، حدد المصدر والوجهة والمنفذ والاتجاه أولاً، ثم افحص عدادات القواعد والسجلات وحالة الاتصال. اختبر من المصدر الفعلي، ولا تعطل الجدار الناري بالكامل كحل دائم.",
+      "مبدأ Least Privilege يعني السماح بما يحتاجه العمل فقط. وثّق سبب كل قاعدة ومالكها وتاريخ مراجعتها، وأزل القواعد القديمة أو الواسعة بعد التأكد من عدم اعتماد خدمات عليها.",
+      "تمرين: اسمح لأجهزة VLAN 10 بالوصول إلى خادم HTTPS في VLAN 20 على 192.168.20.10:443، وامنع بقية الاتصالات بين الشبكتين مع الإبقاء على DNS وDHCP الضروريين وفق مكان تشغيلهما. اكتب مصفوفة التدفق قبل تحويلها إلى ACL."
+    ],
+    bodyEn: [
+      "A firewall enforces traffic policy using attributes such as source and destination addresses, protocol, ports and connection state. The goal is to allow only required communication and reduce the attack surface.",
+      "An access control list is an ordered set of rules. On many platforms, processing stops at the first matching rule. An implicit deny may exist at the end, so traffic without an explicit permit can be dropped.",
+      "A Cisco IOS extended ACL example is: ip access-list extended USERS-TO-SERVER; permit tcp 192.168.10.0 0.0.0.255 host 192.168.20.10 eq 443; deny ip any any. Apply it to the correct interface and direction after mapping the traffic flow. This illustrative example may block other services if used unchanged.",
+      "On MikroTik RouterOS, chain=input handles traffic destined to the router, chain=forward handles traffic routed through it, and chain=output handles traffic generated by the router. Understand rule order and connection tracking before adding drop rules.",
+      "Use an explicit default policy, and allow management services only from trusted networks. Do not expose Winbox, SSH or RDP to the Internet without a clear need and strong safeguards. Keep an alternate management path or local session when changing a remote firewall.",
+      "For troubleshooting, identify source, destination, port and direction first, then inspect rule counters, logs and connection state. Test from the actual source; do not disable the firewall entirely as a permanent fix.",
+      "Least privilege means allowing only what operations require. Document each rule's purpose, owner and review date, and remove obsolete or overly broad rules only after confirming that no service depends on them.",
+      "Exercise: allow VLAN 10 clients to reach HTTPS on server 192.168.20.10 in VLAN 20, while blocking other inter-VLAN traffic and preserving required DNS and DHCP flows according to where those services run. Write a traffic matrix before translating it into an ACL."
+    ],
+    quiz: [
+      { qAr: "ما المقصود بـ implicit deny؟", qEn: "What does implicit deny mean?", options: ["رفض الحركة التي لا تطابق سماحاً صريحاً", "السماح بكل الحركة", "تشفير الحزم"], answer: 0 },
+      { qAr: "أي chain في MikroTik تعالج الحركة العابرة عبر الراوتر؟", qEn: "Which MikroTik chain handles traffic passing through the router?", options: ["input", "forward", "output"], answer: 1 },
+      { qAr: "ما أفضل ممارسة عند تعديل Firewall عن بعد؟", qEn: "What is a safer practice when changing a remote firewall?", options: ["إبقاء مسار إدارة بديل", "حذف كل القواعد أولاً", "تعطيل تسجيل الدخول"], answer: 0 }
+    ]
+  },
+  {
+    id: "packet-capture-troubleshooting",
+    level: "advanced",
+    titleAr: "تحليل الحزم وبناء منهجية استكشاف الأعطال",
+    titleEn: "Packet capture and structured troubleshooting",
+    bodyAr: [
+      "تحليل الحزم Packet Capture يسجل حركة الشبكة لفهم ما يحدث فعلياً بين العميل والخادم. أداة Wireshark تعرض البروتوكولات والاتصالات والتوقيت وإعادة الإرسال وأخطاء DNS وTCP، بينما يمكن استخدام tcpdump في الأنظمة التي توفره.",
+      "ابدأ بسؤال محدد: هل يفشل DNS أم TCP handshake أم TLS أم التطبيق؟ حدد جهاز المصدر والوجهة والوقت والمنفذ، ثم التقط أقل قدر من الحركة اللازمة لإجابة السؤال. الالتقاط العشوائي الكبير يصعب تحليله وقد يحتوي بيانات حساسة.",
+      "مرشحات العرض في Wireshark أمثلة: dns لإظهار DNS، tcp.port == 443 لحركة HTTPS عبر TCP، icmp لرسائل ICMP، وip.addr == 192.168.1.10 لحركة عنوان محدد. مرشحات الالتقاط تختلف عن مرشحات العرض وتطبق أثناء التسجيل.",
+      "في TCP راقب SYN ثم SYN-ACK ثم ACK لإكمال المصافحة. تكرار SYN دون رد قد يشير إلى مسار أو Firewall أو خدمة لا تستجيب؛ ووجود RST يعني أن الطرف أو وسيطاً رفض الاتصال أو أغلقه. لا تستنتج السبب من حزمة واحدة دون مقارنة الطرفين.",
+      "في DNS راقب الاستعلام والرد ورمز النتيجة والوقت. NXDOMAIN يعني أن الاسم غير موجود وفق الخادم الذي أجاب، بينما SERVFAIL يشير إلى فشل في المعالجة. تأخر الرد أو غيابه قد يكون بسبب Resolver أو مسار أو Firewall.",
+      "على Linux يمكن استخدام sudo tcpdump -ni any host 192.168.1.10 and port 53 لالتقاط DNS مرتبط بعنوان محدد. احفظ الالتقاط بصيغة pcap عند الحاجة، واحمِ الملف لأنه قد يحتوي أسماء مستخدمين أو عناوين أو بيانات تطبيق.",
+      "اتبع منهجية منظمة: عرّف الأثر، اجمع خط أساس، حدد نطاق المشكلة، اختبر من الأقرب إلى الأبعد، غيّر عاملاً واحداً، وثّق النتيجة ثم تحقق من عودة الخدمة. قارن جهازاً متأثراً بآخر يعمل على VLAN ومسار مماثلين.",
+      "انتبه إلى حدود الرؤية: الالتقاط على جهاز العميل قد لا يعرض كل ما يحدث داخل السويتش أو نقطة الوصول، وميزات مثل hardware offload قد تؤثر في الالتقاط على الراوتر. استخدم SPAN أو port mirroring أو نقطة التقاط مناسبة بموافقة مسؤول الشبكة.",
+      "الخصوصية والسلامة: التقط حركة تملك تصريحاً بتحليلها فقط، وقلل البيانات والمدة، وخزن الملفات بأمان واحذفها وفق سياسة المؤسسة. لا تشارك ملفات pcap عامة لأنها قد تكشف معلومات حساسة."
+    ],
+    bodyEn: [
+      "Packet capture records network traffic so you can see what actually happens between a client and a server. Wireshark displays protocols, conversations, timing, retransmissions, DNS errors and TCP behavior; tcpdump is useful on systems where it is available.",
+      "Start with a focused question: is DNS, the TCP handshake, TLS or the application failing? Identify source, destination, time and port, then capture only the traffic needed. Large unfocused captures are difficult to analyze and may contain sensitive data.",
+      "Wireshark display-filter examples include dns for DNS, tcp.port == 443 for HTTPS over TCP, icmp for ICMP, and ip.addr == 192.168.1.10 for traffic involving a host. Capture filters differ from display filters and apply while recording.",
+      "For TCP, inspect SYN, SYN-ACK and ACK during the handshake. Repeated SYN packets without a reply may indicate a path, firewall or unresponsive-service issue; an RST means an endpoint or intermediary rejected or closed the connection. Do not infer the root cause from one packet alone.",
+      "For DNS, inspect the query, response, result code and timing. NXDOMAIN means the responding server says the name does not exist; SERVFAIL indicates processing failure. A delayed or missing response may involve the resolver, path or firewall.",
+      "On Linux, sudo tcpdump -ni any host 192.168.1.10 and port 53 can capture DNS traffic associated with a host. Save a pcap file when needed and protect it because it may contain usernames, addresses or application data.",
+      "Use a structured workflow: define impact, collect a baseline, scope the fault, test from nearest to farthest, change one variable, record the result and verify service recovery. Compare an affected device with a working device on a similar VLAN and path.",
+      "Understand visibility limits: a client-side capture may not show everything inside a switch or access point, and hardware offload can affect router captures. Use SPAN, port mirroring or an appropriate capture point with network-owner authorization.",
+      "Privacy and safety: capture only traffic you are authorized to inspect, minimize data and duration, store files securely and delete them according to policy. Do not publicly share pcap files because they may expose sensitive information."
+    ],
+    quiz: [
+      { qAr: "ما تسلسل TCP handshake؟", qEn: "What is the TCP handshake sequence?", options: ["SYN, SYN-ACK, ACK", "ACK, FIN, SYN", "DNS, ARP, ICMP"], answer: 0 },
+      { qAr: "أي مرشح عرض يظهر استعلامات DNS في Wireshark؟", qEn: "Which Wireshark display filter shows DNS traffic?", options: ["dns", "http only", "vlan.id"], answer: 0 },
+      { qAr: "ماذا يعني NXDOMAIN غالباً؟", qEn: "What does NXDOMAIN usually mean?", options: ["الاسم غير موجود وفق رد DNS", "نجاح TLS", "انقطاع كابل"], answer: 0 }
+    ]
+  }
+
 ];
