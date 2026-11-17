@@ -16,20 +16,25 @@ export const Route = createFileRoute("/learn/$id")({
   head: ({ loaderData }) => {
     const lesson = loaderData?.lesson;
     const isBasics = lesson?.id === "what-is-network";
+    const isIpAddressing = lesson?.id === "ip-addressing";
     const lessonSummary = lesson?.bodyAr.slice(0, 2).join(" ").replace(/\\s+/g, " ").trim();
     const description = isBasics
       ? networkDescription
-      : lesson
-        ? `${lesson.titleAr}: ${lessonSummary}`.slice(0, 155).replace(/[،,؛;:.!?؟\\s]+$/, "")
-        : "درس تفاعلي لتعلم الشبكات بالعربية والإنجليزية على Network Master.";
+      : isIpAddressing
+        ? "شرح عناوين IPv4 وSubnet Mask وCIDR وتقسيم الشبكات Subnetting مع أمثلة محلولة وحساب عدد الأجهزة ونطاق العناوين، وتدريب عملي مجاني."
+        : lesson
+          ? `${lesson.titleAr}: ${lessonSummary}`.slice(0, 155).replace(/[،,؛;:.!?؟\\s]+$/, "")
+          : "درس تفاعلي لتعلم الشبكات بالعربية والإنجليزية على Network Master.";
     const canonical = lesson
       ? `https://alsalhi-network-master.lovable.app/learn/${lesson.id}`
       : "https://alsalhi-network-master.lovable.app/learn";
     const title = isBasics
       ? "ما هي شبكة الحاسوب؟ تعريفها وأنواعها ومكوناتها | Network Master"
-      : lesson
-        ? `${lesson.titleAr} — شرح مبسط واختبار | Network Master`
-        : "دروس الشبكات — Network Master";
+      : isIpAddressing
+        ? "شرح IP Address وSubnet Mask وتقسيم الشبكات Subnetting | Network Master"
+        : lesson
+          ? `${lesson.titleAr} — شرح مبسط واختبار | Network Master`
+          : "دروس الشبكات — Network Master";
     return {
       links: [{ rel: "canonical", href: canonical }],
       meta: [
@@ -146,6 +151,7 @@ function LessonPage() {
         ))}
       </div>
       {lesson.id === "what-is-network" && <NetworkBasicsSupplement />}
+      {lesson.id === "ip-addressing" && <IpAddressingSupplement />}
       <section className="mt-10 rounded-xl border border-border bg-card p-6">
         <h2 className="font-display text-xl font-semibold">{t("اختبر نفسك", "Quick quiz")}</h2>
         {lesson.quiz.map((q, i) => (
@@ -264,6 +270,215 @@ function LessonPage() {
         </section>
       )}
     </main>
+  );
+}
+
+function IpAddressingSupplement() {
+  const { t } = useLang();
+
+  return (
+    <article className="mt-10 space-y-8 leading-8">
+      <section>
+        <h2 className="font-display text-2xl font-bold">
+          {t("ما هو عنوان IPv4؟", "What is an IPv4 address?")}
+        </h2>
+        <p className="mt-3">
+          {t(
+            "عنوان IPv4 هو معرّف منطقي من 32 بت يُكتب عادةً بأربع خانات عشرية تفصل بينها نقاط، مثل 192.168.10.25. كل خانة تمثل 8 بت وتتراوح قيمتها من 0 إلى 255. يستخدم الجهاز العنوان لمعرفة مصدر الحزم ووجهتها داخل الشبكات.",
+            "An IPv4 address is a 32-bit logical identifier, usually written as four decimal octets separated by dots, such as 192.168.10.25. Each octet represents 8 bits and ranges from 0 to 255. Devices use addresses to identify packet sources and destinations.",
+          )}
+        </p>
+      </section>
+
+      <section>
+        <h2 className="font-display text-2xl font-bold">
+          {t("ما وظيفة Subnet Mask؟", "What does a subnet mask do?")}
+        </h2>
+        <p className="mt-3">
+          {t(
+            "قناع الشبكة يحدد أي بتات تنتمي إلى جزء الشبكة وأيها مخصصة للأجهزة. في الشبكة 192.168.10.0/24 يكون القناع 255.255.255.0؛ أول 24 بت للشبكة والـ8 بت المتبقية للأجهزة. الرمز /24 يسمى CIDR Prefix Length.",
+            "A subnet mask identifies which bits belong to the network portion and which are available for hosts. In 192.168.10.0/24, the mask is 255.255.255.0: the first 24 bits identify the network and the remaining 8 bits are for hosts. The /24 notation is the CIDR prefix length.",
+          )}
+        </p>
+        <div className="overflow-x-auto rounded-xl border border-border">
+          <table className="w-full text-start text-sm">
+            <thead className="bg-secondary">
+              <tr>
+                <th className="p-3">{t("البادئة", "Prefix")}</th>
+                <th className="p-3">{t("قناع الشبكة", "Subnet mask")}</th>
+                <th className="p-3">{t("الأجهزة المعتادة", "Usable hosts")}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {[
+                ["/24", "255.255.255.0", "254"],
+                ["/25", "255.255.255.128", "126"],
+                ["/26", "255.255.255.192", "62"],
+                ["/27", "255.255.255.224", "30"],
+                ["/28", "255.255.255.240", "14"],
+                ["/30", "255.255.255.252", "2"],
+              ].map(([prefix, mask, hosts]) => (
+                <tr key={prefix} className="border-t border-border">
+                  <td className="p-3 font-mono">{prefix}</td>
+                  <td className="p-3 font-mono" dir="ltr">
+                    {mask}
+                  </td>
+                  <td className="p-3">{hosts}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <p className="text-sm text-muted-foreground">
+          {t(
+            "الأعداد أعلاه للشبكات التقليدية التي تحجز عنوان الشبكة والبث؛ توجد استثناءات مثل /31 لوصلات point-to-point وفق RFC 3021.",
+            "Host counts above follow the traditional convention of reserving network and broadcast addresses; /31 point-to-point links are a special case defined by RFC 3021.",
+          )}
+        </p>
+      </section>
+
+      <section>
+        <h2 className="font-display text-2xl font-bold">
+          {t("كيف نحسب عدد الأجهزة؟", "How do you calculate usable hosts?")}
+        </h2>
+        <p className="mt-3">
+          {t(
+            "في IPv4، عدد بتات الأجهزة يساوي 32 ناقص طول البادئة. في الشبكات التقليدية نحسب عدد العناوين القابلة للاستخدام بالمعادلة: 2 مرفوعة لعدد بتات الأجهزة، ثم نطرح 2 لعنوان الشبكة وعنوان البث.",
+            "For IPv4, the number of host bits is 32 minus the prefix length. Under the traditional subnetting convention, usable hosts equal 2 raised to the number of host bits, minus 2 for the network and broadcast addresses.",
+          )}
+        </p>
+        <div className="rounded-xl border border-primary/30 bg-primary/5 p-4">
+          <p className="font-semibold">{t("مثال: شبكة /26", "Example: a /26 network")}</p>
+          <p className="mt-2 font-mono text-sm" dir="ltr">
+            32 - 26 = 6 host bits
+          </p>
+          <p className="font-mono text-sm" dir="ltr">
+            2⁶ - 2 = 62 usable hosts
+          </p>
+          <p className="mt-2 text-sm">
+            {t(
+              "إذن الشبكة /26 تحتوي 64 عنواناً إجمالياً، منها 62 عنواناً تقليدياً للأجهزة.",
+              "A /26 subnet contains 64 total addresses, with 62 traditionally usable by hosts.",
+            )}
+          </p>
+        </div>
+      </section>
+
+      <section>
+        <h2 className="font-display text-2xl font-bold">
+          {t("مثال محلول على Subnetting", "Worked subnetting example")}
+        </h2>
+        <p className="mt-3">
+          {t(
+            "لدينا العنوان 192.168.10.70/26. حجم الكتلة في الخانة الأخيرة هو 256 ناقص 192، أي 64. لذلك تبدأ الشبكات عند 0 ثم 64 ثم 128 ثم 192. يقع الرقم 70 ضمن المجال من 64 إلى 127.",
+            "Consider 192.168.10.70/26. The block size in the final octet is 256 minus 192, which equals 64. Subnets therefore start at 0, 64, 128 and 192. The value 70 belongs to the 64–127 block.",
+          )}
+        </p>
+        <div className="overflow-x-auto rounded-xl border border-border">
+          <table className="w-full text-start text-sm">
+            <tbody>
+              {[
+                [t("عنوان الشبكة", "Network address"), "192.168.10.64"],
+                [t("أول عنوان جهاز", "First usable host"), "192.168.10.65"],
+                [t("آخر عنوان جهاز", "Last usable host"), "192.168.10.126"],
+                [t("عنوان البث", "Broadcast address"), "192.168.10.127"],
+                [t("القناع", "Subnet mask"), "255.255.255.192"],
+                [t("عدد الأجهزة", "Usable hosts"), "62"],
+              ].map(([label, value]) => (
+                <tr key={label} className="border-b border-border last:border-0">
+                  <th className="p-3 text-start font-medium">{label}</th>
+                  <td className="p-3 font-mono" dir="ltr">
+                    {value}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section>
+        <h2 className="font-display text-2xl font-bold">
+          {t("متى نحتاج إلى تقسيم الشبكة؟", "Why subnet a network?")}
+        </h2>
+        <ul className="mt-3 list-disc space-y-2 ps-6">
+          <li>
+            {t(
+              "توزيع العناوين بما يناسب عدد الأجهزة في كل قسم.",
+              "Allocate address space according to each department's host count.",
+            )}
+          </li>
+          <li>
+            {t(
+              "تقليل نطاقات البث وتنظيم الشبكات الكبيرة.",
+              "Reduce broadcast domains and organize larger networks.",
+            )}
+          </li>
+          <li>
+            {t(
+              "فصل الأقسام وتطبيق سياسات التوجيه والتحكم بالوصول.",
+              "Separate departments and apply routing and access-control policies.",
+            )}
+          </li>
+          <li>
+            {t(
+              "تسهيل التوثيق واستكشاف أعطال الاتصال.",
+              "Make documentation and connectivity troubleshooting easier.",
+            )}
+          </li>
+        </ul>
+      </section>
+
+      <section>
+        <h2 className="font-display text-2xl font-bold">
+          {t("أخطاء شائعة عند حساب Subnetting", "Common subnetting mistakes")}
+        </h2>
+        <ul className="mt-3 list-disc space-y-2 ps-6">
+          <li>
+            {t(
+              "الخلط بين عدد العناوين الكلي وعدد عناوين الأجهزة القابلة للاستخدام.",
+              "Confusing total addresses with usable host addresses.",
+            )}
+          </li>
+          <li>
+            {t(
+              "اختيار عنوان الشبكة أو البث لجهاز نهائي في الشبكات التقليدية.",
+              "Assigning the network or broadcast address to an end device under the traditional model.",
+            )}
+          </li>
+          <li>
+            {t(
+              "استخدام قناع مختلف بين أجهزة يفترض أنها في الشبكة الفرعية نفسها.",
+              "Using inconsistent subnet masks among devices expected to share a subnet.",
+            )}
+          </li>
+          <li>
+            {t(
+              "نسيان ضبط البوابة الافتراضية عند الحاجة إلى الوصول لشبكات أخرى.",
+              "Forgetting the default gateway when communication with other networks is required.",
+            )}
+          </li>
+        </ul>
+      </section>
+
+      <section className="rounded-xl border border-border bg-card p-5">
+        <h2 className="font-display text-xl font-semibold">
+          {t("طبّق بنفسك: حاسبة الشبكات الفرعية", "Practice: subnet calculator")}
+        </h2>
+        <p className="mt-2 text-sm leading-7 text-muted-foreground">
+          {t(
+            "بعد فهم المثال، أدخل عنوان IP والبادئة في الحاسبة لمعرفة عنوان الشبكة والبث ونطاق الأجهزة. جرّب 192.168.10.70/26 وتحقق من مطابقة النتائج للجدول أعلاه.",
+            "After studying the example, enter an IP address and prefix in the calculator to find the network, broadcast and host range. Try 192.168.10.70/26 and compare the results with the table above.",
+          )}
+        </p>
+        <Link
+          to="/subnet"
+          className="mt-4 inline-flex rounded-lg bg-primary px-5 py-3 font-semibold text-primary-foreground hover:opacity-90"
+        >
+          {t("افتح حاسبة Subnetting", "Open subnet calculator")} →
+        </Link>
+      </section>
+    </article>
   );
 }
 
