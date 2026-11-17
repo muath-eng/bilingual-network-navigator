@@ -488,7 +488,8 @@ export const scenarios: TroubleshootingScenario[] = [
     answer: 0,
     explainAr::
       "يجب تحديد واجهة الشبكة الداخلية بـ ip nat inside وواجهة WAN بـ ip nat outside. بعد التصحيح افحص show ip nat translations وعدادات NAT، وتأكد من المسار الافتراضي وسياسة ACL.",
-    explainEn: "Mark the LAN interface with ip nat inside and the WAN interface with ip nat outside. Then inspect show ip nat translations and NAT counters, and verify the default route and ACL policy."
+    explainEn:
+      "Mark the LAN interface with ip nat inside and the WAN interface with ip nat outside. Then inspect show ip nat translations and NAT counters, and verify the default route and ACL policy.",
   },
   {
     id: "s12",
@@ -511,7 +512,8 @@ export const scenarios: TroubleshootingScenario[] = [
     answer: 0,
     explainAr::
       "يجب أن تكون VLAN موجودة ومسموحة على مسار trunk، وأن تكون إعدادات native VLAN متوافقة عند استخدامها. افحص show vlan brief وshow interfaces trunk ثم اختبر الاتصال.",
-    explainEn: "The VLAN must exist and be allowed across the trunk, with matching native VLAN settings where applicable. Check show vlan brief and show interfaces trunk, then retest."
+    explainEn:
+      "The VLAN must exist and be allowed across the trunk, with matching native VLAN settings where applicable. Check show vlan brief and show interfaces trunk, then retest.",
   },
   {
     id: "s13",
@@ -534,7 +536,8 @@ export const scenarios: TroubleshootingScenario[] = [
     answer: 0,
     explainAr::
       "تُعالج قواعد ACL المرتبة من الأعلى إلى الأسفل، وغالباً يتوقف الفحص عند أول تطابق. قاعدة المنع سبقت السماح فأسقطت الحركة. راجع ترتيب القواعد والواجهة والاتجاه قبل التعديل.",
-    explainEn: "Ordered ACL entries are evaluated top-down, commonly stopping at the first match. The earlier deny drops the traffic before the permit is reached. Review rule order, interface and direction before changing it."
+    explainEn:
+      "Ordered ACL entries are evaluated top-down, commonly stopping at the first match. The earlier deny drops the traffic before the permit is reached. Review rule order, interface and direction before changing it.",
   },
   {
     id: "s14",
@@ -557,7 +560,8 @@ export const scenarios: TroubleshootingScenario[] = [
     answer: 0,
     explainAr::
       "نجاح الوصول إلى Next Hop يثبت جزءاً من الاتصال فقط. يجب أن يعرف R2 طريق العودة إلى مصدر الحزم، وإلا قد تصل الطلبات ولا تعود الردود. افحص جدول التوجيه في الطرفين.",
-    explainEn: "Reaching the next hop proves only part of the path. R2 needs a route back to the source, or requests may arrive while replies cannot return. Inspect routing tables on both routers."
+    explainEn:
+      "Reaching the next hop proves only part of the path. R2 needs a route back to the source, or requests may arrive while replies cannot return. Inspect routing tables on both routers.",
   },
   {
     id: "s15",
@@ -580,6 +584,7 @@ export const scenarios: TroubleshootingScenario[] = [
     answer: 0,
     explainAr::
       "العنوان 100.72.15.8 يقع ضمن نطاق 100.64.0.0/10 المخصص لـ Shared Address Space ويشير غالباً إلى CGNAT لدى المزود. لا يكفي إعداد Port Forwarding على راوتر العميل وحده؛ تحقق مع المزود من إمكانية الحصول على عنوان عام.",
-    explainEn: "100.72.15.8 is within 100.64.0.0/10 shared address space and commonly indicates ISP CGNAT. Port forwarding on the customer router alone is insufficient; ask the ISP whether a public address is available."
+    explainEn:
+      "100.72.15.8 is within 100.64.0.0/10 shared address space and commonly indicates ISP CGNAT. Port forwarding on the customer router alone is insufficient; ask the ISP whether a public address is available.",
   },
 ];
