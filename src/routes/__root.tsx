@@ -161,6 +161,17 @@ function RootComponent() {
       <LangProvider>
         <SiteHeader />
         <Outlet />
+        <footer className="mt-12 border-t border-border bg-card/40">
+          <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-4 py-6 text-sm text-muted-foreground">
+            <p>© {new Date().getFullYear()} Network Master</p>
+            <nav aria-label="معلومات الموقع" className="flex flex-wrap gap-x-5 gap-y-2">
+              <Link to="/about" className="hover:text-primary">حول المنصة</Link>
+              <Link to="/contact" className="hover:text-primary">اتصل بنا</Link>
+              <Link to="/privacy" className="hover:text-primary">سياسة الخصوصية</Link>
+              <Link to="/terms" className="hover:text-primary">شروط الاستخدام</Link>
+            </nav>
+          </div>
+        </footer>
       </LangProvider>
     </QueryClientProvider>
   );
