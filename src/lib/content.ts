@@ -415,14 +415,7 @@ export const scenarios: TroubleshootingScenario[] = [
       "العنوان 169.254.x.x هو APIPA، ويظهر غالباً عندما لا يتلقى الجهاز استجابة من خادم DHCP.\nما أول خدمة يجب فحصها عند ظهور APIPA؟",
     infoEn:
       "A 169.254.x.x address is APIPA and commonly appears when a client receives no DHCP response.\nWhich service should be checked first when APIPA appears?",
-    optionsAr: [
-      "DHCP",
-      "DNS",
-      "NTP",
-      "DHCP",
-      "DNS",
-      "NTP",
-    ],
+    optionsAr: ["DHCP", "DNS", "NTP", "DHCP", "DNS", "NTP"],
     answer: 0,
     explainAr:
       "تحقق من تشغيل الخادم ونطاق العناوين وVLAN وDHCP relay وإمكانية وصول رسائل DHCP إلى الخادم.",
@@ -475,11 +468,7 @@ export const scenarios: TroubleshootingScenario[] = [
       "الراوتر يصل إلى بوابة مزود الخدمة بنجاح. جهاز LAN عنوانه 192.168.10.25/24 والبوابة 192.168.10.1. قاعدة PAT موجودة، لكن واجهة LAN مضبوطة nat outside وواجهة WAN مضبوطة nat inside.",
     infoEn:
       "The router can reach the ISP gateway. A LAN client is 192.168.10.25/24 with gateway 192.168.10.1. A PAT rule exists, but the LAN interface is marked nat outside and the WAN interface nat inside.",
-    optionsAr: [
-      "عكس أدوار inside وoutside",
-      "تغيير DNS إلى 8.8.8.8 فقط",
-      "زيادة DHCP lease time",
-    ],
+    optionsAr: ["عكس أدوار inside وoutside", "تغيير DNS إلى 8.8.8.8 فقط", "زيادة DHCP lease time"],
     optionsEn: [
       "Reverse the inside and outside roles",
       "Only change DNS to 8.8.8.8",
