@@ -572,6 +572,5 @@ export const scenarios: TroubleshootingScenario[] = [
     answer: 0,
     explainAr: "العنوان 100.72.15.8 يقع ضمن نطاق 100.64.0.0/10 المخصص لـ Shared Address Space ويشير غالباً إلى CGNAT لدى المزود. لا يكفي إعداد Port Forwarding على راوتر العميل وحده؛ تحقق مع المزود من إمكانية الحصول على عنوان عام.",
     explainEn: "100.72.15.8 is within 100.64.0.0/10 shared address space and commonly indicates ISP CGNAT. Port forwarding on the customer router alone is insufficient; ask the ISP whether a public address is available."
-  }
-
+  },
 ];
