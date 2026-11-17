@@ -32,6 +32,66 @@ export const Route = createFileRoute("/learn/")({
         content: "دروس شبكات عربية، شرح CCNA، اختبارات قصيرة وتطبيق عملي.",
       },
     ],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Course",
+          name: "تعلم الشبكات وCCNA بالعربية",
+          description:
+            "منهج مجاني ثنائي اللغة لتعلم أساسيات الشبكات ومفاهيم CCNA مع دروس واختبارات وتطبيقات عملية.",
+          inLanguage: ["ar", "en"],
+          provider: {
+            "@type": "Organization",
+            name: "Network Master",
+            url: "https://alsalhi-network-master.lovable.app/",
+          },
+          url: "https://alsalhi-network-master.lovable.app/learn",
+        }),
+      },
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          mainEntity: [
+            {
+              "@type": "Question",
+              name: "هل يمكن تعلم الشبكات من الصفر؟",
+              acceptedAnswer: {
+                "@type": "Answer",
+                text: "نعم. ابدأ بالأساسيات ثم انتقل تدريجياً إلى نموذج OSI وعناوين IP وVLAN والتوجيه وخدمات الشبكة.",
+              },
+            },
+            {
+              "@type": "Question",
+              name: "هل دروس Network Master مجانية؟",
+              acceptedAnswer: {
+                "@type": "Answer",
+                text: "نعم، محتوى التعلم والدروس والاختبارات والمختبرات التعليمية متاحة مجاناً.",
+              },
+            },
+            {
+              "@type": "Question",
+              name: "هل المحتوى مناسب للتحضير لمفاهيم CCNA؟",
+              acceptedAnswer: {
+                "@type": "Answer",
+                text: "يغطي المسار موضوعات أساسية ومتقدمة مرتبطة بأهداف CCNA 200-301، مع توضيح إصدار المنهج وتحديثاته.",
+              },
+            },
+            {
+              "@type": "Question",
+              name: "هل أحتاج إلى أجهزة شبكات حقيقية للتدرب؟",
+              acceptedAnswer: {
+                "@type": "Answer",
+                text: "يمكنك البدء بالدروس والمختبرات والمحاكاة داخل المنصة دون امتلاك أجهزة فعلية.",
+              },
+            },
+          ],
+        }),
+      },
+    ],
   }),
   component: Learn,
 });
@@ -171,6 +231,64 @@ function Learn() {
           </section>
         ))}
       </div>
+
+      <section className="mt-10 rounded-xl border border-border bg-card p-6">
+        <h2 className="font-display text-xl font-semibold">
+          {t("أسئلة شائعة عن تعلم الشبكات", "Frequently asked questions about learning networking")}
+        </h2>
+        <div className="mt-4 space-y-5">
+          <div>
+            <h3 className="font-semibold">
+              {t("هل يمكن تعلم الشبكات من الصفر؟", "Can I learn networking from zero?")}
+            </h3>
+            <p className="mt-1 text-sm leading-7 text-muted-foreground">
+              {t(
+                "نعم. ابدأ بالأساسيات ثم انتقل تدريجياً إلى نموذج OSI وعناوين IP وVLAN والتوجيه وخدمات الشبكة.",
+                "Yes. Start with the foundations, then progress through the OSI model, IP addressing, VLANs, routing and network services.",
+              )}
+            </p>
+          </div>
+          <div>
+            <h3 className="font-semibold">
+              {t("هل دروس Network Master مجانية؟", "Are Network Master lessons free?")}
+            </h3>
+            <p className="mt-1 text-sm leading-7 text-muted-foreground">
+              {t(
+                "نعم، محتوى التعلم والدروس والاختبارات والمختبرات التعليمية متاحة مجاناً.",
+                "Yes. Learning content, lessons, quizzes and educational labs are available for free.",
+              )}
+            </p>
+          </div>
+          <div>
+            <h3 className="font-semibold">
+              {t(
+                "هل المحتوى مناسب للتحضير لمفاهيم CCNA؟",
+                "Does the content help prepare for CCNA topics?",
+              )}
+            </h3>
+            <p className="mt-1 text-sm leading-7 text-muted-foreground">
+              {t(
+                "يغطي المسار موضوعات مرتبطة بأهداف CCNA 200-301، مع توضيح إصدار المنهج وتحديثاته.",
+                "The learning path covers topics aligned with CCNA 200-301 objectives and identifies the curriculum version.",
+              )}
+            </p>
+          </div>
+          <div>
+            <h3 className="font-semibold">
+              {t(
+                "هل أحتاج إلى أجهزة شبكات حقيقية للتدرب؟",
+                "Do I need physical networking devices to practice?",
+              )}
+            </h3>
+            <p className="mt-1 text-sm leading-7 text-muted-foreground">
+              {t(
+                "يمكنك البدء بالدروس والمختبرات والمحاكاة داخل المنصة دون امتلاك أجهزة فعلية.",
+                "You can begin with lessons, labs and simulations on the platform without owning physical devices.",
+              )}
+            </p>
+          </div>
+        </div>
+      </section>
 
       <section className="mt-10">
         <h2 className="font-display text-xl font-semibold">
