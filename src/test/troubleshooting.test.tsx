@@ -40,4 +40,32 @@ describe("Troubleshooting regression", () => {
       }
     });
   }
+
+  for (const lang of ["ar", "en"] as const) {
+    it(`tracks answered scenarios and resets progress in ${lang}`, () => {
+      localStorage.setItem("nm-lang", lang);
+      render(
+        <LangProvider>{createElement(Route.options.component as ComponentType)}</LangProvider>,
+      );
+      const progress = screen.getByRole("progressbar", {
+        name: lang === "ar" ? "تقدم التدريب" : "Training progress",
+      });
+      expect(progress).toHaveAttribute("aria-valuenow", "0");
+      const first = scenarios[0];
+      if (!first) throw new Error("Missing first troubleshooting scenario");
+      const options = lang === "ar" ? first.optionsAr : first.optionsEn;
+      const heading = screen.getByRole("heading", {
+        name: lang === "ar" ? first.titleAr : first.titleEn,
+      });
+      const scope = within(heading.parentElement!);
+      fireEvent.click(scope.getByRole("button", { name: options[first.answer] }));
+      expect(progress).toHaveAttribute("aria-valuenow", "1");
+      const reset = screen.getByRole("button", {
+        name: lang === "ar" ? "إعادة المحاولة" : "Reset practice",
+      });
+      fireEvent.click(reset);
+      expect(progress).toHaveAttribute("aria-valuenow", "0");
+      expect(reset).toBeDisabled();
+    });
+  }
 });

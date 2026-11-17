@@ -43,6 +43,11 @@ export const Route = createFileRoute("/troubleshoot")({
 function Troubleshoot() {
   const { t, lang } = useLang();
   const [picked, setPicked] = useState<Record<string, number>>({});
+  const answeredCount = Object.keys(picked).length;
+  const correctCount = scenarios.filter(
+    (scenario) => picked[scenario.id] === scenario.answer,
+  ).length;
+  const progress = scenarios.length ? (answeredCount / scenarios.length) * 100 : 0;
   return (
     <main className="mx-auto max-w-3xl px-4 py-10">
       <h1 className="font-display text-3xl font-bold">
@@ -51,6 +56,54 @@ function Troubleshoot() {
       <p className="mt-2 text-muted-foreground">
         {t("اقرأ المعطيات واختر السبب الأرجح.", "Read the details and pick the most likely cause.")}
       </p>
+      <section className="mt-6 rounded-xl border border-border bg-card p-5">
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <p className="text-sm font-semibold">{t("تقدم التدريب", "Training progress")}</p>
+            <p className="mt-1 text-sm text-muted-foreground">
+              {answeredCount} / {scenarios.length}{" "}
+              {t("حالة تمت الإجابة عنها", "scenarios answered")}
+            </p>
+          </div>
+          <div className="text-sm">
+            <span className="text-muted-foreground">
+              {t("الإجابات الصحيحة", "Correct answers")}:{" "}
+            </span>
+            <strong>
+              {correctCount} / {answeredCount}
+            </strong>
+          </div>
+          <button
+            type="button"
+            onClick={() => setPicked({})}
+            disabled={answeredCount === 0}
+            className="rounded-lg border border-border px-3 py-2 text-sm hover:border-primary disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            {t("إعادة المحاولة", "Reset practice")}
+          </button>
+        </div>
+        <div
+          role="progressbar"
+          aria-label={t("تقدم التدريب", "Training progress")}
+          aria-valuemin={0}
+          aria-valuemax={scenarios.length}
+          aria-valuenow={answeredCount}
+          className="mt-4 h-2 overflow-hidden rounded-full bg-secondary"
+        >
+          <div
+            className="h-full rounded-full bg-primary transition-all"
+            style={{ width: `${progress}%` }}
+          />
+        </div>
+        {answeredCount === scenarios.length && (
+          <p className="mt-3 text-sm font-medium text-primary">
+            {t(
+              "أكملت جميع الحالات! راجع إجاباتك وحاول تحسين نتيجتك.",
+              "All scenarios completed! Review your answers and try to improve your score.",
+            )}
+          </p>
+        )}
+      </section>
       <div className="mt-8 space-y-5">
         {scenarios.map((s) => {
           const p = picked[s.id];
