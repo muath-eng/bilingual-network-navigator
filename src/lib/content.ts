@@ -1,4 +1,5 @@
 import { ccnaLessons } from "./ccna-course";
+import { networkOperationsLessons } from "./network-operations-lessons";
 import type { Lesson, TroubleshootingScenario } from "./lesson-types";
 export type { Lesson } from "./lesson-types";
 export { ccnaDomains } from "./ccna-course";
@@ -260,7 +261,7 @@ const foundationLessons: Lesson[] = [
   },
 ];
 
-export const lessons: Lesson[] = [...foundationLessons, ...ccnaLessons];
+export const lessons: Lesson[] = [...foundationLessons, ...networkOperationsLessons, ...ccnaLessons];
 
 export const scenarios: TroubleshootingScenario[] = [
   {
