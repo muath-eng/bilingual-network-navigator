@@ -221,7 +221,7 @@ function NetworkBasicsSupplement() {
             <div className="w-full max-w-xs rounded-lg border border-border px-4 py-3 font-semibold">
               {t("السويتش أو نقطة الوصول", "Switch or access point")}
             </div>
-            <span aria-hidden="true">↙　↓　↘</span>
+            <span aria-hidden="true">↙ ↓ ↘</span>
             <div className="grid w-full grid-cols-3 gap-2 text-sm">
               {[t("حاسوب", "Computer"), t("هاتف", "Phone"), t("طابعة", "Printer")].map((device) => (
                 <div key={device} className="rounded-lg bg-secondary px-2 py-3 font-medium">
