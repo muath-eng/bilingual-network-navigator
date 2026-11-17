@@ -15,7 +15,7 @@ afterEach(cleanup);
 
 describe("Troubleshooting regression", () => {
   for (const lang of ["ar", "en"] as const) {
-    it(`renders and answers all ten drills in ${lang} without missing options`, () => {
+    it(`renders and answers all fifteen drills in ${lang} without missing options`, () => {
       localStorage.setItem("nm-lang", lang);
       render(
         <LangProvider>{createElement(Route.options.component as ComponentType)}</LangProvider>,
