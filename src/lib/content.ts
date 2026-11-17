@@ -473,7 +473,6 @@ export const scenarios: TroubleshootingScenario[] = [
     explainEn:
       "Inspect routing tables on both ends, default gateways and ACL or firewall rules that may block traffic.",
   },
-  ,
   {
     id: "s11",
     titleAr: "NAT مضبوط لكن أجهزة LAN لا تصل إلى الإنترنت",
@@ -484,6 +483,8 @@ export const scenarios: TroubleshootingScenario[] = [
       "عكس أدوار inside وoutside",
       "تغيير DNS إلى 8.8.8.8 فقط",
       "زيادة DHCP lease time",
+    ],
+    optionsEn: [
       "Reverse the inside and outside roles",
       "Only change DNS to 8.8.8.8",
       "Increase the DHCP lease time",
@@ -502,6 +503,8 @@ export const scenarios: TroubleshootingScenario[] = [
       "إضافة VLAN 20 إلى قائمة VLANs المسموحة على trunk والتحقق من وجودها",
       "تغيير خادم DNS",
       "إيقاف STP",
+    ],
+    optionsEn: [
       "Allow VLAN 20 on the trunk and verify the VLAN exists",
       "Change the DNS server",
       "Disable STP",
@@ -520,6 +523,8 @@ export const scenarios: TroubleshootingScenario[] = [
       "نقل قاعدة السماح قبل قاعدة المنع مع التحقق من اتجاه تطبيق ACL",
       "إضافة DNS آخر",
       "إعادة تشغيل جميع السويتشات",
+    ],
+    optionsEn: [
       "Move the permit rule before the deny and verify ACL direction",
       "Add another DNS server",
       "Reboot all switches",
@@ -538,6 +543,8 @@ export const scenarios: TroubleshootingScenario[] = [
       "إضافة مسار عودة على R2 والتحقق من ACL",
       "تغيير عنوان MAC على R1",
       "تغيير DNS على أجهزة الشبكتين",
+    ],
+    optionsEn: [
       "Add a return route on R2 and check ACLs",
       "Change R1's MAC address",
       "Change DNS on both networks",
@@ -556,6 +563,8 @@ export const scenarios: TroubleshootingScenario[] = [
       "التحقق من CGNAT وطلب IPv4 عام أو استخدام VPN مناسب",
       "فتح كل منافذ الراوتر",
       "تعطيل Firewall بالكامل",
+    ],
+    optionsEn: [
       "Check for CGNAT and request a public IPv4 or use an appropriate VPN",
       "Open every router port",
       "Disable the firewall entirely",
