@@ -261,7 +261,11 @@ const foundationLessons: Lesson[] = [
   },
 ];
 
-export const lessons: Lesson[] = [...foundationLessons, ...networkOperationsLessons, ...ccnaLessons];
+export const lessons: Lesson[] = [
+  ...foundationLessons,
+  ...networkOperationsLessons,
+  ...ccnaLessons,
+];
 
 export const scenarios: TroubleshootingScenario[] = [
   {
