@@ -16,10 +16,11 @@ export const Route = createFileRoute("/learn/$id")({
   head: ({ loaderData }) => {
     const lesson = loaderData?.lesson;
     const isBasics = lesson?.id === "what-is-network";
+    const lessonSummary = lesson?.bodyAr.slice(0, 2).join(" ").replace(/\\s+/g, " ").trim();
     const description = isBasics
       ? networkDescription
       : lesson
-        ? `${lesson.titleAr}: ${lesson.bodyAr.join(" ")}`.slice(0, 160)
+        ? `${lesson.titleAr}: ${lessonSummary}`.slice(0, 155).replace(/[،,؛;:.!?؟\\s]+$/, "")
         : "درس تفاعلي لتعلم الشبكات بالعربية والإنجليزية على Network Master.";
     const canonical = lesson
       ? `https://alsalhi-network-master.lovable.app/learn/${lesson.id}`
@@ -39,10 +40,60 @@ export const Route = createFileRoute("/learn/$id")({
         { property: "og:type", content: "article" },
         { property: "og:description", content: description },
         { property: "og:site_name", content: "Network Master" },
+        { property: "og:locale", content: "ar_QA" },
+        { property: "og:image", content: "https://alsalhi-network-master.lovable.app/network-master-social.svg" },
         { name: "twitter:card", content: "summary_large_image" },
+        { name: "twitter:image", content: "https://alsalhi-network-master.lovable.app/network-master-social.svg" },
         { name: "twitter:title", content: title },
         { name: "twitter:description", content: description },
       ],
+      scripts: lesson
+        ? [
+            {
+              type: "application/ld+json",
+              children: JSON.stringify({
+                "@context": "https://schema.org",
+                "@type": "Article",
+                headline: title,
+                description,
+                inLanguage: "ar",
+                mainEntityOfPage: canonical,
+                publisher: {
+                  "@type": "Organization",
+                  name: "Network Master",
+                  url: "https://alsalhi-network-master.lovable.app/",
+                },
+                isPartOf: {
+                  "@type": "Course",
+                  name: "تعلم الشبكات وCCNA بالعربية",
+                  url: "https://alsalhi-network-master.lovable.app/learn",
+                },
+              }),
+            },
+            {
+              type: "application/ld+json",
+              children: JSON.stringify({
+                "@context": "https://schema.org",
+                "@type": "BreadcrumbList",
+                itemListElement: [
+                  {
+                    "@type": "ListItem",
+                    position: 1,
+                    name: "الرئيسية",
+                    item: "https://alsalhi-network-master.lovable.app/",
+                  },
+                  {
+                    "@type": "ListItem",
+                    position: 2,
+                    name: "دروس الشبكات",
+                    item: "https://alsalhi-network-master.lovable.app/learn",
+                  },
+                  { "@type": "ListItem", position: 3, name: lesson.titleAr, item: canonical },
+                ],
+              }),
+            },
+          ]
+        : [],
     };
   },
   component: LessonPage,
@@ -57,6 +108,14 @@ function LessonPage() {
   const score = lesson.quiz.filter((q, i) => answers[i] === q.answer).length;
   const idx = lessons.findIndex((l) => l.id === lesson.id);
   const next = lessons[idx + 1];
+  const relatedLessons = lessons
+    .filter(
+      (candidate) =>
+        candidate.id !== lesson.id &&
+        candidate.id !== next?.id &&
+        (lesson.domain ? candidate.domain === lesson.domain : candidate.level === lesson.level),
+    )
+    .slice(0, 3);
   const domain = lesson.domain ? ccnaDomains.find((item) => item.id === lesson.domain) : undefined;
 
   return (
@@ -171,6 +230,32 @@ function LessonPage() {
         >
           {t("الدرس التالي:", "Next:")} {t(next.titleAr, next.titleEn)} →
         </Link>
+      )}
+      {relatedLessons.length > 0 && (
+        <section className="mt-10 rounded-xl border border-border bg-card p-6">
+          <h2 className="font-display text-xl font-semibold">
+            {t("دروس مرتبطة بهذا الموضوع", "Related networking lessons")}
+          </h2>
+          <p className="mt-2 text-sm text-muted-foreground">
+            {t(
+              "تابع هذه الدروس لفهم الموضوع بصورة أعمق وربط المفاهيم ببعضها.",
+              "Continue with these lessons to build a deeper, connected understanding.",
+            )}
+          </p>
+          <ul className="mt-4 grid gap-2">
+            {relatedLessons.map((related) => (
+              <li key={related.id}>
+                <Link
+                  to="/learn/$id"
+                  params={{ id: related.id }}
+                  className="block rounded-lg border border-border px-4 py-3 font-medium hover:border-primary hover:text-primary"
+                >
+                  {t(related.titleAr, related.titleEn)} →
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
       )}
     </main>
   );
