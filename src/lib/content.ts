@@ -412,7 +412,8 @@ export const scenarios: TroubleshootingScenario[] = [
       "افحص جداول التوجيه في الطرفين والبوابات الافتراضية وقواعد ACL أو Firewall التي قد تمنع حركة المرور.",
     explainEn:
       "Inspect routing tables on both ends, default gateways and ACL or firewall rules that may block traffic.",
-  },,
+  },
+  ,
   {
     id: "s11",
     titleAr: "NAT مضبوط لكن أجهزة LAN لا تصل إلى الإنترنت",
