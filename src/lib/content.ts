@@ -274,14 +274,8 @@ export const scenarios: TroubleshootingScenario[] = [
     titleEn: "PC can't reach the Internet",
     infoAr: "PC: IP 192.168.1.20 / 255.255.255.0 / Gateway 192.168.2.1 — الراوتر: 192.168.1.1",
     infoEn: "PC: IP 192.168.1.20 / 255.255.255.0 / Gateway 192.168.2.1 — Router: 192.168.1.1",
-    optionsAr: [
-      "الكابل مفصول",
-      "البوابة الافتراضية خاطئة",
-      "DNS معطل",
-      "Cable unplugged",
-      "Wrong default gateway",
-      "DNS down",
-    ],
+    optionsAr: ["الكابل مفصول", "البوابة الافتراضية خاطئة", "DNS معطل"],
+    optionsEn: ["Cable unplugged", "Wrong default gateway", "DNS down"],
     answer: 1,
     explainAr: "البوابة يجب أن تكون 192.168.1.1 أي في نفس شبكة الجهاز.",
     explainEn: "The gateway must be 192.168.1.1, in the same subnet as the PC.",
@@ -292,14 +286,8 @@ export const scenarios: TroubleshootingScenario[] = [
     titleEn: "Websites fail but ping 8.8.8.8 works",
     infoAr: "ping 8.8.8.8 ناجح، ping google.com يعطي: could not find host",
     infoEn: "ping 8.8.8.8 succeeds, ping google.com: could not find host",
-    optionsAr: [
-      "مشكلة DNS",
-      "مشكلة كابل",
-      "قناع خاطئ",
-      "DNS problem",
-      "Cable problem",
-      "Wrong mask",
-    ],
+    optionsAr: ["مشكلة DNS", "مشكلة كابل", "قناع خاطئ"],
+    optionsEn: ["DNS problem", "Cable problem", "Wrong mask"],
     answer: 0,
     explainAr: "الاتصال يعمل، لكن ترجمة الأسماء فشلت = DNS.",
     explainEn: "Connectivity works but name resolution fails = DNS.",
@@ -310,14 +298,8 @@ export const scenarios: TroubleshootingScenario[] = [
     titleEn: "Two PCs on the same switch can't talk",
     infoAr: "PC1: 10.0.0.5/24 في VLAN 10 — PC2: 10.0.0.6/24 في VLAN 20",
     infoEn: "PC1: 10.0.0.5/24 on VLAN 10 — PC2: 10.0.0.6/24 on VLAN 20",
-    optionsAr: [
-      "عناوين متضاربة",
-      "الأجهزة في VLANs مختلفة",
-      "السويتش معطل",
-      "IP conflict",
-      "Devices on different VLANs",
-      "Switch is broken",
-    ],
+    optionsAr: ["عناوين متضاربة", "الأجهزة في VLANs مختلفة", "السويتش معطل"],
+    optionsEn: ["IP conflict", "Devices on different VLANs", "Switch is broken"],
     answer: 1,
     explainAr: "VLANs مختلفة تعني شبكات منفصلة؛ ضعهما في نفس VLAN أو أضف توجيه بين VLANs.",
     explainEn:
@@ -329,14 +311,8 @@ export const scenarios: TroubleshootingScenario[] = [
     titleEn: "IP address conflict warning",
     infoAr: "جهازان مضبوطان يدوياً على 192.168.1.50",
     infoEn: "Two devices manually set to 192.168.1.50",
-    optionsAr: [
-      "غيّر عنوان أحدهما أو استخدم DHCP",
-      "أعد تشغيل الراوتر فقط",
-      "غيّر DNS",
-      "Change one IP or use DHCP",
-      "Just reboot router",
-      "Change DNS",
-    ],
+    optionsAr: ["غيّر عنوان أحدهما أو استخدم DHCP", "أعد تشغيل الراوتر فقط", "غيّر DNS"],
+    optionsEn: ["Change one IP or use DHCP", "Just reboot router", "Change DNS"],
     answer: 0,
     explainAr: "كل جهاز يحتاج عنواناً فريداً في الشبكة.",
     explainEn: "Each device needs a unique address on the network.",
@@ -349,14 +325,8 @@ export const scenarios: TroubleshootingScenario[] = [
       "افحص عنوان IP وVLAN لكل جهاز. وجود الجهازين في VLANs مختلفة يعني أنهما في نطاقي بث منفصلين.\nما المطلوب لتمكين الاتصال بين VLAN 10 وVLAN 20؟",
     infoEn:
       "Check each device's IP address and VLAN. Different VLANs are separate broadcast domains.\nWhat is required for communication between VLAN 10 and VLAN 20?",
-    optionsAr: [
-      "توجيه بين VLANs",
-      "تغيير DNS فقط",
-      "كابل متقاطع",
-      "Inter-VLAN routing",
-      "Changing DNS only",
-      "A crossover cable",
-    ],
+    optionsAr: ["توجيه بين VLANs", "تغيير DNS فقط", "كابل متقاطع"],
+    optionsEn: ["Inter-VLAN routing", "Changing DNS only", "A crossover cable"],
     answer: 0,
     explainAr:
       "الحل هو إعداد توجيه بين VLANs عبر SVI أو Router-on-a-stick، مع التحقق من trunk والبوابات الافتراضية.",
@@ -371,14 +341,8 @@ export const scenarios: TroubleshootingScenario[] = [
       "يعرض الأمر show ip interface brief حالة الواجهة administratively down/down، وهذا يدل على إيقافها من الإعدادات.\nما الأمر الذي يعيد تشغيل الواجهة المغلقة إدارياً؟",
     infoEn:
       "show ip interface brief reports administratively down/down, indicating that the interface is disabled by configuration.\nWhich command re-enables an administratively shut interface?",
-    optionsAr: [
-      "no shutdown",
-      "ip helper-address",
-      "shutdown",
-      "no shutdown",
-      "ip helper-address",
-      "shutdown",
-    ],
+    optionsAr: ["no shutdown", "ip helper-address", "shutdown"],
+    optionsEn: ["no shutdown", "ip helper-address", "shutdown"],
     answer: 0,
     explainAr:
       "بعد التأكد من المنفذ والطرف الآخر، ادخل إلى إعداد الواجهة ونفّذ no shutdown ثم أعد فحص الحالة.",
@@ -393,14 +357,8 @@ export const scenarios: TroubleshootingScenario[] = [
       "حالة Link up لا تعني أن جودة الإشارة سليمة. راقب عدادات CRC وinput errors في show interfaces.\nما السبب الأكثر احتمالاً لزيادة أخطاء CRC؟",
     infoEn:
       "A link-up state does not guarantee a clean physical connection. Inspect CRC and input-error counters with show interfaces.\nWhat is a likely cause of increasing CRC errors?",
-    optionsAr: [
-      "مشكلة في الكابل أو المنفذ",
-      "بوابة افتراضية خاطئة",
-      "DHCP معطل",
-      "Physical cable or port issue",
-      "Wrong default gateway",
-      "Disabled DHCP",
-    ],
+    optionsAr: ["مشكلة في الكابل أو المنفذ", "بوابة افتراضية خاطئة", "DHCP معطل"],
+    optionsEn: ["Physical cable or port issue", "Wrong default gateway", "Disabled DHCP"],
     answer: 0,
     explainAr:
       "افحص الكابل والموصلات والطرفين واحتمال وجود تشويش أو منفذ معيب، ثم قارن العدادات بعد الإصلاح.",
@@ -415,7 +373,8 @@ export const scenarios: TroubleshootingScenario[] = [
       "العنوان 169.254.x.x هو APIPA، ويظهر غالباً عندما لا يتلقى الجهاز استجابة من خادم DHCP.\nما أول خدمة يجب فحصها عند ظهور APIPA؟",
     infoEn:
       "A 169.254.x.x address is APIPA and commonly appears when a client receives no DHCP response.\nWhich service should be checked first when APIPA appears?",
-    optionsAr: ["DHCP", "DNS", "NTP", "DHCP", "DNS", "NTP"],
+    optionsAr: ["DHCP", "DNS", "NTP"],
+    optionsEn: ["DHCP", "DNS", "NTP"],
     answer: 0,
     explainAr:
       "تحقق من تشغيل الخادم ونطاق العناوين وVLAN وDHCP relay وإمكانية وصول رسائل DHCP إلى الخادم.",
@@ -430,14 +389,8 @@ export const scenarios: TroubleshootingScenario[] = [
       "نجاح ping إلى عنوان IP مع فشل أسماء النطاقات يشير غالباً إلى مشكلة DNS وليس إلى انقطاع الاتصال بالكامل.\nما الأداة المناسبة لاختبار تحليل أسماء النطاقات؟",
     infoEn:
       "Successful pings to IP addresses while domain names fail usually indicate a DNS issue rather than total connectivity loss.\nWhich tool is suitable for testing DNS name resolution?",
-    optionsAr: [
-      "nslookup",
-      "traceroute فقط",
-      "show vlan brief",
-      "nslookup",
-      "traceroute only",
-      "show vlan brief",
-    ],
+    optionsAr: ["nslookup", "traceroute فقط", "show vlan brief"],
+    optionsEn: ["nslookup", "traceroute only", "show vlan brief"],
     answer: 0,
     explainAr:
       "استخدم nslookup لفحص خادم DNS، وتحقق من إعداد DNS على العميل ومن القيمة التي يوزعها DHCP.",
@@ -459,7 +412,7 @@ export const scenarios: TroubleshootingScenario[] = [
       "افحص جداول التوجيه في الطرفين والبوابات الافتراضية وقواعد ACL أو Firewall التي قد تمنع حركة المرور.",
     explainEn:
       "Inspect routing tables on both ends, default gateways and ACL or firewall rules that may block traffic.",
-  },
+  },,
   {
     id: "s11",
     titleAr: "NAT مضبوط لكن أجهزة LAN لا تصل إلى الإنترنت",
