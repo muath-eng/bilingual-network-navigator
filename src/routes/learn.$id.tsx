@@ -41,9 +41,15 @@ export const Route = createFileRoute("/learn/$id")({
         { property: "og:description", content: description },
         { property: "og:site_name", content: "Network Master" },
         { property: "og:locale", content: "ar_QA" },
-        { property: "og:image", content: "https://alsalhi-network-master.lovable.app/network-master-social.svg" },
+        {
+          property: "og:image",
+          content: "https://alsalhi-network-master.lovable.app/network-master-social.svg",
+        },
         { name: "twitter:card", content: "summary_large_image" },
-        { name: "twitter:image", content: "https://alsalhi-network-master.lovable.app/network-master-social.svg" },
+        {
+          name: "twitter:image",
+          content: "https://alsalhi-network-master.lovable.app/network-master-social.svg",
+        },
         { name: "twitter:title", content: title },
         { name: "twitter:description", content: description },
       ],
