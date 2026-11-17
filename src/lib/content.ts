@@ -413,4 +413,120 @@ export const scenarios: TroubleshootingScenario[] = [
     explainEn:
       "Inspect routing tables on both ends, default gateways and ACL or firewall rules that may block traffic.",
   },
+  {
+    id: "s11",
+    titleAr: "NAT مضبوط لكن أجهزة LAN لا تصل إلى الإنترنت",
+    titleEn: "NAT is configured but LAN clients cannot reach the Internet",
+    infoAr:
+      "الراوتر يصل إلى بوابة مزود الخدمة بنجاح. جهاز LAN عنوانه 192.168.10.25/24 والبوابة 192.168.10.1. قاعدة PAT موجودة، لكن واجهة LAN مضبوطة nat outside وواجهة WAN مضبوطة nat inside.",
+    infoEn:
+      "The router can reach the ISP gateway. A LAN client is 192.168.10.25/24 with gateway 192.168.10.1. A PAT rule exists, but the LAN interface is marked nat outside and the WAN interface nat inside.",
+    optionsAr: ["عكس أدوار inside وoutside", "تغيير DNS إلى 8.8.8.8 فقط", "زيادة DHCP lease time"],
+    optionsEn: [
+      "Reverse the inside and outside roles",
+      "Only change DNS to 8.8.8.8",
+      "Increase the DHCP lease time",
+    ],
+    answer: 0,
+    explainAr:
+      "يجب تحديد واجهة الشبكة الداخلية بـ ip nat inside وواجهة WAN بـ ip nat outside. بعد التصحيح افحص show ip nat translations وعدادات NAT، وتأكد من المسار الافتراضي وسياسة ACL.",
+    explainEn:
+      "Mark the LAN interface with ip nat inside and the WAN interface with ip nat outside. Then inspect show ip nat translations and NAT counters, and verify the default route and ACL policy.",
+  },
+  {
+    id: "s12",
+    titleAr: "اتصال VLAN 10 بـ VLAN 20 يفشل رغم وجود مسار",
+    titleEn: "VLAN 10 cannot reach VLAN 20 although a route exists",
+    infoAr:
+      "السويتش يعرض trunk بينه وبين الراوتر. الأمر show interfaces trunk يبين أن VLAN 10 مسموحة، لكن VLAN 20 غير موجودة ضمن allowed VLANs. عناوين البوابات على الراوتر صحيحة.",
+    infoEn:
+      "A trunk connects the switch to the router. show interfaces trunk shows VLAN 10 allowed, but VLAN 20 is missing from the allowed VLAN list. Router gateway addresses are correct.",
+    optionsAr: [
+      "إضافة VLAN 20 إلى قائمة VLANs المسموحة على trunk والتحقق من وجودها",
+      "تغيير خادم DNS",
+      "إيقاف STP",
+    ],
+    optionsEn: [
+      "Allow VLAN 20 on the trunk and verify the VLAN exists",
+      "Change the DNS server",
+      "Disable STP",
+    ],
+    answer: 0,
+    explainAr:
+      "يجب أن تكون VLAN موجودة ومسموحة على مسار trunk، وأن تكون إعدادات native VLAN متوافقة عند استخدامها. افحص show vlan brief وshow interfaces trunk ثم اختبر الاتصال.",
+    explainEn:
+      "The VLAN must exist and be allowed across the trunk, with matching native VLAN settings where applicable. Check show vlan brief and show interfaces trunk, then retest.",
+  },
+  {
+    id: "s13",
+    titleAr: "خادم HTTPS لا يستجيب بعد إضافة ACL",
+    titleEn: "HTTPS server stopped responding after an ACL was added",
+    infoAr:
+      "المستخدمون في 192.168.10.0/24 لا يصلون إلى الخادم 192.168.20.10 على TCP/443. أضيفت قاعدة permit tcp إلى ACL، لكنها جاءت بعد deny ip any any.",
+    infoEn:
+      "Users in 192.168.10.0/24 cannot reach server 192.168.20.10 on TCP/443. A permit tcp rule was added to the ACL, but it appears after deny ip any any.",
+    optionsAr: [
+      "نقل قاعدة السماح قبل قاعدة المنع مع التحقق من اتجاه تطبيق ACL",
+      "إضافة DNS آخر",
+      "إعادة تشغيل جميع السويتشات",
+    ],
+    optionsEn: [
+      "Move the permit rule before the deny and verify ACL direction",
+      "Add another DNS server",
+      "Reboot all switches",
+    ],
+    answer: 0,
+    explainAr:
+      "تُعالج قواعد ACL المرتبة من الأعلى إلى الأسفل، وغالباً يتوقف الفحص عند أول تطابق. قاعدة المنع سبقت السماح فأسقطت الحركة. راجع ترتيب القواعد والواجهة والاتجاه قبل التعديل.",
+    explainEn:
+      "Ordered ACL entries are evaluated top-down, commonly stopping at the first match. The earlier deny drops the traffic before the permit is reached. Review rule order, interface and direction before changing it.",
+  },
+  {
+    id: "s14",
+    titleAr: "المسار الثابت موجود لكن الوصول إلى الشبكة البعيدة يفشل",
+    titleEn: "Static route exists but the remote network remains unreachable",
+    infoAr:
+      "R1 لديه مسار إلى 192.168.20.0/24 عبر 10.0.0.2، ويمكنه ping إلى 10.0.0.2. لكن R2 لا يحتوي على مسار عودة إلى شبكة R1 وهي 192.168.10.0/24.",
+    infoEn:
+      "R1 has a route to 192.168.20.0/24 via 10.0.0.2 and can ping 10.0.0.2. R2 has no return route to R1's 192.168.10.0/24 network.",
+    optionsAr: [
+      "إضافة مسار عودة على R2 والتحقق من ACL",
+      "تغيير عنوان MAC على R1",
+      "تغيير DNS على أجهزة الشبكتين",
+    ],
+    optionsEn: [
+      "Add a return route on R2 and check ACLs",
+      "Change R1's MAC address",
+      "Change DNS on both networks",
+    ],
+    answer: 0,
+    explainAr:
+      "نجاح الوصول إلى Next Hop يثبت جزءاً من الاتصال فقط. يجب أن يعرف R2 طريق العودة إلى مصدر الحزم، وإلا قد تصل الطلبات ولا تعود الردود. افحص جدول التوجيه في الطرفين.",
+    explainEn:
+      "Reaching the next hop proves only part of the path. R2 needs a route back to the source, or requests may arrive while replies cannot return. Inspect routing tables on both routers.",
+  },
+  {
+    id: "s15",
+    titleAr: "Port Forwarding لا يعمل من الإنترنت",
+    titleEn: "Port forwarding does not work from the Internet",
+    infoAr:
+      "قاعدة dst-nat تحول TCP/8443 إلى خادم داخلي، والخادم يستجيب من شبكة LAN. عنوان WAN في الراوتر هو 100.72.15.8، بينما يظهر موقع فحص عنوان الإنترنت عنواناً عاماً مختلفاً.",
+    infoEn:
+      "A dst-nat rule forwards TCP/8443 to an internal server, which responds on the LAN. The router WAN address is 100.72.15.8, while an external IP-check site reports a different public address.",
+    optionsAr: [
+      "التحقق من CGNAT وطلب IPv4 عام أو استخدام VPN مناسب",
+      "فتح كل منافذ الراوتر",
+      "تعطيل Firewall بالكامل",
+    ],
+    optionsEn: [
+      "Check for CGNAT and request a public IPv4 or use an appropriate VPN",
+      "Open every router port",
+      "Disable the firewall entirely",
+    ],
+    answer: 0,
+    explainAr:
+      "العنوان 100.72.15.8 يقع ضمن نطاق 100.64.0.0/10 المخصص لـ Shared Address Space ويشير غالباً إلى CGNAT لدى المزود. لا يكفي إعداد Port Forwarding على راوتر العميل وحده؛ تحقق مع المزود من إمكانية الحصول على عنوان عام.",
+    explainEn:
+      "100.72.15.8 is within 100.64.0.0/10 shared address space and commonly indicates ISP CGNAT. Port forwarding on the customer router alone is insufficient; ask the ISP whether a public address is available.",
+  },
 ];

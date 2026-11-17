@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { lessons, scenarios } from "./content";
 
 describe("lesson content integrity", () => {
-  it("keeps all six troubleshooting scenarios in the scenario catalog", () => {
+  it("keeps core troubleshooting scenarios in the scenario catalog", () => {
     const scenarioIds = ["s5", "s6", "s7", "s8", "s9", "s10"];
     for (const id of scenarioIds) {
       const scenario = scenarios.find((item) => item.id === id);
@@ -12,8 +12,8 @@ describe("lesson content integrity", () => {
   });
 
   it("provides the complete bilingual drill contract for every scenario", () => {
-    expect(scenarios).toHaveLength(10);
-    expect(new Set(scenarios.map((scenario) => scenario.id)).size).toBe(10);
+    expect(scenarios).toHaveLength(15);
+    expect(new Set(scenarios.map((scenario) => scenario.id)).size).toBe(15);
     for (const scenario of scenarios) {
       for (const value of [
         scenario.infoAr,
