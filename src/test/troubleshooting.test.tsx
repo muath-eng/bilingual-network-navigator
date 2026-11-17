@@ -60,13 +60,12 @@ describe("Troubleshooting regression", () => {
       const scope = within(heading.parentElement!);
       fireEvent.click(scope.getByRole("button", { name: options[first.answer] }));
       expect(progress).toHaveAttribute("aria-valuenow", "1");
-      expect(screen.getByText(lang === "ar" ? "1 / 1" : "1 / 1")).toBeInTheDocument();
-      fireEvent.click(
-        screen.getByRole("button", {
-          name: lang === "ar" ? "إعادة المحاولة" : "Reset practice",
-        }),
-      );
+      const reset = screen.getByRole("button", {
+        name: lang === "ar" ? "إعادة المحاولة" : "Reset practice",
+      });
+      fireEvent.click(reset);
       expect(progress).toHaveAttribute("aria-valuenow", "0");
+      expect(reset).toBeDisabled();
     });
   }
 });
